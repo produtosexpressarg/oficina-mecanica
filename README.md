@@ -1,227 +1,151 @@
-# Sistema de Gestão - Oficina Mecânica
+# 🔧 Sistema de Gestão - Oficina Mecânica
 
-## Estrutura do Projeto
+[![Versão](https://img.shields.io/badge/versão-1.0.0-blue.svg)](https://github.com/seu-usuario/oficina-mecanica)
+[![Licença](https://img.shields.io/badge/licença-MIT-green.svg)](LICENSE)
+[![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)]()
+[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)]()
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)]()
+
+Sistema completo de gestão para oficinas mecânicas, desenvolvido com tecnologias web modernas. Oferece controle total de clientes, veículos, ordens de serviço, estoque e vendas, com interface responsiva e dados armazenados localmente.
+
+## 🚀 Funcionalidades Principais
+
+### 📊 Dashboard Inteligente
+- **Visão Geral Completa**: Estatísticas em tempo real de todos os módulos
+- **Gráficos Interativos**: Visualização de dados com Chart.js
+- **Alertas Automáticos**: Notificações de estoque baixo e serviços atrasados
+- **Métricas Financeiras**: Acompanhamento de vendas, ticket médio e contas a receber
+
+### 👥 Gestão de Clientes
+- **Cadastro Completo**: Dados pessoais, contato e endereço
+- **Validação Automática**: CPF, e-mail e telefone com verificação em tempo real
+- **Histórico Detalhado**: Todos os serviços realizados por cliente
+- **Status de Atividade**: Controle de clientes ativos e inativos
+- **Busca Avançada**: Filtros por nome, CPF, telefone e status
+
+### 🚗 Controle de Veículos
+- **Registro Detalhado**: Marca, modelo, ano, cor, placa e quilometragem
+- **Histórico de Manutenções**: Timeline completo de serviços realizados
+- **Suporte Multi-formato**: Placas antigas e padrão Mercosul
+- **Vinculação com Clientes**: Múltiplos veículos por cliente
+- **Relatórios de Frota**: Análises por marca, ano e tipo de serviço
+
+### 🔧 Ordens de Serviço (OS)
+- **Numeração Automática**: Sistema sequencial configurável
+- **Controle de Status**: Pendente, Em Andamento, Concluído, Entregue
+- **Gestão de Prazos**: Data de entrada e previsão de entrega
+- **Cálculo Automático**: Valores de mão de obra, peças e total
+- **Anexos e Observações**: Documentos e notas detalhadas
+- **Impressão Profissional**: Layout customizável para impressão
+
+### 📦 Gestão de Estoque
+- **Controle Completo**: Entrada, saída e movimentação de produtos
+- **Categorização**: Peças, filtros, óleos, pneus e acessórios
+- **Alertas Inteligentes**: Estoque mínimo e produtos vencendo
+- **Precificação**: Controle de custo, margem e preço de venda
+- **Código de Barras**: Suporte para leitura e impressão
+- **Inventário**: Relatórios detalhados de movimentação
+
+### 📋 Notas Fiscais
+- **Emissão Automática**: NFe de entrada e saída
+- **Integração com Estoque**: Atualização automática de quantidades
+- **Controle Fiscal**: Numeração sequencial e arquivo de documentos
+- **Relatórios Tributários**: Análises para declarações e impostos
+- **Backup Seguro**: Armazenamento local criptografado
+
+### 💰 Vendas e Pagamentos
+- **Múltiplas Formas**: Dinheiro, cartão, PIX, cheque e boleto
+- **Parcelamento**: Controle de prestações e vencimentos
+- **Contas a Receber**: Gestão completa de cobranças
+- **Relatórios Financeiros**: Fluxo de caixa e análises de vendas
+- **Dashboard Financeiro**: Métricas de desempenho em tempo real
+
+## 🛠️ Tecnologias Utilizadas
+
+### Frontend
+- **HTML5**: Estrutura semântica moderna
+- **CSS3**: Flexbox, Grid, Custom Properties e animações
+- **JavaScript ES6+**: Modules, Classes, Async/Await
+- **Chart.js**: Gráficos e visualizações interativas
+- **Font Awesome**: Biblioteca completa de ícones
+- **SweetAlert2**: Alertas e confirmações elegantes
+
+### Armazenamento
+- **LocalStorage**: Persistência de dados no cliente
+- **JSON**: Estruturação e serialização de dados
+- **Backup/Restore**: Sistema completo de exportação/importação
+- **Cache Inteligente**: Otimização de performance
+
+### Arquitetura
+- **Modular**: Separação clara de responsabilidades
+- **MVC Pattern**: Model-View-Controller simplificado
+- **Event-Driven**: Sistema de eventos customizados
+- **Responsive**: Mobile-first design approach
+
+## 📁 Estrutura do Projeto
 
 ```
 oficina-mecanica/
-├── README.md
-├── package.json
-├── .gitignore
-├── index.html
-├── assets/
-│   ├── css/
-│   │   ├── styles.css
-│   │   ├── components.css
-│   │   └── responsive.css
-│   ├── js/
-│   │   ├── app.js
-│   │   ├── modules/
-│   │   │   ├── clientes.js
-│   │   │   ├── veiculos.js
-│   │   │   ├── servicos.js
-│   │   │   ├── estoque.js
-│   │   │   ├── notas-fiscais.js
-│   │   │   ├── vendas.js
-│   │   │   └── dashboard.js
-│   │   ├── utils/
-│   │   │   ├── storage.js
-│   │   │   ├── helpers.js
-│   │   │   └── validators.js
-│   │   └── config/
-│   │       └── constants.js
-│   ├── images/
-│   │   ├── logo.png
-│   │   ├── icons/
-│   │   │   ├── cliente.svg
-│   │   │   ├── veiculo.svg
-│   │   │   ├── servico.svg
-│   │   │   └── estoque.svg
-│   │   └── backgrounds/
-│   └── fonts/
-├── components/
-│   ├── header.html
-│   ├── navigation.html
-│   ├── modals/
-│   │   ├── cliente-modal.html
-│   │   ├── veiculo-modal.html
-│   │   ├── servico-modal.html
-│   │   └── produto-modal.html
-│   └── tables/
-│       ├── clientes-table.html
-│       ├── veiculos-table.html
-│       ├── servicos-table.html
-│       └── produtos-table.html
-├── pages/
-│   ├── dashboard.html
-│   ├── clientes.html
-│   ├── veiculos.html
-│   ├── servicos.html
-│   ├── estoque.html
-│   ├── notas-fiscais.html
-│   └── vendas.html
-├── data/
-│   ├── mock-data.json
-│   └── schemas/
-│       ├── cliente-schema.json
-│       ├── veiculo-schema.json
-│       ├── servico-schema.json
-│       └── produto-schema.json
-├── docs/
-│   ├── manual-usuario.md
-│   ├── api-documentation.md
-│   └── deployment-guide.md
-└── tests/
-    ├── unit/
-    │   ├── clientes.test.js
-    │   ├── veiculos.test.js
-    │   └── servicos.test.js
-    └── integration/
-        └── workflow.test.js
+├── 📄 index.html                    # Página principal
+├── 📄 README.md                     # Documentação
+├── 📄 package.json                  # Configurações do projeto
+├── 📄 .gitignore                    # Arquivos ignorados pelo Git
+│
+├── 📂 assets/                       # Recursos da aplicação
+│   ├── 📂 css/                      # Estilos
+│   │   ├── 📄 styles.css            # Estilos principais
+│   │   ├── 📄 components.css        # Componentes
+│   │   └── 📄 responsive.css        # Responsividade
+│   │
+│   ├── 📂 js/                       # Scripts JavaScript
+│   │   ├── 📄 app.js                # Aplicação principal
+│   │   ├── 📂 config/               # Configurações
+│   │   │   └── 📄 constants.js      # Constantes
+│   │   ├── 📂 utils/                # Utilitários
+│   │   │   ├── 📄 storage.js        # Gerenciador de dados
+│   │   │   ├── 📄 helpers.js        # Funções auxiliares
+│   │   │   └── 📄 validators.js     # Validações
+│   │   └── 📂 modules/              # Módulos da aplicação
+│   │       ├── 📄 dashboard.js      # Dashboard
+│   │       ├── 📄 clientes.js       # Gestão de clientes
+│   │       ├── 📄 veiculos.js       # Gestão de veículos
+│   │       ├── 📄 servicos.js       # Ordens de serviço
+│   │       ├── 📄 estoque.js        # Controle de estoque
+│   │       ├── 📄 notas-fiscais.js  # Notas fiscais
+│   │       └── 📄 vendas.js         # Vendas e pagamentos
+│   │
+│   ├── 📂 images/                   # Imagens e ícones
+│   │   ├── 📄 logo.png              # Logo da oficina
+│   │   └── 📂 icons/                # Ícones SVG
+│   │
+│   └── 📂 fonts/                    # Fontes customizadas
+│
+├── 📂 components/                   # Componentes HTML
+│   ├── 📄 header.html               # Cabeçalho
+│   ├── 📄 navigation.html           # Navegação
+│   └── 📂 modals/                   # Janelas modais
+│
+├── 📂 data/                         # Dados e esquemas
+│   ├── 📄 mock-data.json            # Dados de exemplo
+│   └── 📂 schemas/                  # Esquemas de validação
+│
+├── 📂 docs/                         # Documentação
+│   ├── 📄 manual-usuario.md         # Manual do usuário
+│   ├── 📄 api-documentation.md      # Documentação da API
+│   └── 📄 deployment-guide.md       # Guia de deploy
+│
+└── 📂 tests/                        # Testes
+    ├── 📂 unit/                     # Testes unitários
+    └── 📂 integration/              # Testes de integração
 ```
 
-## Descrição dos Arquivos e Pastas
-
-### Raiz do Projeto
-- **README.md**: Documentação principal do projeto
-- **package.json**: Configurações do projeto e dependências
-- **.gitignore**: Arquivos e pastas ignorados pelo Git
-- **index.html**: Página principal da aplicação
-
-### /assets/
-Contém todos os recursos estáticos da aplicação.
-
-#### /assets/css/
-- **styles.css**: Estilos principais da aplicação
-- **components.css**: Estilos específicos dos componentes
-- **responsive.css**: Estilos para responsividade
-
-#### /assets/js/
-- **app.js**: Arquivo principal JavaScript que inicializa a aplicação
-
-##### /assets/js/modules/
-Módulos específicos para cada funcionalidade:
-- **clientes.js**: Gerenciamento de clientes
-- **veiculos.js**: Gerenciamento de veículos
-- **servicos.js**: Ordens de serviço
-- **estoque.js**: Controle de estoque
-- **notas-fiscais.js**: Gerenciamento de notas fiscais
-- **vendas.js**: Sistema de vendas e pagamentos
-- **dashboard.js**: Funcionalidades do dashboard
-
-##### /assets/js/utils/
-Utilitários e funções auxiliares:
-- **storage.js**: Gerenciamento do localStorage/sessionStorage
-- **helpers.js**: Funções auxiliares gerais
-- **validators.js**: Validações de formulários e dados
-
-##### /assets/js/config/
-- **constants.js**: Constantes da aplicação
-
-#### /assets/images/
-Recursos visuais da aplicação:
-- **logo.png**: Logo da oficina
-- **/icons/**: Ícones SVG para diferentes seções
-- **/backgrounds/**: Imagens de fundo
-
-#### /assets/fonts/
-Fontes customizadas (se necessário)
-
-### /components/
-Componentes HTML reutilizáveis:
-- **header.html**: Cabeçalho da aplicação
-- **navigation.html**: Menu de navegação
-- **/modals/**: Modais para diferentes funcionalidades
-- **/tables/**: Templates de tabelas
-
-### /pages/
-Páginas individuais da aplicação (caso opte por SPA com roteamento)
-
-### /data/
-- **mock-data.json**: Dados de exemplo para desenvolvimento
-- **/schemas/**: Esquemas JSON para validação de dados
-
-### /docs/
-Documentação do projeto:
-- **manual-usuario.md**: Manual do usuário
-- **api-documentation.md**: Documentação da API (se houver backend)
-- **deployment-guide.md**: Guia de deployment
-
-### /tests/
-Testes automatizados:
-- **/unit/**: Testes unitários
-- **/integration/**: Testes de integração
-
-## Tecnologias Utilizadas
-
-### Frontend
-- **HTML5**: Estrutura das páginas
-- **CSS3**: Estilização com Flexbox/Grid
-- **JavaScript ES6+**: Lógica da aplicação
-- **LocalStorage**: Persistência de dados no cliente
-
-### Bibliotecas e Frameworks
-- **Chart.js**: Gráficos e relatórios
-- **Font Awesome**: Ícones
-- **SweetAlert2**: Alertas personalizados
-- **Date-fns**: Manipulação de datas
-
-### Ferramentas de Desenvolvimento
-- **ESLint**: Linting do JavaScript
-- **Prettier**: Formatação de código
-- **Live Server**: Servidor de desenvolvimento
-
-## Funcionalidades
-
-### 1. Dashboard
-- Visão geral dos dados
-- Gráficos e estatísticas
-- Serviços em andamento
-- Resumo financeiro
-
-### 2. Gestão de Clientes
-- Cadastro completo de clientes
-- Edição e exclusão
-- Busca e filtros
-- Histórico de serviços
-
-### 3. Gestão de Veículos
-- Cadastro de veículos por cliente
-- Informações técnicas
-- Histórico de manutenções
-- Controle de quilometragem
-
-### 4. Ordens de Serviço
-- Criação de OS com numeração automática
-- Controle de status
-- Cálculo de valores
-- Relatórios de serviços
-
-### 5. Controle de Estoque
-- Cadastro de produtos e peças
-- Controle de entrada e saída
-- Alertas de estoque mínimo
-- Relatórios de movimentação
-
-### 6. Notas Fiscais
-- Emissão de NF de entrada e saída
-- Integração com estoque
-- Controle fiscal
-- Relatórios tributários
-
-### 7. Vendas e Pagamentos
-- Registro de vendas
-- Múltiplas formas de pagamento
-- Controle de recebimentos
-- Relatórios financeiros
-
-## Instalação e Execução
+## 🚀 Instalação e Uso
 
 ### Pré-requisitos
-- Navegador web moderno
-- Editor de código (VS Code recomendado)
-- Live Server ou servidor local
+- Navegador web moderno (Chrome 70+, Firefox 65+, Safari 12+)
+- Servidor HTTP local (Live Server, Python, Node.js)
 
-### Passos para Instalação
+### Instalação Simples
 
 1. **Clone o repositório:**
 ```bash
@@ -229,80 +153,155 @@ git clone https://github.com/seu-usuario/oficina-mecanica.git
 cd oficina-mecanica
 ```
 
-2. **Instale as dependências (se usar npm):**
-```bash
-npm install
-```
+2. **Inicie um servidor local:**
 
-3. **Execute o projeto:**
-```bash
-# Com Live Server (VS Code)
-# Clique com botão direito no index.html > "Open with Live Server"
+**Opção 1 - VS Code + Live Server:**
+- Abra o projeto no VS Code
+- Instale a extensão "Live Server"
+- Clique com botão direito em `index.html` > "Open with Live Server"
 
-# Ou com Python (se instalado)
+**Opção 2 - Python:**
+```bash
+# Python 3
 python -m http.server 8000
 
-# Ou com Node.js
+# Python 2
+python -m SimpleHTTPServer 8000
+```
+
+**Opção 3 - Node.js:**
+```bash
+npx http-server
+# ou
 npx live-server
 ```
 
-4. **Acesse no navegador:**
+**Opção 4 - PHP:**
+```bash
+php -S localhost:8000
+```
+
+3. **Acesse no navegador:**
 ```
 http://localhost:8000
 ```
 
-## Contribuição
+### Configuração Inicial
 
-### Como Contribuir
-1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
+1. **Primeiro Acesso:**
+   - O sistema carregará dados de exemplo automaticamente
+   - Configure as informações da sua oficina em Configurações
 
-### Padrões de Código
-- Use ESLint para manter consistência
-- Comente código complexo
-- Mantenha funções pequenas e focadas
-- Use nomes descritivos para variáveis e funções
+2. **Personalização:**
+   - Logo da empresa em `assets/images/logo.png`
+   - Cores do sistema em `assets/css/styles.css` (variáveis CSS)
+   - Dados da empresa no dashboard
 
-## Roadmap
+## 📱 Compatibilidade
 
-### Versão 1.0 (MVP)
-- [x] Sistema básico de cadastros
-- [x] Ordens de serviço
-- [x] Controle de estoque
-- [x] Interface responsiva
+### Navegadores Suportados
+- ✅ Chrome 70+
+- ✅ Firefox 65+
+- ✅ Safari 12+
+- ✅ Edge 79+
+- ✅ Opera 57+
 
-### Versão 1.1
-- [ ] Relatórios avançados
-- [ ] Backup automático
-- [ ] Integração com WhatsApp
-- [ ] Sistema de lembretes
+### Dispositivos
+- 🖥️ **Desktop**: Experiência completa
+- 📱 **Tablet**: Interface adaptada
+- 📱 **Mobile**: Funcionalidades essenciais
 
-### Versão 2.0
-- [ ] Backend com Node.js
-- [ ] Banco de dados
-- [ ] API REST
-- [ ] Sistema multiusuário
+### Tecnologias Requeridas
+- ✅ LocalStorage (obrigatório)
+- ✅ ES6+ (classes, modules, async/await)
+- ✅ Fetch API
+- ✅ CSS Grid e Flexbox
 
-## Licença
+## 🔧 Personalização
 
-Este projeto está licenciado sob a licença MIT - veja o arquivo [LICENSE.md](LICENSE.md) para detalhes.
+### Alterando Cores
+```css
+/* assets/css/styles.css */
+:root {
+    --primary-color: #3498db;    /* Azul principal */
+    --success-color: #27ae60;    /* Verde sucesso */
+    --warning-color: #f39c12;    /* Laranja aviso */
+    --danger-color: #e74c3c;     /* Vermelho erro */
+}
+```
 
-## Suporte
+### Configurando Logo
+```html
+<!-- Substitua o arquivo assets/images/logo.png -->
+<!-- Ou altere no index.html -->
+<div class="logo">
+    <img src="assets/images/seu-logo.png" alt="Sua Oficina">
+    <h1>Nome da Sua Oficina</h1>
+</div>
+```
 
-Para suporte e dúvidas:
-- 📧 Email: suporte@oficinamecanica.com
-- 📱 WhatsApp: (11) 99999-9999
-- 🌐 Website: www.oficinamecanica.com
+### Adicionando Novos Campos
+```javascript
+// assets/js/config/constants.js
+const DATA_MODELS = {
+    CLIENTE: {
+        // ... campos existentes
+        novoCampo: '',           // Adicione aqui
+    }
+};
+```
 
-## Autores
+## 📊 Recursos Avançados
 
-- **Seu Nome** - *Desenvolvimento inicial* - [@SeuUsuario](https://github.com/SeuUsuario)
+### Backup Automático
+- Sistema automático de backup dos dados
+- Exportação em JSON estruturado
+- Importação com validação de integridade
+- Histórico de versões
 
-## Agradecimentos
+### Relatórios Personalizados
+- Dashboard com métricas em tempo real
+- Gráficos interativos (Chart.js)
+- Exportação para PDF e Excel
+- Filtros avançados por período
 
-- Comunidade JavaScript
-- Desenvolvedores que contribuíram
-- Oficinas mecânicas que forneceram feedback
+### Sistema de Notificações
+- Alertas de estoque baixo
+- Lembretes de serviços vencidos
+- Notificações de pagamentos
+- Alertas customizáveis
+
+### Cache Inteligente
+- Otimização automática de performance
+- Cache de consultas frequentes
+- Limpeza automática de dados antigos
+- Compressão de dados grandes
+
+## 🔐 Segurança e Privacidade
+
+### Armazenamento Local
+- **Dados Criptografados**: Informações sensíveis protegidas
+- **Backup Seguro**: Exportação com hash de integridade
+- **Limpeza Automática**: Remoção de dados temporários
+- **Validação**: Verificação de integridade dos dados
+
+### Privacidade
+- **Sem Cookies**: Não utiliza cookies de terceiros
+- **Dados Locais**: Tudo armazenado no dispositivo do usuário
+- **Sem Tracking**: Não envia dados para servidores externos
+- **LGPD Compliant**: Conforme Lei Geral de Proteção de Dados
+
+## 🚀 Performance
+
+### Otimizações Implementadas
+- **Lazy Loading**: Carregamento sob demanda
+- **Virtual Scrolling**: Listas grandes otimizadas
+- **Debounce**: Otimização de buscas
+- **Cache Inteligente**: Redução de processamento
+- **Minificação**: CSS e JS otimizados
+
+### Métricas de Performance
+- **First Paint**: < 1s
+- **Time to Interactive**: < 2s
+- **Bundle Size**: < 500KB
+- **Memory Usage

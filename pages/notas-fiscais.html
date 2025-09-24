@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas Fiscais - Oficina Mecânica</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div id="sidebar-container"></div>
+
+        <!-- Conteúdo principal -->
+        <div class="main-content">
+            <!-- Header -->
+            <div id="header-container"></div>
+
+            <!-- Conteúdo da página -->
+            <div class="page-header">
+                <h1 class="page-title">Gerenciamento de Notas Fiscais</h1>
+                <button class="btn btn-primary" id="btn-nova-nota">Nova Nota Fiscal</button>
+            </div>
+
+            <!-- Filtros e busca -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="filter-container">
+                        <div class="search-box">
+                            <input type="text" id="search-nota" placeholder="Buscar nota fiscal...">
+                            <button>Buscar</button>
+                        </div>
+                        <div class="filter-options">
+                            <div class="date-range">
+                                <label for="data-inicio">De:</label>
+                                <input type="date" id="data-inicio">
+                                <label for="data-fim">Até:</label>
+                                <input type="date" id="data-fim">
+                            </div>
+                            <select id="filter-status">
+                                <option value="">Todos os status</option>
+                                <option value="emitida">Emitida</option>
+                                <option value="cancelada">Cancelada</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de notas fiscais -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Notas Fiscais</h2>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Número</th>
+                                <th>Data Emissão</th>
+                                <th>Cliente</th>
+                                <th>Valor Total</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="notas-table-body">
+                            <!-- Dados serão carregados via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer-container"></div>
+
+    <!-- Scripts -->
+    <script src="../assets/js/app.js"></script>
+    <script>
+        // Carregar componentes
+        document.addEventListener('DOMContentLoaded', function() {
+            // Carregar sidebar
+            fetch('../components/sidebar.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('sidebar-container').innerHTML = data;
+                });
+            
+            // Carregar header
+            fetch('../components/header.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('header-container').innerHTML = data;
+                });
+            
+            // Carregar footer
+            fetch('../components/footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer-container').innerHTML = data;
+                });
+        });
+    </script>
+</body>
+</html>

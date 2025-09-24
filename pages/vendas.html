@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendas - Oficina Mecânica</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/layout.css">
+    <link rel="stylesheet" href="../assets/css/forms.css">
+</head>
+<body>
+    <div class="main-container">
+        <div id="sidebar-container"></div>
+        <div class="main-content">
+            <div id="header-container"></div>
+            <div class="page-header">
+                <h1 class="page-title">Vendas</h1>
+                <button class="btn btn-primary" id="btn-nova-venda">
+                    <i class="fas fa-plus"></i> Nova Venda
+                </button>
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    <div class="filter-container">
+                        <input type="text" id="search-venda" placeholder="Buscar venda...">
+                        <input type="date" id="data-inicio">
+                        <input type="date" id="data-fim">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Data</th>
+                                <th>Cliente</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vendas-table-body">
+                            <!-- Dados serão carregados via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="footer-container"></div>
+    
+    <script src="../assets/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('../components/sidebar.html').then(r => r.text()).then(d => document.getElementById('sidebar-container').innerHTML = d);
+            fetch('../components/header.html').then(r => r.text()).then(d => document.getElementById('header-container').innerHTML = d);
+            fetch('../components/footer.html').then(r => r.text()).then(d => document.getElementById('footer-container').innerHTML = d);
+        });
+    </script>
+</body>
+</html>

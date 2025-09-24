@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dashboard - Sistema de Gestão para Oficina Mecânica">
+    <title>Dashboard - Sistema de Gestão Oficina</title>
+    
+    <!-- CSS -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+            --border-color: #dee2e6;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--warning-color);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-subtitle {
+            margin-top: 0.5rem;
+            opacity: 0.9;
+        }
+
+        /* Navigation */
+        .nav-menu {
+            background: var(--card-bg);
+            padding: 1rem 0;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            color: var(--text-color);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            background: var(--bg-color);
+            color: var(--secondary-color);
+        }
+
+        .nav-link.active {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .page-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--secondary-color);
+            border: 2px solid var(--secondary-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .stat-card:nth-child(1) .stat-icon {
+            background: var(--secondary-color);
+        }
+
+        .stat-card:nth-child(2) .stat-icon {
+            background: var(--success-color);
+        }
+
+        .stat-card:nth-child(3) .stat-icon {
+            background: var(--warning-color);
+        }
+
+        .stat-card:nth-child(4) .stat-icon {
+            background: var(--danger-color);
+        }
+
+        .stat-info h3 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .stat-info p {
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 2px solid var(--bg-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .card-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            min-height: 200px;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 2rem;
+        }
+
+        /* Service Items */
+        .service-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-left: 4px solid var(--warning-color);
+            background: #fff9e6;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 0.75rem;
+        }
+
+        .service-info h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .service-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .service-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-andamento {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        /* Alert Items */
+        .alert-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-left: 4px solid var(--danger-color);
+            background: #f8d7da;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 0.75rem;
+        }
+
+        .alert-info h4 {
+            color: var(--danger-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .alert-info p {
+            color: #721c24;
+            font-size: 0.9rem;
+        }
+
+        .alert-quantity {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--danger-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                text-align: center;
+            }
+
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+
+            .nav-links {
+                justify-content: center;
+            }
+
+            .page-header {
+                text-align: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .service-item,
+            .alert-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-wrench"></i>
+                    <h1>Sistema de Gestão - Oficina Mecânica</h1>
+                </div>
+                <div class="user-info">
+                    <span id="currentDate"></span>
+                    <div class="user-menu">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Administrador</span>
+                    </div>
+                </div>
+            </div>
+            <p class="header-subtitle">Gestão completa para sua oficina automotiva</p>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav-menu">
+        <div class="container">
+            <div class="nav-links">
+                <a href="dashboard.html" class="nav-link active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+                <a href="clientes.html" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    Clientes
+                </a>
+                <a href="veiculos.html" class="nav-link">
+                    <i class="fas fa-car"></i>
+                    Veículos
+                </a>
+                <a href="servicos.html" class="nav-link">
+                    <i class="fas fa-clipboard-list"></i>
+                    Ordens de Serviço
+                </a>
+                <a href="estoque.html" class="nav-link">
+                    <i class="fas fa-boxes"></i>
+                    Estoque
+                </a>
+                <a href="notas-fiscais.html" class="nav-link">
+                    <i class="fas fa-file-invoice"></i>
+                    Notas Fiscais
+                </a>
+                <a href="vendas.html" class="nav-link">
+                    <i class="fas fa-cash-register"></i>
+                    Vendas & Pagamentos
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h2 class="page-title">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard - Visão Geral
+                </h2>
+                <div class="page-actions">
+                    <button class="btn btn-outline" onclick="atualizarDashboard()">
+                        <i class="fas fa-sync-alt"></i>
+                        Atualizar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalClientes">248</h3>
+                        <p>Clientes Cadastrados</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalVeiculos">312</h3>
+                        <p>Veículos Registrados</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalServicos">89</h3>
+                        <p>Ordens de Serviço</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalVendas">R$ 47.850,00</h3>
+                        <p>Total em Vendas</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-tools"></i> Serviços em Andamento</h3>
+                    </div>
+                    <div class="card-body" id="servicosAndamento">
+                        <div class="service-item">
+                            <div class="service-info">
+                                <h4>OS #001234 - João Silva</h4>
+                                <p>Honda Civic - Troca de óleo e filtros</p>
+                            </div>
+                            <div class="service-status status-andamento">Em Andamento</div>
+                        </div>
+                        <div class="service-item">
+                            <div class="service-info">
+                                <h4>OS #001235 - Maria Santos</h4>
+                                <p>Toyota Corolla - Revisão completa</p>
+                            </div>
+                            <div class="service-status status-andamento">Em Andamento</div>
+                        </div>
+                        <div class="service-item">
+                            <div class="service-info">
+                                <h4>OS #001236 - Carlos Oliveira</h4>
+                                <p>Ford Focus - Reparo de freios</p>
+                            </div>
+                            <div class="service-status status-andamento">Em Andamento</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Alertas de Estoque</h3>
+                    </div>
+                    <div class="card-body" id="alertasEstoque">
+                        <div class="alert-item">
+                            <div class="alert-info">
+                                <h4>Filtro de Óleo</h4>
+                                <p>Estoque crítico - Reabastecer urgente</p>
+                            </div>
+                            <div class="alert-quantity">5</div>
+                        </div>
+                        <div class="alert-item">
+                            <div class="alert-info">
+                                <h4>Pastilha de Freio Dianteira</h4>
+                                <p>Estoque baixo - Reabastecer em breve</p>
+                            </div>
+                            <div class="alert-quantity">12</div>
+                        </div>
+                        <div class="alert-item">
+                            <div class="alert-info">
+                                <h4>Óleo Motor 5W30</h4>
+                                <p>Estoque baixo - Verificar fornecedor</p>
+                            </div>
+                            <div class="alert-quantity">8</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Atualizar data atual
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentDate = document.getElementById('currentDate');
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            currentDate.textContent = now.toLocaleDateString('pt-BR', options);
+        });
+
+        // Função para atualizar dashboard
+        function atualizarDashboard() {
+            // Simular carregamento
+            const btn = event.target.closest('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Atualizando...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                // Atualizar números aleatoriamente para demonstração
+                document.getElementById('totalClientes').textContent = Math.floor(Math.random() * 50) + 200;
+                document.getElementById('totalVeiculos').textContent = Math.floor(Math.random() * 100) + 250;
+                document.getElementById('totalServicos').textContent = Math.floor(Math.random() * 50) + 75;
+                
+                const vendas = (Math.random() * 50000 + 30000).toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                });
+                document.getElementById('totalVendas').textContent = vendas;
+
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }, 1500);
+        }
+
+        // Animação de entrada dos cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.stat-card, .card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

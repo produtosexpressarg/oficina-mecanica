@@ -1,0 +1,74 @@
+[
+  {
+    "id": "1",
+    "nome": "Troca de óleo",
+    "descricao": "Troca de óleo do motor e filtro de óleo",
+    "valor": 120.00,
+    "tempoPrevisto": 30,
+    "categoria": "manutencao_preventiva",
+    "ativo": true
+  },
+  {
+    "id": "2",
+    "nome": "Alinhamento e balanceamento",
+    "descricao": "Alinhamento de direção e balanceamento das rodas",
+    "valor": 150.00,
+    "tempoPrevisto": 60,
+    "categoria": "manutencao_preventiva",
+    "ativo": true
+  },
+  {
+    "id": "3",
+    "nome": "Revisão completa",
+    "descricao": "Revisão completa do veículo incluindo verificação de fluidos, freios, suspensão e motor",
+    "valor": 350.00,
+    "tempoPrevisto": 120,
+    "categoria": "manutencao_preventiva",
+    "ativo": true
+  },
+  {
+    "id": "4",
+    "nome": "Troca de pastilhas de freio",
+    "descricao": "Substituição das pastilhas de freio dianteiras ou traseiras",
+    "valor": 180.00,
+    "tempoPrevisto": 60,
+    "categoria": "freios",
+    "ativo": true
+  },
+  {
+    "id": "5",
+    "nome": "Troca de amortecedores",
+    "descricao": "Substituição dos amortecedores dianteiros ou traseiros",
+    "valor": 450.00,
+    "tempoPrevisto": 120,
+    "categoria": "suspensao",
+    "ativo": true
+  },
+  {
+    "id": "6",
+    "nome": "Diagnóstico eletrônico",
+    "descricao": "Leitura e diagnóstico de falhas através do scanner eletrônico",
+    "valor": 100.00,
+    "tempoPrevisto": 30,
+    "categoria": "eletrica_eletronica",
+    "ativo": true
+  },
+  {
+    "id": "7",
+    "nome": "Higienização de ar condicionado",
+    "descricao": "Limpeza e higienização do sistema de ar condicionado",
+    "valor": 150.00,
+    "tempoPrevisto": 60,
+    "categoria": "ar_condicionado",
+    "ativo": true
+  },
+  {
+    "id": "8",
+    "nome": "Reparo de motor",
+    "descricao": "Diagnóstico e reparo de problemas no motor",
+    "valor": 800.00,
+    "tempoPrevisto": 240,
+    "categoria": "motor",
+    "ativo": true
+  }
+]

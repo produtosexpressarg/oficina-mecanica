@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Gestão de Clientes - Sistema de Gestão para Oficina Mecânica">
+    <title>Clientes - Sistema de Gestão Oficina</title>
+    
+    <!-- CSS -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+            --border-color: #dee2e6;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--warning-color);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        /* Navigation */
+        .nav-menu {
+            background: var(--card-bg);
+            padding: 1rem 0;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            color: var(--text-color);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            background: var(--bg-color);
+            color: var(--secondary-color);
+        }
+
+        .nav-link.active {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .page-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #219a52;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--secondary-color);
+            border: 2px solid var(--secondary-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        /* Filters Section */
+        .filters-section {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .search-bar {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--border-color);
+            background: white;
+            color: var(--text-color);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+
+        /* Table */
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        tbody tr {
+            transition: background-color 0.3s ease;
+        }
+
+        tbody tr:hover {
+            background: var(--bg-color);
+        }
+
+        /* Status badges */
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-ativo {
+            background: #d1f2eb;
+            color: #00695c;
+        }
+
+        .status-inativo {
+            background: #fdeaea;
+            color: #c62828;
+        }
+
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        /* Form styles */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--border-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                text-align: center;
+            }
+
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+
+            .nav-links {
+                justify-content: center;
+            }
+
+            .page-header {
+                text-align: center;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 800px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                margin: 1rem;
+                width: calc(100% - 2rem);
+            }
+        }
+    </style>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-wrench"></i>
+                    <h1>Sistema de Gestão - Oficina Mecânica</h1>
+                </div>
+                <div class="user-info">
+                    <span id="currentDate"></span>
+                    <div class="user-menu">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Administrador</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav-menu">
+        <div class="container">
+            <div class="nav-links">
+                <a href="/index.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+                <a href="clientes.html" class="nav-link active">
+                    <i class="fas fa-users"></i>
+                    Clientes
+                </a>
+                <a href="veiculos.html" class="nav-link">
+                    <i class="fas fa-car"></i>
+                    Veículos
+                </a>
+                <a href="servicos.html" class="nav-link">
+                    <i class="fas fa-clipboard-list"></i>
+                    Ordens de Serviço
+                </a>
+                <a href="estoque.html" class="nav-link">
+                    <i class="fas fa-boxes"></i>
+                    Estoque
+                </a>
+                <a href="notas-fiscais.html" class="nav-link">
+                    <i class="fas fa-file-invoice"></i>
+                    Notas Fiscais
+                </a>
+                <a href="vendas.html" class="nav-link">
+                    <i class="fas fa-cash-register"></i>
+                    Vendas & Pagamentos
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h2 class="page-title">
+                    <i class="fas fa-users"></i>
+                    Gestão de Clientes
+                </h2>
+                <div class="page-actions">
+                    <button class="btn btn-success" onclick="novoCliente()">
+                        <i class="fas fa-plus"></i>
+                        Novo Cliente
+                    </button>
+                    <button class="btn btn-outline" onclick="exportarClientes()">
+                        <i class="fas fa-download"></i>
+                        Exportar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filters Section -->
+            <div class="filters-section">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchClientes" placeholder="Pesquisar clientes por nome, CPF ou telefone...">
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="todos" onclick="filtrarClientes('todos')">Todos</button>
+                    <button class="filter-btn" data-filter="ativos" onclick="filtrarClientes('ativos')">Ativos</button>
+                    <button class="filter-btn" data-filter="inativos" onclick="filtrarClientes('inativos')">Inativos</button>
+                </div>
+            </div>
+
+            <!-- Table Container -->
+            <div class="table-container">
+                <table id="tabelaClientes">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>CPF</th>
+                            <th>Telefone</th>
+                            <th>E-mail</th>
+                            <th>Veículos</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>João Silva Santos</td>
+                            <td>123.456.789-01</td>
+                            <td>(11) 99999-1234</td>
+                            <td>joao.silva@email.com</td>
+                            <td>2</td>
+                            <td><span class="status-badge status-ativo">Ativo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-sm btn-outline" onclick="editarCliente(1)">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-warning" onclick="verCliente(1)">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="excluirCliente(1)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Maria Oliveira Costa</td>
+                            <td>987.654.321-09</td>
+                            <td>(11) 98888-5678</td>
+                            <td>maria.oliveira@email.com</td>
+                            <td>1</td>
+                            <td><span class="status-badge status-ativo">Ativo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-sm btn-outline" onclick="editarCliente(2)">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-warning" onclick="verCliente(2)">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="excluirCliente(2)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Carlos Eduardo Lima</td>
+                            <td>456.789.123-45</td>
+                            <td>(11) 97777-9012</td>
+                            <td>carlos.lima@email.com</td>
+                            <td>3</td>
+                            <td><span class="status-badge status-ativo">Ativo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-sm btn-outline" onclick="editarCliente(3)">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-warning" onclick="verCliente(3)">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="excluirCliente(3)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ana Paula Ferreira</td>
+                            <td>321.654.987-12</td>
+                            <td>(11) 96666-3456</td>
+                            <td>ana.ferreira@email.com</td>
+                            <td>1</td>
+                            <td><span class="status-badge status-inativo">Inativo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-sm btn-outline" onclick="editarCliente(4)">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-warning" onclick="verCliente(4)">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="excluirCliente(4)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Novo/Editar Cliente -->
+    <div id="modalCliente" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalClienteTitle">Novo Cliente</h3>
+                <button class="close-btn" onclick="fecharModal()">&times;</button>
+            </div>
+            <form id="formCliente">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="nomeCliente">Nome Completo *</label>
+                        <input type="text" id="nomeCliente" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="cpfCliente">CPF *</label>
+                        <input type="text" id="cpfCliente" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="telefoneCliente">Telefone *</label>
+                        <input type="text" id="telefoneCliente" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="emailCliente">E-mail</label>
+                        <input type="email" id="emailCliente" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="enderecoCliente">Endereço</label>
+                    <input type="text" id="enderecoCliente" class="form-control" placeholder="Rua, número, bairro, cidade - Estado">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="cepCliente">CEP</label>
+                        <input type="text" id="cepCliente" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="statusCliente">Status</label>
+                        <select id="statusCliente" class="form-control">
+                            <option value="ativo">Ativo</option>
+                            <option value="inativo">Inativo</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="observacoesCliente">Observações</label>
+                    <textarea id="observacoesCliente" class="form-control" rows="3" placeholder="Observações sobre o cliente..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" onclick="fecharModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Salvar Cliente</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Atualizar data atual
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentDate = document.getElementById('currentDate');
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            currentDate.textContent = now.toLocaleDateString('pt-BR', options);
+
+            // Configurar busca
+            const searchInput = document.getElementById('searchClientes');
+            searchInput.addEventListener('input', realizarBusca);
+
+            // Máscaras para campos
+            aplicarMascaras();
+        });
+
+        // Função para novo cliente
+        function novoCliente() {
+            document.getElementById('modalClienteTitle').textContent = 'Novo Cliente';
+            document.getElementById('formCliente').reset();
+            document.getElementById('modalCliente').classList.add('show');
+        }
+
+        // Função para editar cliente
+        function editarCliente(id) {
+            document.getElementById('modalClienteTitle').textContent = 'Editar Cliente';
+            // Carregar dados do cliente
+            // Simulação - em um sistema real, carregaria os dados do cliente
+            document.getElementById('nomeCliente').value = 'Cliente Exemplo';
+            document.getElementById('cpfCliente').value = '123.456.789-01';
+            document.getElementById('telefoneCliente').value = '(11) 99999-1234';
+            document.getElementById('emailCliente').value = 'cliente@email.com';
+            
+            document.getElementById('modalCliente').classList.add('show');
+        }
+
+        // Função para ver cliente
+        function verCliente(id) {
+            alert(`Visualizar detalhes do cliente ID: ${id}`);
+        }
+
+        // Função para excluir cliente
+        function excluirCliente(id) {
+            if (confirm('Tem certeza que deseja excluir este cliente?')) {
+                alert(`Cliente ID ${id} excluído com sucesso!`);
+                // Aqui removeria a linha da tabela
+            }
+        }
+
+        // Função para fechar modal
+        function fecharModal() {
+            document.getElementById('modalCliente').classList.remove('show');
+        }
+
+        // Função para filtrar clientes
+        function filtrarClientes(filtro) {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const rows = document.querySelectorAll('#tabelaClientes tbody tr');
+            
+            rows.forEach(row => {
+                const status = row.querySelector('.status-badge').textContent.toLowerCase();
+                
+                switch(filtro) {
+                    case 'todos':
+                        row.style.display = 'table-row';
+                        break;
+                    case 'ativos':
+                        row.style.display = status.includes('ativo') ? 'table-row' : 'none';
+                        break;
+                    case 'inativos':
+                        row.style.display = status.includes('inativo') ? 'table-row' : 'none';
+                        break;
+                }
+            });
+        }
+
+        // Função para realizar busca
+        function realizarBusca() {
+            const searchTerm = document.getElementById('searchClientes').value.toLowerCase();
+            const rows = document.querySelectorAll('#tabelaClientes tbody tr');
+            
+            rows.forEach(row => {
+                const nome = row.cells[0].textContent.toLowerCase();
+                const cpf = row.cells[1].textContent.toLowerCase();
+                const telefone = row.cells[2].textContent.toLowerCase();
+                const email = row.cells[3].textContent.toLowerCase();
+                
+                const matches = nome.includes(searchTerm) || 
+                               cpf.includes(searchTerm) || 
+                               telefone.includes(searchTerm) || 
+                               email.includes(searchTerm);
+                
+                row.style.display = matches ? 'table-row' : 'none';
+            });
+        }
+
+        // Função para exportar clientes
+        function exportarClientes() {
+            alert('Exportando lista de clientes...');
+        }
+
+        // Aplicar máscaras aos campos
+        function aplicarMascaras() {
+            // Máscara CPF
+            const cpfInput = document.getElementById('cpfCliente');
+            cpfInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+                e.target.value = value;
+            });
+
+            // Máscara Telefone
+            const telefoneInput = document.getElementById('telefoneCliente');
+            telefoneInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                value = value.replace(/(\d{2})(\d)/, '($1) $2');
+                value = value.replace(/(\d)(\d{4})$/, '$1-$2');
+                e.target.value = value;
+            });
+
+            // Máscara CEP
+            const cepInput = document.getElementById('cepCliente');
+            if (cepInput) {
+                cepInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    value = value.replace(/(\d{5})(\d)/, '$1-$2');
+                    e.target.value = value;
+                });
+            }
+        }
+
+        // Submissão do formulário
+        document.getElementById('formCliente').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validar campos obrigatórios
+            const nome = document.getElementById('nomeCliente').value;
+            const cpf = document.getElementById('cpfCliente').value;
+            const telefone = document.getElementById('telefoneCliente').value;
+            
+            if (!nome || !cpf || !telefone) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+            
+            alert('Cliente salvo com sucesso!');
+            fecharModal();
+        });
+
+        // Fechar modal clicando fora
+        document.getElementById('modalCliente').addEventListener('click', function(e) {
+            if (e.target === this) {
+                fecharModal();
+            }
+        });
+    </script>
+</body>
+</html>

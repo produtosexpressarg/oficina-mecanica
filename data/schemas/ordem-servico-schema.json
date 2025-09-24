@@ -1,0 +1,155 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Ordem de Serviço",
+  "description": "Schema para ordens de serviço da oficina mecânica",
+  "type": "object",
+  "required": ["id", "clienteId", "veiculoId", "dataEntrada", "status"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Identificador único da ordem de serviço"
+    },
+    "numero": {
+      "type": "string",
+      "description": "Número da ordem de serviço"
+    },
+    "clienteId": {
+      "type": "string",
+      "description": "ID do cliente"
+    },
+    "veiculoId": {
+      "type": "string",
+      "description": "ID do veículo"
+    },
+    "dataEntrada": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data e hora de entrada do veículo"
+    },
+    "dataPrevistaEntrega": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data e hora prevista para entrega"
+    },
+    "dataSaida": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data e hora de saída do veículo"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["aberta", "em_andamento", "aguardando_pecas", "concluida", "entregue", "cancelada"],
+      "description": "Status atual da ordem de serviço"
+    },
+    "descricao": {
+      "type": "string",
+      "description": "Descrição do problema relatado pelo cliente"
+    },
+    "diagnostico": {
+      "type": "string",
+      "description": "Diagnóstico técnico do problema"
+    },
+    "observacoes": {
+      "type": "string",
+      "description": "Observações adicionais"
+    },
+    "tecnicoResponsavel": {
+      "type": "string",
+      "description": "Nome do técnico responsável pelo serviço"
+    },
+    "itensServico": {
+      "type": "array",
+      "description": "Serviços realizados",
+      "items": {
+        "type": "object",
+        "required": ["servicoId", "quantidade", "valorUnitario"],
+        "properties": {
+          "servicoId": {
+            "type": "string",
+            "description": "ID do serviço"
+          },
+          "descricao": {
+            "type": "string",
+            "description": "Descrição do serviço"
+          },
+          "quantidade": {
+            "type": "number",
+            "minimum": 1,
+            "description": "Quantidade do serviço"
+          },
+          "valorUnitario": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Valor unitário do serviço"
+          },
+          "valorTotal": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Valor total do serviço"
+          }
+        }
+      }
+    },
+    "itensPeca": {
+      "type": "array",
+      "description": "Peças utilizadas",
+      "items": {
+        "type": "object",
+        "required": ["produtoId", "quantidade", "valorUnitario"],
+        "properties": {
+          "produtoId": {
+            "type": "string",
+            "description": "ID do produto/peça"
+          },
+          "descricao": {
+            "type": "string",
+            "description": "Descrição da peça"
+          },
+          "quantidade": {
+            "type": "number",
+            "minimum": 1,
+            "description": "Quantidade da peça"
+          },
+          "valorUnitario": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Valor unitário da peça"
+          },
+          "valorTotal": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Valor total da peça"
+          }
+        }
+      }
+    },
+    "valorTotal": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Valor total da ordem de serviço"
+    },
+    "formaPagamento": {
+      "type": "string",
+      "enum": ["dinheiro", "cartao_credito", "cartao_debito", "pix", "transferencia", "boleto"],
+      "description": "Forma de pagamento"
+    },
+    "garantia": {
+      "type": "object",
+      "properties": {
+        "tempoGarantia": {
+          "type": "number",
+          "description": "Tempo de garantia em dias"
+        },
+        "dataFimGarantia": {
+          "type": "string",
+          "format": "date",
+          "description": "Data de fim da garantia"
+        },
+        "observacoesGarantia": {
+          "type": "string",
+          "description": "Observações sobre a garantia"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "1",
+    "nome": "João Silva",
+    "cpf": "123.456.789-00",
+    "telefone": "(11) 98765-4321",
+    "email": "joao.silva@email.com",
+    "endereco": {
+      "rua": "Rua das Flores",
+      "numero": "123",
+      "bairro": "Centro",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "cep": "01234-567"
+    },
+    "dataCadastro": "2023-01-15T10:30:00Z"
+  },
+  {
+    "id": "2",
+    "nome": "Maria Oliveira",
+    "cpf": "987.654.321-00",
+    "telefone": "(11) 91234-5678",
+    "email": "maria.oliveira@email.com",
+    "endereco": {
+      "rua": "Avenida Paulista",
+      "numero": "1000",
+      "bairro": "Bela Vista",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "cep": "01310-100"
+    },
+    "dataCadastro": "2023-02-20T14:45:00Z"
+  },
+  {
+    "id": "3",
+    "nome": "Carlos Santos",
+    "cpf": "456.789.123-00",
+    "telefone": "(11) 97890-1234",
+    "email": "carlos.santos@email.com",
+    "endereco": {
+      "rua": "Rua Augusta",
+      "numero": "500",
+      "bairro": "Consolação",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "cep": "01304-000"
+    },
+    "dataCadastro": "2023-03-10T09:15:00Z"
+  },
+  {
+    "id": "4",
+    "nome": "Ana Pereira",
+    "cpf": "789.123.456-00",
+    "telefone": "(11) 94567-8901",
+    "email": "ana.pereira@email.com",
+    "endereco": {
+      "rua": "Rua Oscar Freire",
+      "numero": "300",
+      "bairro": "Jardins",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "cep": "01426-000"
+    },
+    "dataCadastro": "2023-04-05T16:20:00Z"
+  },
+  {
+    "id": "5",
+    "nome": "Roberto Almeida",
+    "cpf": "321.654.987-00",
+    "telefone": "(11) 93456-7890",
+    "email": "roberto.almeida@email.com",
+    "endereco": {
+      "rua": "Rua Haddock Lobo",
+      "numero": "750",
+      "bairro": "Cerqueira César",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "cep": "01414-000"
+    },
+    "dataCadastro": "2023-05-12T11:10:00Z"
+  }
+]

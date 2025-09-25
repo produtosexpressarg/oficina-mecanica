@@ -1,0 +1,68 @@
+<!-- Tabela de Veículos -->
+<div class="table-container">
+    <div class="table-header">
+        <h3>Cadastro de Veículos</h3>
+        <div class="table-actions">
+            <button class="btn btn-primary" id="btn-novo-veiculo">
+                <i class="fas fa-plus"></i> Novo Veículo
+            </button>
+            <button class="btn btn-secondary" id="btn-exportar-veiculos">
+                <i class="fas fa-download"></i> Exportar
+            </button>
+        </div>
+    </div>
+    
+    <div class="table-filters">
+        <div class="filter-group">
+            <input type="text" placeholder="Buscar veículo..." id="search-veiculo" class="search-input">
+            <select id="filter-marca" class="filter-select">
+                <option value="">Todas as Marcas</option>
+                <option value="volkswagen">Volkswagen</option>
+                <option value="ford">Ford</option>
+                <option value="chevrolet">Chevrolet</option>
+                <option value="fiat">Fiat</option>
+                <option value="toyota">Toyota</option>
+                <option value="honda">Honda</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="data-table" id="veiculos-table">
+            <thead>
+                <tr>
+                    <th>Placa</th>
+                    <th>Proprietário</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Ano</th>
+                    <th>Cor</th>
+                    <th>Combustível</th>
+                    <th>KM</th>
+                    <th>Cadastro</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dados serão carregados via JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-pagination">
+        <div class="pagination-info">
+            <span>Mostrando <span id="showing-start">1</span> a <span id="showing-end">10</span> de <span id="total-records">0</span> registros</span>
+        </div>
+        <div class="pagination-controls">
+            <button class="btn-pagination" id="btn-prev" disabled>
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <span class="pagination-numbers" id="pagination-numbers">
+                <!-- Números das páginas serão gerados via JavaScript -->
+            </span>
+            <button class="btn-pagination" id="btn-next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>

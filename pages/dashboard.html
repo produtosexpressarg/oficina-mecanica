@@ -6,221 +6,48 @@
     <meta name="description" content="Dashboard - Sistema de Gestão para Oficina Mecânica">
     <title>Dashboard - Sistema de Gestão Oficina</title>
     
-    <!-- CSS -->
+    <!-- Design System CSS -->
+    <link rel="stylesheet" href="../assets/css/design-system.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Dashboard Specific Styles -->
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --success-color: #27ae60;
-            --warning-color: #f39c12;
-            --danger-color: #e74c3c;
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-color: #2c3e50;
-            --border-color: #dee2e6;
-            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header */
-        .header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 1.5rem 0;
-            box-shadow: var(--shadow);
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .logo i {
-            font-size: 2rem;
-            color: var(--warning-color);
-        }
-
-        .logo h1 {
-            font-size: 1.8rem;
-            font-weight: 600;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .header-subtitle {
-            margin-top: 0.5rem;
-            opacity: 0.9;
-        }
-
-        /* Navigation */
-        .nav-menu {
-            background: var(--card-bg);
-            padding: 1rem 0;
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1rem;
-            text-decoration: none;
-            color: var(--text-color);
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .nav-link:hover {
-            background: var(--bg-color);
-            color: var(--secondary-color);
-        }
-
-        .nav-link.active {
-            background: var(--secondary-color);
-            color: white;
-        }
-
-        /* Main Content */
-        .main-content {
-            padding: 2rem 0;
-        }
-
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .page-title {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 2rem;
-            color: var(--primary-color);
-        }
-
-        .page-actions {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background: var(--secondary-color);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: var(--secondary-color);
-            border: 2px solid var(--secondary-color);
-        }
-
-        .btn-outline:hover {
-            background: var(--secondary-color);
-            color: white;
-        }
-
         /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
+            gap: var(--spacing-xl);
+            margin-bottom: var(--spacing-3xl);
         }
 
         .stat-card {
             background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 12px;
+            padding: var(--spacing-2xl);
+            border-radius: var(--radius-lg);
             box-shadow: var(--shadow);
             display: flex;
             align-items: center;
-            gap: 1.5rem;
-            transition: transform 0.3s ease;
+            gap: var(--spacing-xl);
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
         }
 
         .stat-card:hover {
             transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
         }
 
         .stat-icon {
             width: 70px;
             height: 70px;
-            border-radius: 50%;
+            border-radius: var(--radius-full);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
-            color: white;
+            font-size: var(--font-size-2xl);
+            color: var(--text-white);
         }
 
         .stat-card:nth-child(1) .stat-icon {
@@ -240,56 +67,23 @@
         }
 
         .stat-info h3 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+            font-size: var(--font-size-4xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--spacing-sm);
             color: var(--primary-color);
         }
 
         .stat-info p {
-            color: #666;
-            font-weight: 500;
+            color: var(--text-muted);
+            font-weight: var(--font-weight-medium);
+            font-size: var(--font-size-sm);
         }
 
         /* Dashboard Grid */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 2rem;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            overflow: hidden;
-        }
-
-        .card-header {
-            padding: 1.5rem;
-            border-bottom: 2px solid var(--bg-color);
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-        }
-
-        .card-header h3 {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
-
-        .card-body {
-            padding: 1.5rem;
-            min-height: 200px;
-        }
-
-        .empty-state {
-            text-align: center;
-            color: #666;
-            font-style: italic;
-            padding: 2rem;
+            gap: var(--spacing-2xl);
         }
 
         /* Service Items */
@@ -297,34 +91,42 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem;
+            padding: var(--spacing-lg);
             border-left: 4px solid var(--warning-color);
             background: #fff9e6;
-            border-radius: 0 8px 8px 0;
-            margin-bottom: 0.75rem;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            margin-bottom: var(--spacing-md);
+            transition: var(--transition);
+        }
+
+        .service-item:hover {
+            background: #fff3cd;
+            transform: translateX(5px);
         }
 
         .service-info h4 {
             color: var(--primary-color);
-            margin-bottom: 0.25rem;
+            margin-bottom: var(--spacing-xs);
+            font-weight: var(--font-weight-semibold);
         }
 
         .service-info p {
-            color: #666;
-            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-size: var(--font-size-sm);
         }
 
         .service-status {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
+            padding: var(--spacing-xs) var(--spacing-md);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
             text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .status-andamento {
-            background: #fff3cd;
-            color: #856404;
+            background: var(--warning-light);
+            color: var(--warning-dark);
         }
 
         /* Alert Items */
@@ -332,47 +134,89 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem;
+            padding: var(--spacing-lg);
             border-left: 4px solid var(--danger-color);
-            background: #f8d7da;
-            border-radius: 0 8px 8px 0;
-            margin-bottom: 0.75rem;
+            background: #fdf2f2;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            margin-bottom: var(--spacing-md);
+            transition: var(--transition);
+        }
+
+        .alert-item:hover {
+            background: #fecaca;
+            transform: translateX(5px);
         }
 
         .alert-info h4 {
             color: var(--danger-color);
-            margin-bottom: 0.25rem;
+            margin-bottom: var(--spacing-xs);
+            font-weight: var(--font-weight-semibold);
         }
 
         .alert-info p {
-            color: #721c24;
-            font-size: 0.9rem;
+            color: var(--danger-dark);
+            font-size: var(--font-size-sm);
         }
 
         .alert-quantity {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
             color: var(--danger-color);
+        }
+
+        /* Chart Container */
+        .chart-container {
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-50);
+            border-radius: var(--radius);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .chart-placeholder {
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .chart-placeholder i {
+            font-size: var(--font-size-4xl);
+            margin-bottom: var(--spacing-lg);
+            color: var(--gray-400);
+        }
+
+        /* Performance Metrics */
+        .performance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+        }
+
+        .performance-item {
+            text-align: center;
+            padding: var(--spacing-lg);
+            background: var(--gray-50);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+        }
+
+        .performance-value {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .performance-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+            font-weight: var(--font-weight-medium);
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .header-content {
-                text-align: center;
-            }
-
-            .logo h1 {
-                font-size: 1.5rem;
-            }
-
-            .nav-links {
-                justify-content: center;
-            }
-
-            .page-header {
-                text-align: center;
-            }
-
             .stats-grid {
                 grid-template-columns: 1fr;
             }
@@ -385,13 +229,14 @@
             .alert-item {
                 flex-direction: column;
                 text-align: center;
-                gap: 0.5rem;
+                gap: var(--spacing-sm);
+            }
+
+            .performance-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <!-- Header -->
@@ -410,7 +255,6 @@
                     </div>
                 </div>
             </div>
-            <p class="header-subtitle">Gestão completa para sua oficina automotiva</p>
         </div>
     </header>
 
@@ -454,7 +298,7 @@
     <main class="main-content">
         <div class="container">
             <!-- Page Header -->
-            <div class="page-header">
+            <div class="page-header d-flex justify-between align-center">
                 <h2 class="page-title">
                     <i class="fas fa-tachometer-alt"></i>
                     Dashboard - Visão Geral
@@ -509,9 +353,10 @@
 
             <!-- Dashboard Grid -->
             <div class="dashboard-grid">
+                <!-- Serviços em Andamento -->
                 <div class="card">
                     <div class="card-header">
-                        <h3><i class="fas fa-tools"></i> Serviços em Andamento</h3>
+                        <h3 class="card-title"><i class="fas fa-tools"></i> Serviços em Andamento</h3>
                     </div>
                     <div class="card-body" id="servicosAndamento">
                         <div class="service-item">
@@ -538,9 +383,10 @@
                     </div>
                 </div>
 
+                <!-- Alertas de Estoque -->
                 <div class="card">
                     <div class="card-header">
-                        <h3><i class="fas fa-exclamation-triangle"></i> Alertas de Estoque</h3>
+                        <h3 class="card-title"><i class="fas fa-exclamation-triangle"></i> Alertas de Estoque</h3>
                     </div>
                     <div class="card-body" id="alertasEstoque">
                         <div class="alert-item">
@@ -563,6 +409,49 @@
                                 <p>Estoque baixo - Verificar fornecedor</p>
                             </div>
                             <div class="alert-quantity">8</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráfico de Vendas -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-chart-line"></i> Vendas Mensais</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <div class="chart-placeholder">
+                                <i class="fas fa-chart-area"></i>
+                                <p>Gráfico de vendas mensais</p>
+                                <small>Integração com biblioteca de gráficos</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance da Oficina -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-tachometer-alt"></i> Performance da Oficina</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="performance-grid">
+                            <div class="performance-item">
+                                <div class="performance-value">95%</div>
+                                <div class="performance-label">Satisfação</div>
+                            </div>
+                            <div class="performance-item">
+                                <div class="performance-value">4.2h</div>
+                                <div class="performance-label">Tempo Médio</div>
+                            </div>
+                            <div class="performance-item">
+                                <div class="performance-value">87%</div>
+                                <div class="performance-label">Eficiência</div>
+                            </div>
+                            <div class="performance-item">
+                                <div class="performance-value">23</div>
+                                <div class="performance-label">Serviços/Dia</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -624,5 +513,9 @@
             });
         });
     </script>
+    
+    <!-- JavaScript Files -->
+    <script src="../assets/js/app.js"></script>
+    <script src="../assets/js/modules/dashboard.js"></script>
 </body>
 </html>

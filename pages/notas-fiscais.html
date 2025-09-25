@@ -3,22 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notas Fiscais - Oficina Mecânica</title>
-    <link rel="stylesheet" href="../assets/css/styles.css">
+    <meta name="description" content="Gestão de Notas Fiscais - Sistema de Gestão para Oficina Mecânica">
+    <title>Notas Fiscais - Sistema de Gestão Oficina</title>
+    
+    <!-- Design System CSS -->
+    <link rel="stylesheet" href="../assets/css/design-system.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="main-container">
-        <!-- Sidebar -->
-        <div id="sidebar-container"></div>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-wrench"></i>
+                    <h1>Sistema de Gestão - Oficina Mecânica</h1>
+                </div>
+                <div class="user-info">
+                    <span id="currentDate"></span>
+                    <div class="user-menu">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Administrador</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 
-        <!-- Conteúdo principal -->
-        <div class="main-content">
-            <!-- Header -->
-            <div id="header-container"></div>
+    <!-- Navigation -->
+    <nav class="nav-menu">
+        <div class="container">
+            <div class="nav-links">
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+                <a href="clientes.html" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    Clientes
+                </a>
+                <a href="veiculos.html" class="nav-link">
+                    <i class="fas fa-car"></i>
+                    Veículos
+                </a>
+                <a href="servicos.html" class="nav-link">
+                    <i class="fas fa-clipboard-list"></i>
+                    Ordens de Serviço
+                </a>
+                <a href="estoque.html" class="nav-link">
+                    <i class="fas fa-boxes"></i>
+                    Estoque
+                </a>
+                <a href="notas-fiscais.html" class="nav-link active">
+                    <i class="fas fa-file-invoice"></i>
+                    Notas Fiscais
+                </a>
+                <a href="vendas.html" class="nav-link">
+                    <i class="fas fa-cash-register"></i>
+                    Vendas & Pagamentos
+                </a>
+            </div>
+        </div>
+    </nav>
 
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
             <!-- Conteúdo da página -->
             <div class="page-header">
-                <h1 class="page-title">Gerenciamento de Notas Fiscais</h1>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <button class="btn btn-outline btn-sm" onclick="window.location.href='dashboard.html'">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </button>
+                    <h1 class="page-title">Gerenciamento de Notas Fiscais</h1>
+                </div>
                 <button class="btn btn-primary" id="btn-nova-nota">Nova Nota Fiscal</button>
             </div>
 
@@ -76,6 +136,9 @@
     <!-- Footer -->
     <div id="footer-container"></div>
 
+    <!-- Modal de Nota Fiscal -->
+    <div id="nota-fiscal-modal-container"></div>
+
     <!-- Scripts -->
     <script src="../assets/js/app.js"></script>
     <script>
@@ -95,6 +158,27 @@
                     document.getElementById('header-container').innerHTML = data;
                 });
             
+            // Carregar modal de nota fiscal
+            fetch('../components/modals/nota-fiscal-modal.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('nota-fiscal-modal-container').innerHTML = data;
+                    
+                    // Configurar botão Nova Nota Fiscal após carregar o modal
+                    setTimeout(() => {
+                        const btnNovaNota = document.getElementById('btn-nova-nota');
+                        if (btnNovaNota) {
+                            btnNovaNota.addEventListener('click', function() {
+                                if (typeof abrirModalNotaFiscal === 'function') {
+                                    abrirModalNotaFiscal();
+                                } else {
+                                    console.error('Função abrirModalNotaFiscal não encontrada');
+                                }
+                            });
+                        }
+                    }, 100);
+                });
+            
             // Carregar footer
             fetch('../components/footer.html')
                 .then(response => response.text())
@@ -103,5 +187,7 @@
                 });
         });
     </script>
+        </div>
+    </main>
 </body>
 </html>

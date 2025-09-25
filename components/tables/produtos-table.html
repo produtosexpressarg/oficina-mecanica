@@ -1,0 +1,76 @@
+<!-- Tabela de Produtos/Estoque -->
+<div class="table-container">
+    <div class="table-header">
+        <h3>Controle de Estoque</h3>
+        <div class="table-actions">
+            <button class="btn btn-primary" id="btn-novo-produto">
+                <i class="fas fa-plus"></i> Novo Produto
+            </button>
+            <button class="btn btn-warning" id="btn-movimentar-estoque">
+                <i class="fas fa-exchange-alt"></i> Movimentar
+            </button>
+            <button class="btn btn-secondary" id="btn-exportar-produtos">
+                <i class="fas fa-download"></i> Exportar
+            </button>
+        </div>
+    </div>
+    
+    <div class="table-filters">
+        <div class="filter-group">
+            <input type="text" placeholder="Buscar produto..." id="search-produto" class="search-input">
+            <select id="filter-categoria" class="filter-select">
+                <option value="">Todas as Categorias</option>
+                <option value="pecas">Peças</option>
+                <option value="oleos">Óleos e Lubrificantes</option>
+                <option value="filtros">Filtros</option>
+                <option value="pneus">Pneus</option>
+                <option value="acessorios">Acessórios</option>
+            </select>
+            <select id="filter-estoque" class="filter-select">
+                <option value="">Todos os Estoques</option>
+                <option value="baixo">Estoque Baixo</option>
+                <option value="zerado">Estoque Zerado</option>
+                <option value="normal">Estoque Normal</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="data-table" id="produtos-table">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Produto</th>
+                    <th>Categoria</th>
+                    <th>Marca</th>
+                    <th>Estoque Atual</th>
+                    <th>Estoque Mínimo</th>
+                    <th>Preço Custo</th>
+                    <th>Preço Venda</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dados serão carregados via JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-pagination">
+        <div class="pagination-info">
+            <span>Mostrando <span id="showing-start">1</span> a <span id="showing-end">10</span> de <span id="total-records">0</span> registros</span>
+        </div>
+        <div class="pagination-controls">
+            <button class="btn-pagination" id="btn-prev" disabled>
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <span class="pagination-numbers" id="pagination-numbers">
+                <!-- Números das páginas serão gerados via JavaScript -->
+            </span>
+            <button class="btn-pagination" id="btn-next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>

@@ -14,12 +14,6 @@ class DashboardModule {
             stats: null,
             lastUpdate: null
         };
-        
-        // Bind dos métodos
-        this.init = this.init.bind(this);
-        this.updateStats = this.updateStats.bind(this);
-        this.loadServicosAndamento = this.loadServicosAndamento.bind(this);
-        this.loadAlertasEstoque = this.loadAlertasEstoque.bind(this);
     }
     
     /**

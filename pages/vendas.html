@@ -3,65 +3,1681 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vendas - Oficina Mecânica</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="../assets/css/styles.css">
-    <link rel="stylesheet" href="../assets/css/layout.css">
-    <link rel="stylesheet" href="../assets/css/forms.css">
+    <meta name="description" content="Vendas - Sistema de Gestão para Oficina Mecânica">
+    <title>Vendas - Sistema de Gestão Oficina</title>
+    
+    <!-- Design System CSS -->
+    <link rel="stylesheet" href="../assets/css/design-system.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Vendas Specific Styles -->
+    <style>
+        .nota-fiscal { max-width: 800px; margin: 0 auto; }
+        .nf-header { text-align: center; margin-bottom: 20px; }
+        .nf-empresa, .nf-cliente { margin-bottom: 20px; padding: 10px; border: 1px solid #ddd; }
+        .nf-table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        .nf-table th, .nf-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        .nf-table th { background-color: #f5f5f5; }
+        .nf-totais { text-align: right; margin-top: 20px; }
+        .nf-obs { margin-top: 20px; padding: 10px; background-color: #f9f9f9; }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            transform: scale(0.7);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.show .modal-content {
+            transform: scale(1);
+            animation: slideIn 0.3s ease;
+        }
+
+        .modal-header {
+            padding: 20px 24px 16px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .modal-close:hover {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        /* Action Bar Styles */
+        .action-bar {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-footer {
+            padding: 16px 24px 24px;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: scale(0.7) translateY(-50px); }
+            to { transform: scale(1) translateY(0); }
+        }
+
+        .modal-form {
+            display: grid;
+            gap: 20px;
+        }
+
+        .form-group-full {
+            grid-column: 1 / -1;
+        }
+    </style>
 </head>
 <body>
-    <div class="main-container">
-        <div id="sidebar-container"></div>
-        <div class="main-content">
-            <div id="header-container"></div>
-            <div class="page-header">
-                <h1 class="page-title">Vendas</h1>
-                <button class="btn btn-primary" id="btn-nova-venda">
-                    <i class="fas fa-plus"></i> Nova Venda
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <button class="btn btn-outline btn-sm" onclick="window.location.href='dashboard.html'" style="margin-right: 1rem;">
+                    <i class="fas fa-arrow-left"></i> Voltar
                 </button>
+                <h1><i class="fas fa-cash-register"></i> Vendas & Pagamentos</h1>
+                <p>Gerencie vendas, pagamentos e relatórios</p>
             </div>
-            
-            <div class="card">
-                <div class="card-body">
-                    <div class="filter-container">
-                        <input type="text" id="search-venda" placeholder="Buscar venda...">
-                        <input type="date" id="data-inicio">
-                        <input type="date" id="data-fim">
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Data</th>
-                                <th>Cliente</th>
-                                <th>Valor</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="vendas-table-body">
-                            <!-- Dados serão carregados via JavaScript -->
-                        </tbody>
-                    </table>
+            <div class="header-right">
+                <span class="current-date" id="currentDate"></span>
+                <div class="user-info">
+                    <span class="user-name">Usuário</span>
+                    <button class="btn btn-outline btn-sm" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
                 </div>
             </div>
         </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav-menu">
+        <div class="container">
+            <div class="nav-links">
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+                <a href="clientes.html" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    Clientes
+                </a>
+                <a href="veiculos.html" class="nav-link">
+                    <i class="fas fa-car"></i>
+                    Veículos
+                </a>
+                <a href="servicos.html" class="nav-link">
+                    <i class="fas fa-clipboard-list"></i>
+                    Ordens de Serviço
+                </a>
+                <a href="estoque.html" class="nav-link">
+                    <i class="fas fa-boxes"></i>
+                    Estoque
+                </a>
+                <a href="notas-fiscais.html" class="nav-link">
+                    <i class="fas fa-file-invoice"></i>
+                    Notas Fiscais
+                </a>
+                <a href="vendas.html" class="nav-link active">
+                    <i class="fas fa-cash-register"></i>
+                    Vendas & Pagamentos
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header mb-xl">
+                <h1 class="page-title">
+                    <i class="fas fa-shopping-cart text-primary"></i>
+                    Vendas
+                </h1>
+                <p class="page-description">Gerencie vendas, pagamentos e relatórios</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid mb-xl">
+                <div class="stat-card">
+                    <div class="stat-icon bg-primary">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-value" id="total-vendas">156</h3>
+                        <p class="stat-label">Total de Vendas</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-success">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-value" id="faturamento-total">R$ 45.230,00</h3>
+                        <p class="stat-label">Faturamento</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-warning">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-value" id="vendas-pendentes">23</h3>
+                        <p class="stat-label">Pendentes</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-info">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-value" id="vendas-hoje">8</h3>
+                        <p class="stat-label">Hoje</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="action-bar mb-xl">
+                <button class="btn btn-primary" onclick="vendasManager.abrirModalVenda()">
+                    <i class="fas fa-plus"></i>
+                    Nova Venda
+                </button>
+                <button class="btn btn-success" onclick="vendasManager.abrirModalPagamento()">
+                    <i class="fas fa-credit-card"></i>
+                    Registrar Pagamento
+                </button>
+                <button class="btn btn-info" onclick="vendasManager.gerarNotaFiscal()">
+                    <i class="fas fa-file-invoice"></i>
+                    Gerar Nota Fiscal
+                </button>
+                <button class="btn btn-secondary" onclick="vendasManager.exportarDados()">
+                    <i class="fas fa-download"></i>
+                    Exportar
+                </button>
+                <button class="btn btn-outline" onclick="vendasManager.gerarRelatorio()">
+                    <i class="fas fa-chart-bar"></i>
+                    Relatório
+                </button>
+            </div>
+
+            <!-- Tabs Container -->
+            <div class="tabs-container mb-xl">
+                <nav class="tabs-nav">
+                    <button class="tab-button active" data-tab="aba-vendas">
+                        <span>Vendas</span>
+                    </button>
+                    <button class="tab-button" data-tab="aba-pagamentos">
+                        <span>Histórico de Pagamentos</span>
+                    </button>
+                    <button class="tab-button" data-tab="aba-relatorios">
+                        <span>Relatórios</span>
+                    </button>
+                </nav>
+
+                <!-- Aba Vendas -->
+        <!-- Aba Vendas -->
+        <div id="aba-vendas" class="tab-content">
+            <div class="page-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-shopping-cart"></i>
+                        Vendas
+                    </h2>
+                    <p class="section-description">Visualize e gere relatórios detalhados sobre vendas</p>
+                </div>
+                
+                <div class="vendas-grid">
+                    <!-- Card Venda -->
+                    <article class="venda-card card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-calendar-alt text-primary"></i>
+                                <h3>Venda</h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="search-venda">Buscar Venda</label>
+                                    <input type="text" id="search-venda" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="filter-cliente">Cliente</label>
+                                    <select id="filter-cliente" class="form-control">
+                                        <option value="">Todos os clientes</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="filter-status">Status</label>
+                                    <select id="filter-status" class="form-control">
+                                        <option value="">Todos os status</option>
+                                        <option value="pendente">Pendente</option>
+                                        <option value="pago">Pago</option>
+                                        <option value="parcial">Parcial</option>
+                                        <option value="cancelado">Cancelado</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="data-inicio">Data Início</label>
+                                    <input type="date" id="data-inicio" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="data-fim">Data Fim</label>
+                                    <input type="date" id="data-fim" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-outline" onclick="limparFiltros()">
+                                        <i class="fas fa-times"></i>
+                                        Limpar
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Tabela de Vendas -->
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Data</th>
+                                            <th>Cliente</th>
+                                            <th>Itens</th>
+                                            <th>Subtotal</th>
+                                            <th>Desconto</th>
+                                            <th>Total</th>
+                                            <th>Status</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="vendas-table-body">
+                                        <tr>
+                                            <td colspan="9" class="text-center">Nenhuma venda encontrada</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Paginação Vendas -->
+                            <div class="pagination-container">
+                                <div class="pagination-info">
+                                    <span id="total-registros">Mostrando 0 de 0 registros</span>
+                                    <span id="pagination-info"></span>
+                                </div>
+                                <div class="pagination">
+                                    <button class="btn btn-outline" id="prev-page" onclick="mudarPagina(-1)" disabled>
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+                                    <span id="page-info">Página 1 de 1</span>
+                                    <button class="btn btn-outline" id="next-page" onclick="mudarPagina(1)" disabled>
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aba Pagamentos -->
+        <div id="aba-pagamentos" class="tab-content">
+            <div class="page-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-money-bill"></i>
+                        Pagamentos
+                    </h2>
+                    <p class="section-description">Visualize e gere relatórios detalhados sobre vendas e pagamentos</p>
+                </div>
+                
+                <div class="pagamentos-grid">
+                    <!-- Card Pagamento -->
+                    <article class="pagamento-card card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-calendar-alt text-primary"></i>
+                                <h3>Pagamento</h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="search-pagamento">Buscar Pagamento</label>
+                                    <input type="text" id="search-pagamento" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="filter-forma-pagamento">Forma de Pagamento</label>
+                                    <select id="filter-forma-pagamento" class="form-control">
+                                        <option value="">Todas as formas</option>
+                                        <option value="dinheiro">Dinheiro</option>
+                                        <option value="cartao-credito">Cartão de Crédito</option>
+                                        <option value="cartao-debito">Cartão de Débito</option>
+                                        <option value="pix">PIX</option>
+                                        <option value="transferencia">Transferência</option>
+                                        <option value="cheque">Cheque</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <input type="date" id="pagamento-data-inicio" class="form-control" title="Data início">
+                                </div>
+                                <div class="form-group">
+                                    <input type="date" id="pagamento-data-fim" class="form-control" title="Data fim">
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-outline" onclick="limparFiltrosPagamentos()">
+                                        <i class="fas fa-times"></i>
+                                        Limpar
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Tabela de Pagamentos -->
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID Pagamento</th>
+                                            <th>Venda</th>
+                                            <th>Cliente</th>
+                                            <th>Data</th>
+                                            <th>Valor</th>
+                                            <th>Forma</th>
+                                            <th>Observações</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="pagamentos-table-body">
+                                        <tr>
+                                            <td colspan="8" class="text-center">Nenhum pagamento encontrado</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Paginação Pagamentos -->
+                            <div class="pagination-container">
+                                <div class="pagination-info">
+                                    <span id="total-pagamentos">0 pagamentos</span>
+                                    <span id="pagination-info-pagamentos">Mostrando 0 de 0 registros</span>
+                                </div>
+                                <div class="pagination">
+                                    <button class="btn btn-outline" id="prev-page-pagamentos" onclick="mudarPaginaPagamentos(-1)" disabled>
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+                                    <span id="page-info-pagamentos">Página 1 de 1</span>
+                                    <button class="btn btn-outline" id="next-page-pagamentos" onclick="mudarPaginaPagamentos(1)" disabled>
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aba Relatórios -->
+        <div id="aba-relatorios" class="tab-content">
+            <div class="page-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-chart-bar"></i>
+                        Relatórios de Vendas e Pagamentos
+                    </h2>
+                    <p class="section-description">Visualize e gere relatórios detalhados sobre vendas e pagamentos</p>
+                </div>
+                
+                <div class="reports-grid">
+                    <!-- Card Relatório Mensal -->
+                    <article class="report-card card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-calendar-alt text-primary"></i>
+                                <h3>Relatório Mensal</h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group mb-lg">
+                                <label for="relatorio-mes" class="form-label">Selecione o mês/ano</label>
+                                <input type="month" id="relatorio-mes" class="form-control">
+                            </div>
+                            <button class="btn btn-primary btn-block" onclick="gerarRelatorioMensal()">
+                                <i class="fas fa-chart-line"></i>
+                                Gerar Relatório Mensal
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Card Relatório por Período -->
+                    <article class="report-card card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-calendar-week text-success"></i>
+                                <h3>Relatório por Período</h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-row mb-lg">
+                                <div class="form-group">
+                                    <label for="relatorio-inicio" class="form-label">Data Início</label>
+                                    <input type="date" id="relatorio-inicio" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="relatorio-fim" class="form-label">Data Fim</label>
+                                    <input type="date" id="relatorio-fim" class="form-control">
+                                </div>
+                            </div>
+                            <button class="btn btn-success btn-block" onclick="gerarRelatorioPeriodo()">
+                                <i class="fas fa-chart-bar"></i>
+                                Gerar Relatório por Período
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Card Formas de Pagamento -->
+                    <article class="report-card card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-credit-card text-warning"></i>
+                                <h3>Formas de Pagamento</h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="stats-container mb-lg" id="formas-pagamento-stats">
+                                <p class="text-muted">Clique em "Atualizar" para ver as estatísticas</p>
+                            </div>
+                            <button class="btn btn-warning btn-block" onclick="atualizarEstatisticasFormasPagamento()">
+                                <i class="fas fa-sync"></i>
+                                Atualizar Estatísticas
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Card Top Clientes -->
+                    <article class="report-card card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-users text-info"></i>
+                                <h3>Top Clientes</h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="stats-container mb-lg" id="top-clientes-stats">
+                                <p class="text-muted">Clique em "Atualizar" para ver o ranking</p>
+                            </div>
+                            <button class="btn btn-info btn-block" onclick="atualizarTopClientes()">
+                                <i class="fas fa-trophy"></i>
+                                Atualizar Ranking
+                            </button>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Nova Venda -->
+    <div class="modal" id="modal-venda">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h3 id="modal-venda-title">Nova Venda</h3>
+                <button class="modal-close" onclick="fecharModalVenda()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form-venda">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="venda-cliente">Cliente *</label>
+                            <select id="venda-cliente" class="form-control" required>
+                                <option value="">Selecione um cliente</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="venda-data">Data da Venda *</label>
+                            <input type="date" id="venda-data" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Itens da Venda</label>
+                        <div class="items-container">
+                            <div class="item-header">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <select id="novo-produto" class="form-control">
+                                            <option value="">Selecione um produto</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="number" id="nova-quantidade" class="form-control" placeholder="Qtd" min="1">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="number" id="novo-preco" class="form-control" placeholder="Preço" step="0.01" min="0">
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-primary" onclick="adicionarItem()">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="items-list" id="items-list">
+                                <!-- Itens serão adicionados aqui -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="venda-subtotal">Subtotal</label>
+                            <input type="text" id="venda-subtotal" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="venda-desconto">Desconto (%)</label>
+                            <input type="number" id="venda-desconto" class="form-control" min="0" max="100" step="0.01" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="venda-total">Total</label>
+                            <input type="text" id="venda-total" class="form-control" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="venda-observacoes">Observações</label>
+                        <textarea id="venda-observacoes" class="form-control" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="fecharModalVenda()">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="salvarVenda()">Salvar Venda</button>
+            </div>
+        </div>
     </div>
-    
-    <div id="footer-container"></div>
-    
-    <script src="../assets/js/app.js"></script>
+
+    <!-- Modal Pagamento -->
+    <div class="modal" id="modal-pagamento">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Registrar Pagamento</h3>
+                <button class="modal-close" onclick="fecharModalPagamento()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form-pagamento">
+                    <div class="form-group">
+                        <label for="pagamento-venda">Venda *</label>
+                        <select id="pagamento-venda" class="form-control" required>
+                            <option value="">Selecione uma venda</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pagamento-valor">Valor do Pagamento *</label>
+                            <input type="number" id="pagamento-valor" class="form-control" step="0.01" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pagamento-data">Data do Pagamento *</label>
+                            <input type="date" id="pagamento-data" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="pagamento-forma">Forma de Pagamento *</label>
+                        <select id="pagamento-forma" class="form-control" required>
+                            <option value="">Selecione</option>
+                            <option value="dinheiro">Dinheiro</option>
+                            <option value="cartao-credito">Cartão de Crédito</option>
+                            <option value="cartao-debito">Cartão de Débito</option>
+                            <option value="pix">PIX</option>
+                            <option value="transferencia">Transferência</option>
+                            <option value="cheque">Cheque</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="pagamento-observacoes">Observações</label>
+                        <textarea id="pagamento-observacoes" class="form-control" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="fecharModalPagamento()">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="salvarPagamento()">Registrar Pagamento</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Nota Fiscal -->
+    <div class="modal" id="modal-nota-fiscal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h3>Gerar Nota Fiscal</h3>
+                <button class="modal-close" onclick="fecharModalNotaFiscal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="nota-fiscal-preview" id="nota-fiscal-preview">
+                    <!-- Preview da nota fiscal será gerado aqui -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="fecharModalNotaFiscal()">Fechar</button>
+                <button type="button" class="btn btn-primary" onclick="imprimirNotaFiscal()">
+                    <i class="fas fa-print"></i>
+                    Imprimir
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notificações -->
+    <div id="notifications-container"></div>
+
     <script>
+        // Variáveis globais
+        let vendas = JSON.parse(localStorage.getItem('vendas')) || [];
+        let pagamentos = JSON.parse(localStorage.getItem('pagamentos')) || [];
+        let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+        let produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+        let itensVenda = [];
+        let vendaEditando = null;
+        let paginaAtual = 1;
+        const itensPorPagina = 10;
+
+        // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('../components/sidebar.html').then(r => r.text()).then(d => document.getElementById('sidebar-container').innerHTML = d);
-            fetch('../components/header.html').then(r => r.text()).then(d => document.getElementById('header-container').innerHTML = d);
-            fetch('../components/footer.html').then(r => r.text()).then(d => document.getElementById('footer-container').innerHTML = d);
+            carregarDados();
+            atualizarEstatisticas();
+            carregarVendas();
+            configurarEventos();
+            
+            // Mostrar aba de vendas por padrão
+            document.getElementById('aba-vendas').classList.add('active');
+            document.querySelector('[data-tab="aba-vendas"]').classList.add('active');
+            
+            // Event listeners para filtros de pagamentos
+            if (document.getElementById('search-pagamento')) {
+                document.getElementById('search-pagamento').addEventListener('input', carregarPagamentos);
+                document.getElementById('filter-forma-pagamento').addEventListener('change', carregarPagamentos);
+                document.getElementById('pagamento-data-inicio').addEventListener('change', carregarPagamentos);
+                document.getElementById('pagamento-data-fim').addEventListener('change', carregarPagamentos);
+            }
+            
+            // Definir data padrão para relatório mensal
+            const hoje = new Date();
+            if (document.getElementById('relatorio-mes')) {
+                document.getElementById('relatorio-mes').value = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}`;
+            }
+            
+            // Definir data atual
+            document.getElementById('venda-data').value = new Date().toISOString().split('T')[0];
+            document.getElementById('pagamento-data').value = new Date().toISOString().split('T')[0];
+        });
+
+        // Carregar dados dos selects
+        function carregarDados() {
+            // Carregar clientes
+            const selectCliente = document.getElementById('venda-cliente');
+            const filterCliente = document.getElementById('filter-cliente');
+            
+            selectCliente.innerHTML = '<option value="">Selecione um cliente</option>';
+            filterCliente.innerHTML = '<option value="">Todos os clientes</option>';
+            
+            clientes.forEach(cliente => {
+                selectCliente.innerHTML += `<option value="${cliente.id}">${cliente.nome}</option>`;
+                filterCliente.innerHTML += `<option value="${cliente.id}">${cliente.nome}</option>`;
+            });
+
+            // Carregar produtos
+            const selectProduto = document.getElementById('novo-produto');
+            selectProduto.innerHTML = '<option value="">Selecione um produto</option>';
+            
+            produtos.forEach(produto => {
+                selectProduto.innerHTML += `<option value="${produto.id}" data-preco="${produto.precoVenda}">${produto.nome} - R$ ${produto.precoVenda.toFixed(2)}</option>`;
+            });
+
+            // Carregar vendas pendentes para pagamento
+            carregarVendasPendentes();
+        }
+
+        // Carregar vendas pendentes
+        function carregarVendasPendentes() {
+            const selectVenda = document.getElementById('pagamento-venda');
+            selectVenda.innerHTML = '<option value="">Selecione uma venda</option>';
+            
+            const vendasPendentes = vendas.filter(venda => venda.statusPagamento !== 'pago');
+            vendasPendentes.forEach(venda => {
+                const cliente = clientes.find(c => c.id === venda.clienteId);
+                const valorPendente = venda.total - (venda.valorPago || 0);
+                selectVenda.innerHTML += `<option value="${venda.id}" data-valor="${valorPendente}">Venda #${venda.id} - ${cliente?.nome} - R$ ${valorPendente.toFixed(2)}</option>`;
+            });
+        }
+
+        // Configurar eventos
+        function configurarEventos() {
+            // Filtros
+            document.getElementById('search-venda').addEventListener('input', filtrarVendas);
+            document.getElementById('filter-cliente').addEventListener('change', filtrarVendas);
+            document.getElementById('filter-status').addEventListener('change', filtrarVendas);
+            document.getElementById('data-inicio').addEventListener('change', filtrarVendas);
+            document.getElementById('data-fim').addEventListener('change', filtrarVendas);
+
+            // Cálculos da venda
+            document.getElementById('venda-desconto').addEventListener('input', calcularTotal);
+            document.getElementById('novo-produto').addEventListener('change', function() {
+                const option = this.options[this.selectedIndex];
+                if (option.dataset.preco) {
+                    document.getElementById('novo-preco').value = option.dataset.preco;
+                }
+            });
+
+            // Pagamento
+            document.getElementById('pagamento-venda').addEventListener('change', function() {
+                const option = this.options[this.selectedIndex];
+                if (option.dataset.valor) {
+                    document.getElementById('pagamento-valor').value = option.dataset.valor;
+                }
+            });
+        }
+
+        // Atualizar estatísticas
+        function atualizarEstatisticas() {
+            const hoje = new Date().toISOString().split('T')[0];
+            const vendasHoje = vendas.filter(venda => venda.data === hoje);
+            const vendasPendentes = vendas.filter(venda => venda.statusPagamento === 'pendente');
+            const faturamentoTotal = vendas.reduce((total, venda) => total + venda.total, 0);
+
+            document.getElementById('total-vendas').textContent = vendas.length;
+            document.getElementById('faturamento-total').textContent = `R$ ${faturamentoTotal.toFixed(2)}`;
+            document.getElementById('vendas-pendentes').textContent = vendasPendentes.length;
+            document.getElementById('vendas-hoje').textContent = vendasHoje.length;
+        }
+
+        // Carregar e filtrar vendas
+        function carregarVendas() {
+            filtrarVendas();
+        }
+
+        function filtrarVendas() {
+            const busca = document.getElementById('search-venda').value.toLowerCase();
+            const clienteId = document.getElementById('filter-cliente').value;
+            const status = document.getElementById('filter-status').value;
+            const dataInicio = document.getElementById('data-inicio').value;
+            const dataFim = document.getElementById('data-fim').value;
+
+            let vendasFiltradas = vendas.filter(venda => {
+                const cliente = clientes.find(c => c.id === venda.clienteId);
+                const matchBusca = !busca || 
+                    venda.id.toString().includes(busca) ||
+                    cliente?.nome.toLowerCase().includes(busca) ||
+                    venda.itens.some(item => item.nome.toLowerCase().includes(busca));
+                
+                const matchCliente = !clienteId || venda.clienteId === clienteId;
+                const matchStatus = !status || venda.statusPagamento === status;
+                const matchDataInicio = !dataInicio || venda.data >= dataInicio;
+                const matchDataFim = !dataFim || venda.data <= dataFim;
+
+                return matchBusca && matchCliente && matchStatus && matchDataInicio && matchDataFim;
+            });
+
+            exibirVendas(vendasFiltradas);
+        }
+
+        function exibirVendas(vendasFiltradas) {
+            const tbody = document.getElementById('vendas-table-body');
+            const totalRegistros = vendasFiltradas.length;
+            const totalPaginas = Math.ceil(totalRegistros / itensPorPagina);
+            const inicio = (paginaAtual - 1) * itensPorPagina;
+            const fim = inicio + itensPorPagina;
+            const vendasPagina = vendasFiltradas.slice(inicio, fim);
+
+            if (vendasPagina.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" class="text-center">Nenhuma venda encontrada</td></tr>';
+            } else {
+                tbody.innerHTML = vendasPagina.map(venda => {
+                    const cliente = clientes.find(c => c.id === venda.clienteId);
+                    const statusClass = {
+                        'pendente': 'status-warning',
+                        'pago': 'status-success',
+                        'parcial': 'status-info',
+                        'cancelado': 'status-danger'
+                    }[venda.statusPagamento] || 'status-secondary';
+
+                    return `
+                        <tr>
+                            <td>#${venda.id}</td>
+                            <td>${new Date(venda.data).toLocaleDateString('pt-BR')}</td>
+                            <td>${cliente?.nome || 'Cliente não encontrado'}</td>
+                            <td>${venda.itens.length} item(s)</td>
+                            <td>R$ ${venda.subtotal.toFixed(2)}</td>
+                            <td>${venda.desconto}%</td>
+                            <td>R$ ${venda.total.toFixed(2)}</td>
+                            <td><span class="status ${statusClass}">${venda.statusPagamento.toUpperCase()}</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-sm btn-info" onclick="visualizarVenda('${venda.id}')" title="Visualizar">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                                    <button class="btn btn-sm btn-primary" onclick="editarVenda('${venda.id}')" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-success" onclick="gerarNotaFiscalVenda('${venda.id}')" title="Nota Fiscal">
+                                        <i class="fas fa-file-invoice"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="excluirVenda('${venda.id}')" title="Excluir">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            // Atualizar informações de paginação
+            document.getElementById('total-registros').textContent = `${totalRegistros} registros`;
+            document.getElementById('pagination-info').textContent = `Mostrando ${inicio + 1} a ${Math.min(fim, totalRegistros)} de ${totalRegistros} registros`;
+            document.getElementById('page-info').textContent = `Página ${paginaAtual} de ${totalPaginas}`;
+            
+            // Atualizar botões de paginação
+            document.getElementById('prev-page').disabled = paginaAtual === 1;
+            document.getElementById('next-page').disabled = paginaAtual === totalPaginas || totalPaginas === 0;
+        }
+
+        // Paginação
+        function mudarPagina(direcao) {
+            const totalPaginas = Math.ceil(vendas.length / itensPorPagina);
+            paginaAtual += direcao;
+            if (paginaAtual < 1) paginaAtual = 1;
+            if (paginaAtual > totalPaginas) paginaAtual = totalPaginas;
+            filtrarVendas();
+        }
+
+        // Modal de venda
+        function abrirModalVenda(vendaId = null) {
+            vendaEditando = vendaId;
+            itensVenda = [];
+            
+            if (vendaId) {
+                const venda = vendas.find(v => v.id === vendaId);
+                if (venda) {
+                    document.getElementById('modal-venda-title').textContent = 'Editar Venda';
+                    document.getElementById('venda-cliente').value = venda.clienteId;
+                    document.getElementById('venda-data').value = venda.data;
+                    document.getElementById('venda-desconto').value = venda.desconto;
+                    document.getElementById('venda-observacoes').value = venda.observacoes || '';
+                    itensVenda = [...venda.itens];
+                    atualizarListaItens();
+                    calcularTotal();
+                }
+            } else {
+                document.getElementById('modal-venda-title').textContent = 'Nova Venda';
+                document.getElementById('form-venda').reset();
+                document.getElementById('venda-data').value = new Date().toISOString().split('T')[0];
+                document.getElementById('items-list').innerHTML = '';
+                calcularTotal();
+            }
+            
+            document.getElementById('modal-venda').style.display = 'flex';
+        }
+
+        function fecharModalVenda() {
+            const modalElement = document.getElementById('modal-venda');
+            modalElement.classList.remove('show');
+            vendaEditando = null;
+            itensVenda = [];
+        }
+
+        // Gerenciar itens da venda
+        function adicionarItem() {
+            const produtoSelect = document.getElementById('novo-produto');
+            const quantidade = parseInt(document.getElementById('nova-quantidade').value);
+            const preco = parseFloat(document.getElementById('novo-preco').value);
+
+            if (!produtoSelect.value || !quantidade || !preco) {
+                mostrarNotificacao('Preencha todos os campos do item', 'error');
+                return;
+            }
+
+            const produto = produtos.find(p => p.id === produtoSelect.value);
+            if (!produto) {
+                mostrarNotificacao('Produto não encontrado', 'error');
+                return;
+            }
+
+            // Verificar estoque
+            if (produto.estoque < quantidade) {
+                mostrarNotificacao(`Estoque insuficiente. Disponível: ${produto.estoque}`, 'error');
+                return;
+            }
+
+            const item = {
+                id: produto.id,
+                nome: produto.nome,
+                quantidade: quantidade,
+                preco: preco,
+                total: quantidade * preco
+            };
+
+            itensVenda.push(item);
+            atualizarListaItens();
+            calcularTotal();
+
+            // Limpar campos
+            document.getElementById('novo-produto').value = '';
+            document.getElementById('nova-quantidade').value = '';
+            document.getElementById('novo-preco').value = '';
+        }
+
+        function removerItem(index) {
+            itensVenda.splice(index, 1);
+            atualizarListaItens();
+            calcularTotal();
+        }
+
+        function atualizarListaItens() {
+            const container = document.getElementById('items-list');
+            container.innerHTML = itensVenda.map((item, index) => `
+                <div class="item-row">
+                    <span>${item.nome}</span>
+                    <span>Qtd: ${item.quantidade}</span>
+                    <span>R$ ${item.preco.toFixed(2)}</span>
+                    <span>Total: R$ ${item.total.toFixed(2)}</span>
+                    <button type="button" class="btn btn-sm btn-danger" onclick="removerItem(${index})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function calcularTotal() {
+            const subtotal = itensVenda.reduce((total, item) => total + item.total, 0);
+            const desconto = parseFloat(document.getElementById('venda-desconto').value) || 0;
+            const valorDesconto = subtotal * (desconto / 100);
+            const total = subtotal - valorDesconto;
+
+            document.getElementById('venda-subtotal').value = `R$ ${subtotal.toFixed(2)}`;
+            document.getElementById('venda-total').value = `R$ ${total.toFixed(2)}`;
+        }
+
+        // Salvar venda
+        function salvarVenda() {
+            const clienteId = document.getElementById('venda-cliente').value;
+            const data = document.getElementById('venda-data').value;
+            const desconto = parseFloat(document.getElementById('venda-desconto').value) || 0;
+            const observacoes = document.getElementById('venda-observacoes').value;
+
+            if (!clienteId || !data || itensVenda.length === 0) {
+                mostrarNotificacao('Preencha todos os campos obrigatórios e adicione pelo menos um item', 'error');
+                return;
+            }
+
+            const subtotal = itensVenda.reduce((total, item) => total + item.total, 0);
+            const valorDesconto = subtotal * (desconto / 100);
+            const total = subtotal - valorDesconto;
+
+            const venda = {
+                id: vendaEditando || Date.now().toString(),
+                clienteId: clienteId,
+                data: data,
+                itens: [...itensVenda],
+                subtotal: subtotal,
+                desconto: desconto,
+                total: total,
+                statusPagamento: 'pendente',
+                valorPago: 0,
+                observacoes: observacoes,
+                dataCreated: vendaEditando ? vendas.find(v => v.id === vendaEditando).dataCreated : new Date().toISOString()
+            };
+
+            if (vendaEditando) {
+                const index = vendas.findIndex(v => v.id === vendaEditando);
+                vendas[index] = venda;
+                mostrarNotificacao('Venda atualizada com sucesso!', 'success');
+            } else {
+                vendas.push(venda);
+                
+                // Atualizar estoque
+                itensVenda.forEach(item => {
+                    const produto = produtos.find(p => p.id === item.id);
+                    if (produto) {
+                        produto.estoque -= item.quantidade;
+                    }
+                });
+                localStorage.setItem('produtos', JSON.stringify(produtos));
+                
+                mostrarNotificacao('Venda cadastrada com sucesso!', 'success');
+            }
+
+            localStorage.setItem('vendas', JSON.stringify(vendas));
+            fecharModalVenda();
+            carregarVendas();
+            atualizarEstatisticas();
+            carregarVendasPendentes();
+        }
+
+        // Modal de pagamento
+        function abrirModalPagamento() {
+            carregarVendasPendentes();
+            document.getElementById('modal-pagamento').style.display = 'flex';
+        }
+
+        function fecharModalPagamento() {
+            const modalElement = document.getElementById('modal-pagamento');
+            modalElement.classList.remove('show');
+            document.getElementById('form-pagamento').reset();
+        }
+
+        function salvarPagamento() {
+            const vendaId = document.getElementById('pagamento-venda').value;
+            const valor = parseFloat(document.getElementById('pagamento-valor').value);
+            const data = document.getElementById('pagamento-data').value;
+            const forma = document.getElementById('pagamento-forma').value;
+            const observacoes = document.getElementById('pagamento-observacoes').value;
+
+            if (!vendaId || !valor || !data || !forma) {
+                mostrarNotificacao('Preencha todos os campos obrigatórios', 'error');
+                return;
+            }
+
+            const venda = vendas.find(v => v.id === vendaId);
+            if (!venda) {
+                mostrarNotificacao('Venda não encontrada', 'error');
+                return;
+            }
+
+            const valorPendente = venda.total - (venda.valorPago || 0);
+            if (valor > valorPendente) {
+                mostrarNotificacao('Valor do pagamento não pode ser maior que o valor pendente', 'error');
+                return;
+            }
+
+            const pagamento = {
+                id: Date.now().toString(),
+                vendaId: vendaId,
+                valor: valor,
+                data: data,
+                forma: forma,
+                observacoes: observacoes,
+                dataCreated: new Date().toISOString()
+            };
+
+            pagamentos.push(pagamento);
+            venda.valorPago = (venda.valorPago || 0) + valor;
+
+            // Atualizar status do pagamento
+            if (venda.valorPago >= venda.total) {
+                venda.statusPagamento = 'pago';
+            } else if (venda.valorPago > 0) {
+                venda.statusPagamento = 'parcial';
+            }
+
+            localStorage.setItem('pagamentos', JSON.stringify(pagamentos));
+            localStorage.setItem('vendas', JSON.stringify(vendas));
+
+            mostrarNotificacao('Pagamento registrado com sucesso!', 'success');
+            fecharModalPagamento();
+            carregarVendas();
+            atualizarEstatisticas();
+        }
+
+        // Nota fiscal
+        function gerarNotaFiscal() {
+            const vendasPagas = vendas.filter(v => v.statusPagamento === 'pago');
+            if (vendasPagas.length === 0) {
+                mostrarNotificacao('Nenhuma venda paga encontrada para gerar nota fiscal', 'warning');
+                return;
+            }
+            
+            // Aqui você pode implementar a lógica para selecionar vendas específicas
+            mostrarNotificacao('Funcionalidade em desenvolvimento', 'info');
+        }
+
+        function gerarNotaFiscalVenda(vendaId) {
+            const venda = vendas.find(v => v.id === vendaId);
+            if (!venda) return;
+
+            const cliente = clientes.find(c => c.id === venda.clienteId);
+            
+            const notaFiscal = `
+                <div class="nota-fiscal">
+                    <div class="nf-header">
+                        <h2>NOTA FISCAL DE VENDA</h2>
+                        <p>Nº ${venda.id} - ${new Date(venda.data).toLocaleDateString('pt-BR')}</p>
+                    </div>
+                    
+                    <div class="nf-empresa">
+                        <h3>OFICINA PRO LTDA</h3>
+                        <p>CNPJ: 12.345.678/0001-90</p>
+                        <p>Endereço: Rua das Oficinas, 123 - Centro</p>
+                        <p>Telefone: (11) 1234-5678</p>
+                    </div>
+                    
+                    <div class="nf-cliente">
+                        <h3>CLIENTE</h3>
+                        <p><strong>Nome:</strong> ${cliente?.nome || 'N/A'}</p>
+                        <p><strong>CPF:</strong> ${cliente?.cpf || 'N/A'}</p>
+                        <p><strong>Telefone:</strong> ${cliente?.telefone || 'N/A'}</p>
+                        <p><strong>Email:</strong> ${cliente?.email || 'N/A'}</p>
+                    </div>
+                    
+                    <div class="nf-itens">
+                        <h3>ITENS</h3>
+                        <table class="nf-table">
+                            <thead>
+                                <tr>
+                                    <th>Descrição</th>
+                                    <th>Qtd</th>
+                                    <th>Valor Unit.</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${venda.itens.map(item => `
+                                    <tr>
+                                        <td>${item.nome}</td>
+                                        <td>${item.quantidade}</td>
+                                        <td>R$ ${item.preco.toFixed(2)}</td>
+                                        <td>R$ ${item.total.toFixed(2)}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="nf-totais">
+                        <p><strong>Subtotal:</strong> R$ ${venda.subtotal.toFixed(2)}</p>
+                        <p><strong>Desconto:</strong> ${venda.desconto}%</p>
+                        <p><strong>TOTAL:</strong> R$ ${venda.total.toFixed(2)}</p>
+                    </div>
+                    
+                    ${venda.observacoes ? `<div class="nf-obs"><p><strong>Observações:</strong> ${venda.observacoes}</p></div>` : ''}
+                </div>
+            `;
+
+            document.getElementById('nota-fiscal-preview').innerHTML = notaFiscal;
+            document.getElementById('modal-nota-fiscal').style.display = 'flex';
+        }
+
+        function fecharModalNotaFiscal() {
+            const modalElement = document.getElementById('modal-nota-fiscal');
+            modalElement.classList.remove('show');
+        }
+
+        function imprimirNotaFiscal() {
+            const conteudo = document.getElementById('nota-fiscal-preview').innerHTML;
+            const janela = window.open('', '_blank');
+            janela.document.write(`
+                <html>
+                    <head>
+                        <title>Nota Fiscal</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 20px; }
+                            .nota-fiscal { max-width: 800px; margin: 0 auto; }
+                            .nf-header { text-align: center; margin-bottom: 20px; }
+                            .nf-empresa, .nf-cliente { margin-bottom: 20px; padding: 10px; border: 1px solid #ddd; }
+                            .nf-table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+                            .nf-table th, .nf-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                            .nf-table th { background-color: #f5f5f5; }
+                            .nf-totais { text-align: right; margin-top: 20px; }
+                            .nf-obs { margin-top: 20px; padding: 10px; background-color: #f9f9f9; }
+                        </style>
+                    </head>
+                    <body>${conteudo}</body>
+                </html>
+            `);
+            janela.document.close();
+            janela.print();
+        }
+
+        // Outras funções
+        function visualizarVenda(vendaId) {
+            gerarNotaFiscalVenda(vendaId);
+        }
+
+        function editarVenda(vendaId) {
+            abrirModalVenda(vendaId);
+        }
+
+        function excluirVenda(vendaId) {
+            if (confirm('Tem certeza que deseja excluir esta venda?')) {
+                const index = vendas.findIndex(v => v.id === vendaId);
+                if (index !== -1) {
+                    const venda = vendas[index];
+                    
+                    // Restaurar estoque se a venda não foi paga
+                    if (venda.statusPagamento === 'pendente') {
+                        venda.itens.forEach(item => {
+                            const produto = produtos.find(p => p.id === item.id);
+                            if (produto) {
+                                produto.estoque += item.quantidade;
+                            }
+                        });
+                        localStorage.setItem('produtos', JSON.stringify(produtos));
+                    }
+                    
+                    vendas.splice(index, 1);
+                    localStorage.setItem('vendas', JSON.stringify(vendas));
+                    
+                    // Remover pagamentos relacionados
+                    pagamentos = pagamentos.filter(p => p.vendaId !== vendaId);
+                    localStorage.setItem('pagamentos', JSON.stringify(pagamentos));
+                    
+                    mostrarNotificacao('Venda excluída com sucesso!', 'success');
+                    carregarVendas();
+                    atualizarEstatisticas();
+                }
+            }
+        }
+
+        function limparFiltros() {
+            document.getElementById('search-venda').value = '';
+            document.getElementById('filter-cliente').value = '';
+            document.getElementById('filter-status').value = '';
+            document.getElementById('data-inicio').value = '';
+            document.getElementById('data-fim').value = '';
+            paginaAtual = 1;
+            filtrarVendas();
+        }
+
+        function exportarVendas() {
+            const dados = {
+                vendas: vendas,
+                pagamentos: pagamentos,
+                exportadoEm: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `vendas_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            mostrarNotificacao('Dados exportados com sucesso!', 'success');
+        }
+
+        function gerarRelatorio() {
+            const hoje = new Date();
+            const mesAtual = hoje.getMonth();
+            const anoAtual = hoje.getFullYear();
+            
+            const vendasMes = vendas.filter(venda => {
+                const dataVenda = new Date(venda.data);
+                return dataVenda.getMonth() === mesAtual && dataVenda.getFullYear() === anoAtual;
+            });
+            
+            const faturamentoTotal = vendasMes.reduce((total, venda) => total + venda.total, 0);
+            const ticketMedio = vendasMes.length > 0 ? faturamentoTotal / vendasMes.length : 0;
+            
+            const relatorio = `
+                RELATÓRIO DE VENDAS - ${hoje.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }).toUpperCase()}
+                
+                Total de Vendas: ${vendasMes.length}
+                Faturamento Total: R$ ${faturamentoTotal.toFixed(2)}
+                Ticket Médio: R$ ${ticketMedio.toFixed(2)}
+                
+                Status dos Pagamentos:
+                - Pagas: ${vendasMes.filter(v => v.statusPagamento === 'pago').length}
+                - Pendentes: ${vendasMes.filter(v => v.statusPagamento === 'pendente').length}
+                - Parciais: ${vendasMes.filter(v => v.statusPagamento === 'parcial').length}
+                
+                Gerado em: ${hoje.toLocaleString('pt-BR')}
+            `;
+            
+            const blob = new Blob([relatorio], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `relatorio_vendas_${hoje.getFullYear()}_${(hoje.getMonth() + 1).toString().padStart(2, '0')}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            mostrarNotificacao('Relatório gerado com sucesso!', 'success');
+        }
+
+        // === FUNÇÕES DE PAGAMENTOS ===
+        // Variável pagamentos já declarada anteriormente
+        let paginaAtualPagamentos = 1;
+        const itensPorPaginaPagamentos = 10;
+
+        function carregarPagamentos() {
+            const searchTerm = document.getElementById('search-pagamento').value.toLowerCase();
+            const formaPagamento = document.getElementById('filter-forma-pagamento').value;
+            const dataInicio = document.getElementById('pagamento-data-inicio').value;
+            const dataFim = document.getElementById('pagamento-data-fim').value;
+
+            let pagamentosFiltrados = pagamentos.filter(pagamento => {
+                const venda = vendas.find(v => v.id === pagamento.vendaId);
+                const cliente = clientes.find(c => c.id === venda?.clienteId);
+                
+                const matchSearch = !searchTerm || 
+                    pagamento.id.toLowerCase().includes(searchTerm) ||
+                    venda?.id.toLowerCase().includes(searchTerm) ||
+                    cliente?.nome.toLowerCase().includes(searchTerm);
+                
+                const matchForma = !formaPagamento || pagamento.formaPagamento === formaPagamento;
+                
+                const matchDataInicio = !dataInicio || pagamento.data >= dataInicio;
+                const matchDataFim = !dataFim || pagamento.data <= dataFim;
+
+                return matchSearch && matchForma && matchDataInicio && matchDataFim;
+            });
+
+            const totalRegistros = pagamentosFiltrados.length;
+            const totalPaginas = Math.ceil(totalRegistros / itensPorPaginaPagamentos);
+            const inicio = (paginaAtualPagamentos - 1) * itensPorPaginaPagamentos;
+            const fim = inicio + itensPorPaginaPagamentos;
+            const pagamentosPaginados = pagamentosFiltrados.slice(inicio, fim);
+
+            const tbody = document.getElementById('pagamentos-table-body');
+            
+            if (pagamentosPaginados.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center">Nenhum pagamento encontrado</td></tr>';
+            } else {
+                tbody.innerHTML = pagamentosPaginados.map(pagamento => {
+                    const venda = vendas.find(v => v.id === pagamento.vendaId);
+                    const cliente = clientes.find(c => c.id === venda?.clienteId);
+                    
+                    return `
+                        <tr>
+                            <td>#${pagamento.id}</td>
+                            <td>#${venda?.id || 'N/A'}</td>
+                            <td>${cliente?.nome || 'Cliente não encontrado'}</td>
+                            <td>${new Date(pagamento.data).toLocaleDateString('pt-BR')}</td>
+                            <td>R$ ${pagamento.valor.toFixed(2)}</td>
+                            <td>${formatarFormaPagamento(pagamento.formaPagamento)}</td>
+                            <td>${pagamento.observacoes || '-'}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-sm btn-info" onclick="visualizarPagamento('${pagamento.id}')" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="excluirPagamento('${pagamento.id}')" title="Excluir">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            // Atualizar informações de paginação
+            document.getElementById('total-pagamentos').textContent = `${totalRegistros} pagamentos`;
+            document.getElementById('pagination-info-pagamentos').textContent = `Mostrando ${inicio + 1} a ${Math.min(fim, totalRegistros)} de ${totalRegistros} registros`;
+            document.getElementById('page-info-pagamentos').textContent = `Página ${paginaAtualPagamentos} de ${totalPaginas}`;
+            
+            // Atualizar botões de paginação
+            document.getElementById('prev-page-pagamentos').disabled = paginaAtualPagamentos === 1;
+            document.getElementById('next-page-pagamentos').disabled = paginaAtualPagamentos === totalPaginas || totalPaginas === 0;
+        }
+
+        function mudarPaginaPagamentos(direcao) {
+            const totalPaginas = Math.ceil(pagamentos.length / itensPorPaginaPagamentos);
+            paginaAtualPagamentos += direcao;
+            if (paginaAtualPagamentos < 1) paginaAtualPagamentos = 1;
+            if (paginaAtualPagamentos > totalPaginas) paginaAtualPagamentos = totalPaginas;
+            carregarPagamentos();
+        }
+
+        function limparFiltrosPagamentos() {
+            document.getElementById('search-pagamento').value = '';
+            document.getElementById('filter-forma-pagamento').value = '';
+            document.getElementById('pagamento-data-inicio').value = '';
+            document.getElementById('pagamento-data-fim').value = '';
+            paginaAtualPagamentos = 1;
+            carregarPagamentos();
+        }
+
+        function formatarFormaPagamento(forma) {
+            const formas = {
+                'dinheiro': 'Dinheiro',
+                'cartao-credito': 'Cartão de Crédito',
+                'cartao-debito': 'Cartão de Débito',
+                'pix': 'PIX',
+                'transferencia': 'Transferência',
+                'cheque': 'Cheque'
+            };
+            return formas[forma] || forma;
+        }
+
+        function visualizarPagamento(pagamentoId) {
+            const pagamento = pagamentos.find(p => p.id === pagamentoId);
+            const venda = vendas.find(v => v.id === pagamento.vendaId);
+            const cliente = clientes.find(c => c.id === venda?.clienteId);
+            
+            if (pagamento) {
+                alert(`Detalhes do Pagamento:
+ID: ${pagamento.id}
+Venda: #${venda?.id || 'N/A'}
+Cliente: ${cliente?.nome || 'N/A'}
+Data: ${new Date(pagamento.data).toLocaleDateString('pt-BR')}
+Valor: R$ ${pagamento.valor.toFixed(2)}
+Forma: ${formatarFormaPagamento(pagamento.formaPagamento)}
+Observações: ${pagamento.observacoes || 'Nenhuma'}`);
+            }
+        }
+
+        function excluirPagamento(pagamentoId) {
+            if (confirm('Tem certeza que deseja excluir este pagamento?')) {
+                pagamentos = pagamentos.filter(p => p.id !== pagamentoId);
+                localStorage.setItem('pagamentos', JSON.stringify(pagamentos));
+                carregarPagamentos();
+                atualizarEstatisticas();
+                mostrarNotificacao('Pagamento excluído com sucesso!', 'success');
+            }
+        }
+
+        // === FUNÇÕES DE RELATÓRIOS ===
+        function gerarRelatorioMensal() {
+            const mesAno = document.getElementById('relatorio-mes').value;
+            if (!mesAno) {
+                mostrarNotificacao('Selecione um mês/ano', 'error');
+                return;
+            }
+
+            const [ano, mes] = mesAno.split('-');
+            const vendasMes = vendas.filter(venda => {
+                const dataVenda = new Date(venda.data);
+                return dataVenda.getFullYear() == ano && (dataVenda.getMonth() + 1) == mes;
+            });
+
+            const pagamentosMes = pagamentos.filter(pagamento => {
+                const dataPagamento = new Date(pagamento.data);
+                return dataPagamento.getFullYear() == ano && (dataPagamento.getMonth() + 1) == mes;
+            });
+
+            const totalVendas = vendasMes.length;
+            const faturamentoTotal = vendasMes.reduce((total, venda) => total + venda.total, 0);
+            const totalPagamentos = pagamentosMes.reduce((total, pagamento) => total + pagamento.valor, 0);
+
+            const relatorio = `RELATÓRIO MENSAL - ${mes}/${ano}
+═══════════════════════════════════════
+
+📊 RESUMO GERAL:
+• Total de Vendas: ${totalVendas}
+• Faturamento Total: R$ ${faturamentoTotal.toFixed(2)}
+• Total de Pagamentos: R$ ${totalPagamentos.toFixed(2)}
+• Diferença: R$ ${(faturamentoTotal - totalPagamentos).toFixed(2)}
+
+📈 VENDAS POR STATUS:
+${gerarEstatisticasStatus(vendasMes)}
+
+💳 PAGAMENTOS POR FORMA:
+${gerarEstatisticasFormasPagamento(pagamentosMes)}
+
+👥 TOP 5 CLIENTES:
+${gerarTopClientes(vendasMes)}`;
+
+            mostrarRelatorio(relatorio);
+        }
+
+        function gerarRelatorioPeriodo() {
+            const dataInicio = document.getElementById('relatorio-inicio').value;
+            const dataFim = document.getElementById('relatorio-fim').value;
+            
+            if (!dataInicio || !dataFim) {
+                mostrarNotificacao('Selecione as datas de início e fim', 'error');
+                return;
+            }
+
+            const vendasPeriodo = vendas.filter(venda => 
+                venda.data >= dataInicio && venda.data <= dataFim
+            );
+
+            const pagamentosPeriodo = pagamentos.filter(pagamento => 
+                pagamento.data >= dataInicio && pagamento.data <= dataFim
+            );
+
+            const totalVendas = vendasPeriodo.length;
+            const faturamentoTotal = vendasPeriodo.reduce((total, venda) => total + venda.total, 0);
+            const totalPagamentos = pagamentosPeriodo.reduce((total, pagamento) => total + pagamento.valor, 0);
+
+            const relatorio = `RELATÓRIO POR PERÍODO
+${new Date(dataInicio).toLocaleDateString('pt-BR')} a ${new Date(dataFim).toLocaleDateString('pt-BR')}
+═══════════════════════════════════════
+
+📊 RESUMO GERAL:
+• Total de Vendas: ${totalVendas}
+• Faturamento Total: R$ ${faturamentoTotal.toFixed(2)}
+• Total de Pagamentos: R$ ${totalPagamentos.toFixed(2)}
+• Diferença: R$ ${(faturamentoTotal - totalPagamentos).toFixed(2)}
+
+📈 VENDAS POR STATUS:
+${gerarEstatisticasStatus(vendasPeriodo)}
+
+💳 PAGAMENTOS POR FORMA:
+${gerarEstatisticasFormasPagamento(pagamentosPeriodo)}
+
+👥 TOP 5 CLIENTES:
+${gerarTopClientes(vendasPeriodo)}`;
+
+            mostrarRelatorio(relatorio);
+        }
+
+        function gerarEstatisticasStatus(vendasArray) {
+            const stats = {};
+            vendasArray.forEach(venda => {
+                stats[venda.statusPagamento] = (stats[venda.statusPagamento] || 0) + 1;
+            });
+
+            return Object.entries(stats)
+                .map(([status, count]) => `• ${status.toUpperCase()}: ${count}`)
+                .join('\n');
+        }
+
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            carregarVendas();
+            carregarPagamentos();
+            
+            // Configurar tabs
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetTab = this.getAttribute('data-tab');
+                    
+                    // Remove active class from all buttons and tabs
+                    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                    
+                    // Add active class to clicked button and target tab
+                    this.classList.add('active');
+                    document.getElementById(targetTab).classList.add('active');
+                });
+            });
         });
     </script>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2024 Oficina PRO. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../assets/js/app.js"></script>
+    <script src="../js/vendas.js"></script>
 </body>
 </html>

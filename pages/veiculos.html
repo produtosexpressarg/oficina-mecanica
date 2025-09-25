@@ -3,39 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Veículos - Oficina Mecânica</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="../assets/css/styles.css">
-    <link rel="stylesheet" href="../assets/css/layout.css">
-    <link rel="stylesheet" href="../assets/css/forms.css">
+    <meta name="description" content="Gestão de Veículos - Sistema de Gestão para Oficina Mecânica">
+    <title>Veículos - Sistema de Gestão Oficina</title>
+    
+    <!-- Design System CSS -->
+    <link rel="stylesheet" href="../assets/css/design-system.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease;
+        }
+
+        .modal-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            background: var(--background-secondary);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+        }
+        
+        .form-group-full {
+            grid-column: 1 / -1;
+        }
+    </style>
 </head>
 <body>
-    <div class="main-container">
-        <div id="sidebar-container"></div>
-        <div class="main-content">
-            <div id="header-container"></div>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-wrench"></i>
+                    <h1>Sistema de Gestão - Oficina Mecânica</h1>
+                </div>
+                <div class="user-info">
+                    <span id="currentDate"></span>
+                    <div class="user-menu">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Administrador</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav-menu">
+        <div class="container">
+            <div class="nav-links">
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+                <a href="clientes.html" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    Clientes
+                </a>
+                <a href="veiculos.html" class="nav-link active">
+                    <i class="fas fa-car"></i>
+                    Veículos
+                </a>
+                <a href="servicos.html" class="nav-link">
+                    <i class="fas fa-clipboard-list"></i>
+                    Ordens de Serviço
+                </a>
+                <a href="estoque.html" class="nav-link">
+                    <i class="fas fa-boxes"></i>
+                    Estoque
+                </a>
+                <a href="notas-fiscais.html" class="nav-link">
+                    <i class="fas fa-file-invoice"></i>
+                    Notas Fiscais
+                </a>
+                <a href="vendas.html" class="nav-link">
+                    <i class="fas fa-cash-register"></i>
+                    Vendas & Pagamentos
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
             <div class="page-header">
-                <h1 class="page-title">Gerenciamento de Veículos</h1>
-                <button class="btn btn-primary" id="btn-novo-veiculo"><i class="fas fa-plus"></i> Novo Veículo</button>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <button class="btn btn-outline btn-sm" onclick="window.location.href='dashboard.html'">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </button>
+                    <h1 class="page-title">Gerenciamento de Veículos</h1>
+                </div>
+                <button id="btn-novo-veiculo" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Novo Veículo
+                </button>
             </div>
             
             <div class="card">
                 <div class="card-body">
                     <div class="filter-container">
                         <div class="search-box">
-                            <input type="text" id="search-veiculo" class="form-control" placeholder="Buscar veículo...">
-                            <button class="btn btn-outline-primary"><i class="fas fa-search"></i></button>
+                            <input type="text" id="search-veiculo" class="form-control" placeholder="Buscar veículo..." onkeyup="buscarVeiculo()">
+                            <button class="btn btn-outline-primary" onclick="buscarVeiculo()">
+                                <i class="fas fa-search"></i>
+                            </button>
                         </div>
                         <div class="filter-options">
-                            <select id="filter-marca" class="form-select">
+                            <select id="filter-marca" class="form-select" onchange="filtrarVeiculos()">
                                 <option value="">Todas as marcas</option>
                                 <option value="volkswagen">Volkswagen</option>
                                 <option value="fiat">Fiat</option>
                                 <option value="chevrolet">Chevrolet</option>
                                 <option value="ford">Ford</option>
                                 <option value="toyota">Toyota</option>
+                                <option value="honda">Honda</option>
+                                <option value="hyundai">Hyundai</option>
+                                <option value="nissan">Nissan</option>
                             </select>
-                            <select id="filter-cliente" class="form-select">
+                            <select id="filter-cliente" class="form-select" onchange="filtrarVeiculos()">
                                 <option value="">Todos os clientes</option>
                                 <!-- Opções serão carregadas via JavaScript -->
                             </select>
@@ -47,6 +213,11 @@
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">Lista de Veículos</h2>
+                    <div class="card-tools">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="exportarVeiculos()">
+                            <i class="fas fa-file-export"></i> Exportar
+                        </button>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -77,14 +248,82 @@
     <div id="footer-container"></div>
     
     <script src="../assets/js/app.js"></script>
-    <script src="../assets/js/modules/veiculos.js"></script>
+    <script src="../js/veiculos.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             fetch('../components/sidebar.html').then(r => r.text()).then(d => document.getElementById('sidebar-container').innerHTML = d);
             fetch('../components/header.html').then(r => r.text()).then(d => document.getElementById('header-container').innerHTML = d);
             fetch('../components/modals/veiculo-modal.html').then(r => r.text()).then(d => document.getElementById('veiculo-modal-container').innerHTML = d);
             fetch('../components/footer.html').then(r => r.text()).then(d => document.getElementById('footer-container').innerHTML = d);
+            
+            // Carregar dados iniciais
+            carregarVeiculos();
+            carregarClientes();
         });
+
+        function abrirModalVeiculo(id = null) {
+            const modal = document.getElementById('veiculo-modal');
+            if (modal) {
+                modal.style.display = 'block';
+                modal.classList.add('show');
+                
+                if (id) {
+                    // Carregar dados do veículo para edição
+                    carregarDadosVeiculo(id);
+                } else {
+                    // Limpar formulário para novo veículo
+                    document.getElementById('veiculo-form').reset();
+                }
+            }
+        }
+
+        function buscarVeiculo() {
+            const termo = document.getElementById('search-veiculo').value.toLowerCase();
+            const linhas = document.querySelectorAll('#veiculos-table-body tr');
+            
+            linhas.forEach(linha => {
+                const texto = linha.textContent.toLowerCase();
+                linha.style.display = texto.includes(termo) ? '' : 'none';
+            });
+        }
+
+        function filtrarVeiculos() {
+            const marca = document.getElementById('filter-marca').value;
+            const cliente = document.getElementById('filter-cliente').value;
+            const linhas = document.querySelectorAll('#veiculos-table-body tr');
+            
+            linhas.forEach(linha => {
+                const marcaVeiculo = linha.cells[1]?.textContent || '';
+                const clienteVeiculo = linha.cells[5]?.textContent || '';
+                
+                const mostrarMarca = !marca || marcaVeiculo.toLowerCase().includes(marca.toLowerCase());
+                const mostrarCliente = !cliente || clienteVeiculo.toLowerCase().includes(cliente.toLowerCase());
+                
+                linha.style.display = (mostrarMarca && mostrarCliente) ? '' : 'none';
+            });
+        }
+
+        function carregarVeiculos() {
+            // Implementar carregamento de veículos
+            console.log('Carregando veículos...');
+        }
+
+        function carregarClientes() {
+            // Implementar carregamento de clientes para o filtro
+            console.log('Carregando clientes...');
+        }
+
+        function carregarDadosVeiculo(id) {
+            // Implementar carregamento de dados do veículo
+            console.log('Carregando dados do veículo:', id);
+        }
+
+        function exportarVeiculos() {
+            // Implementar exportação de veículos
+            console.log('Exportando veículos...');
+        }
     </script>
+        </div>
+    </main>
 </body>
 </html>

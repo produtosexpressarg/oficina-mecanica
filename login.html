@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Oficina Mecânica</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/validations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="assets/js/validations.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 900px;
+            min-height: 500px;
+            display: flex;
+        }
+
+        .login-left {
+            flex: 1;
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        .login-logo {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .login-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .login-right {
+            flex: 1;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-form-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-form-subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #2196F3;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        .form-group .input-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+
+        .password-toggle {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: auto;
+        }
+
+        .forgot-password {
+            color: #2196F3;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(33, 150, 243, 0.3);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .demo-credentials {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-left: 4px solid #2196F3;
+        }
+
+        .demo-credentials h4 {
+            margin: 0 0 0.5rem 0;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .demo-credentials p {
+            margin: 0.25rem 0;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #c62828;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+                margin: 1rem;
+                max-width: none;
+            }
+
+            .login-left {
+                padding: 2rem;
+            }
+
+            .login-right {
+                padding: 2rem;
+            }
+
+            .login-title {
+                font-size: 2rem;
+            }
+
+            .login-logo {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-left">
+            <div class="login-logo">
+                <i class="fas fa-wrench"></i>
+            </div>
+            <h1 class="login-title">Oficina Mecânica</h1>
+            <p class="login-subtitle">
+                Sistema completo de gerenciamento para oficinas mecânicas. 
+                Controle clientes, veículos, estoque, vendas e muito mais.
+            </p>
+        </div>
+
+        <div class="login-right">
+            <h2 class="login-form-title">Bem-vindo!</h2>
+            <p class="login-form-subtitle">Faça login para acessar o sistema</p>
+
+            <div class="error-message" id="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="error-text">Usuário ou senha incorretos</span>
+            </div>
+
+            <form id="login-form" onsubmit="realizarLogin(event)">
+                <div class="form-group">
+                    <label for="username">Usuário</label>
+                    <input type="text" id="username" name="username" required autocomplete="username">
+                    <i class="fas fa-user input-icon"></i>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" name="password" required autocomplete="current-password">
+                    <i class="fas fa-eye input-icon password-toggle" onclick="togglePassword()"></i>
+                </div>
+
+                <div class="login-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember" name="remember">
+                        <span>Lembrar-me</span>
+                    </label>
+                    <a href="#" class="forgot-password" onclick="esqueceuSenha()">Esqueceu a senha?</a>
+                </div>
+
+                <button type="submit" class="login-btn" id="login-btn">
+                    <span class="loading-spinner" id="loading-spinner"></span>
+                    <span id="btn-text">Entrar</span>
+                </button>
+            </form>
+
+            <div class="demo-credentials">
+                <h4><i class="fas fa-info-circle"></i> Credenciais de Demonstração</h4>
+                <p><strong>Usuário:</strong> admin</p>
+                <p><strong>Senha:</strong> admin123</p>
+                <p><strong>Usuário:</strong> mecanico</p>
+                <p><strong>Senha:</strong> mecanico123</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Usuários válidos para demonstração
+        const usuarios = {
+            'admin': {
+                senha: 'admin123',
+                nome: 'Administrador',
+                perfil: 'admin',
+                permissoes: ['dashboard', 'clientes', 'veiculos', 'estoque', 'vendas', 'notas-fiscais', 'relatorios']
+            },
+            'mecanico': {
+                senha: 'mecanico123',
+                nome: 'Mecânico',
+                perfil: 'mecanico',
+                permissoes: ['dashboard', 'clientes', 'veiculos', 'estoque', 'vendas']
+            },
+            'atendente': {
+                senha: 'atendente123',
+                nome: 'Atendente',
+                perfil: 'atendente',
+                permissoes: ['dashboard', 'clientes', 'veiculos', 'vendas']
+            }
+        };
+
+        // Verificar se já está logado
+        document.addEventListener('DOMContentLoaded', function() {
+            const usuarioLogado = localStorage.getItem('usuarioLogado');
+            if (usuarioLogado) {
+                window.location.href = 'pages/dashboard.html';
+            }
+
+            // Focar no campo usuário
+            document.getElementById('username').focus();
+        });
+
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.querySelector('.password-toggle');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        function mostrarErro(mensagem) {
+            const errorDiv = document.getElementById('error-message');
+            const errorText = document.getElementById('error-text');
+            errorText.textContent = mensagem;
+            errorDiv.style.display = 'block';
+            
+            // Esconder erro após 5 segundos
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function mostrarCarregamento(mostrar) {
+            const spinner = document.getElementById('loading-spinner');
+            const btnText = document.getElementById('btn-text');
+            const btn = document.getElementById('login-btn');
+            
+            if (mostrar) {
+                spinner.style.display = 'inline-block';
+                btnText.textContent = 'Entrando...';
+                btn.disabled = true;
+            } else {
+                spinner.style.display = 'none';
+                btnText.textContent = 'Entrar';
+                btn.disabled = false;
+            }
+        }
+
+        function realizarLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('remember').checked;
+            
+            // Validações básicas
+            if (!username || !password) {
+                mostrarErro('Por favor, preencha todos os campos');
+                return;
+            }
+            
+            mostrarCarregamento(true);
+            
+            // Simular delay de autenticação
+            setTimeout(() => {
+                // Verificar credenciais
+                if (usuarios[username] && usuarios[username].senha === password) {
+                    const usuario = usuarios[username];
+                    
+                    // Salvar dados do usuário logado
+                    const dadosUsuario = {
+                        username: username,
+                        nome: usuario.nome,
+                        perfil: usuario.perfil,
+                        permissoes: usuario.permissoes,
+                        loginTime: new Date().toISOString()
+                    };
+                    
+                    // Salvar no localStorage ou sessionStorage
+                    if (remember) {
+                        localStorage.setItem('usuarioLogado', JSON.stringify(dadosUsuario));
+                    } else {
+                        sessionStorage.setItem('usuarioLogado', JSON.stringify(dadosUsuario));
+                    }
+                    
+                    // Registrar log de acesso
+                    const logsAcesso = JSON.parse(localStorage.getItem('logsAcesso') || '[]');
+                    logsAcesso.push({
+                        usuario: username,
+                        nome: usuario.nome,
+                        timestamp: new Date().toISOString(),
+                        ip: 'localhost', // Em produção, capturar IP real
+                        userAgent: navigator.userAgent
+                    });
+                    
+                    // Manter apenas os últimos 100 logs
+                    if (logsAcesso.length > 100) {
+                        logsAcesso.splice(0, logsAcesso.length - 100);
+                    }
+                    
+                    localStorage.setItem('logsAcesso', JSON.stringify(logsAcesso));
+                    
+                    // Redirecionar para o dashboard
+                    window.location.href = 'pages/dashboard.html';
+                } else {
+                    mostrarCarregamento(false);
+                    mostrarErro('Usuário ou senha incorretos');
+                    
+                    // Limpar campo senha
+                    document.getElementById('password').value = '';
+                    document.getElementById('password').focus();
+                }
+            }, 1500); // Simular 1.5s de processamento
+        }
+
+        function esqueceuSenha() {
+            alert('Funcionalidade de recuperação de senha será implementada em breve.\n\nPara demonstração, use:\n• admin / admin123\n• mecanico / mecanico123');
+        }
+
+        // Permitir login com Enter
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                const form = document.getElementById('login-form');
+                if (form) {
+                    realizarLogin(event);
+                }
+            }
+        });
+
+        // Limpar mensagem de erro ao digitar
+        document.getElementById('username').addEventListener('input', function() {
+            document.getElementById('error-message').style.display = 'none';
+        });
+
+        document.getElementById('password').addEventListener('input', function() {
+            document.getElementById('error-message').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

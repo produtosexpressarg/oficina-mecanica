@@ -18,17 +18,6 @@ class ClientesModule {
             btnNovoCliente: document.querySelector('.btn-success'),
             modalCliente: null
         };
-        
-        // Bind dos métodos
-        this.init = this.init.bind(this);
-        this.carregarClientes = this.carregarClientes.bind(this);
-        this.renderizarTabela = this.renderizarTabela.bind(this);
-        this.filtrarClientes = this.filtrarClientes.bind(this);
-        this.buscarClientes = this.buscarClientes.bind(this);
-        this.abrirModalCliente = this.abrirModalCliente.bind(this);
-        this.salvarCliente = this.salvarCliente.bind(this);
-        this.editarCliente = this.editarCliente.bind(this);
-        this.excluirCliente = this.excluirCliente.bind(this);
     }
     
     /**

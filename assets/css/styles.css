@@ -28,7 +28,7 @@
     
     /* Bordas */
     --border-color: #e0e6ed;
-    --border-radius: 8px;
+    --border-radius: px;
     --border-radius-lg: 15px;
     
     /* Sombras */
@@ -225,7 +225,7 @@ body {
 
 /* ===== CONTEÚDO PRINCIPAL ===== */
 .content {
-    background: var(--bg-white);
+    background: var(--bg-glass);
     border-radius: var(--border-radius-lg);
     padding: var(--spacing-2xl);
     box-shadow: var(--shadow-lg);

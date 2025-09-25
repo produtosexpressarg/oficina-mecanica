@@ -1,0 +1,21 @@
+{
+  "name": "oficina-mecanica",
+  "version": "1.0.0",
+  "description": "Sistema de Gestão para Oficina Mecânica",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "oficina",
+    "mecanica",
+    "gestao",
+    "sistema"
+  ],
+  "author": "Sistema de Gestão Oficina",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {}
+}

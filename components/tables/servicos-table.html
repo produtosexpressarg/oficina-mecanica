@@ -1,0 +1,127 @@
+<!-- Tabela de Serviços/Ordens de Serviço -->
+<div class="table-container">
+    <div class="table-header">
+        <h3>Ordens de Serviço</h3>
+        <div class="table-actions">
+            <button class="btn btn-primary" id="btn-nova-os">
+                <i class="fas fa-plus"></i> Nova OS
+            </button>
+            <button class="btn btn-info" id="btn-relatorio-servicos">
+                <i class="fas fa-chart-bar"></i> Relatório
+            </button>
+            <button class="btn btn-secondary" id="btn-exportar-servicos">
+                <i class="fas fa-download"></i> Exportar
+            </button>
+        </div>
+    </div>
+    
+    <div class="table-filters">
+        <div class="filter-group">
+            <input type="text" placeholder="Buscar OS..." id="search-servico" class="search-input">
+            <select id="filter-status-servico" class="filter-select">
+                <option value="">Todos os Status</option>
+                <option value="aberta">Aberta</option>
+                <option value="em-andamento">Em Andamento</option>
+                <option value="aguardando-pecas">Aguardando Peças</option>
+                <option value="concluida">Concluída</option>
+                <option value="cancelada">Cancelada</option>
+            </select>
+            <select id="filter-prioridade" class="filter-select">
+                <option value="">Todas as Prioridades</option>
+                <option value="baixa">Baixa</option>
+                <option value="normal">Normal</option>
+                <option value="alta">Alta</option>
+                <option value="urgente">Urgente</option>
+            </select>
+            <input type="date" id="filter-data-inicio" class="filter-date" placeholder="Data Início">
+            <input type="date" id="filter-data-fim" class="filter-date" placeholder="Data Fim">
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="data-table" id="servicos-table">
+            <thead>
+                <tr>
+                    <th>OS Nº</th>
+                    <th>Cliente</th>
+                    <th>Veículo</th>
+                    <th>Serviço</th>
+                    <th>Mecânico</th>
+                    <th>Status</th>
+                    <th>Prioridade</th>
+                    <th>Valor Total</th>
+                    <th>Data Abertura</th>
+                    <th>Previsão</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dados serão carregados via JavaScript -->
+                <tr class="no-data" style="display: none;">
+                    <td colspan="11" class="text-center">
+                        <i class="fas fa-clipboard-list"></i>
+                        <p>Nenhuma ordem de serviço encontrada</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-summary">
+        <div class="summary-cards">
+            <div class="summary-card">
+                <div class="summary-icon">
+                    <i class="fas fa-folder-open"></i>
+                </div>
+                <div class="summary-info">
+                    <span class="summary-label">Abertas</span>
+                    <span class="summary-value" id="total-abertas">0</span>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <div class="summary-info">
+                    <span class="summary-label">Em Andamento</span>
+                    <span class="summary-value" id="total-andamento">0</span>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="summary-info">
+                    <span class="summary-label">Concluídas</span>
+                    <span class="summary-value" id="total-concluidas">0</span>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="summary-info">
+                    <span class="summary-label">Faturamento</span>
+                    <span class="summary-value" id="total-faturamento">R$ 0,00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-pagination">
+        <div class="pagination-info">
+            <span>Mostrando <span id="showing-start">1</span> a <span id="showing-end">10</span> de <span id="total-records">0</span> registros</span>
+        </div>
+        <div class="pagination-controls">
+            <button class="btn-pagination" id="btn-prev" disabled>
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <span class="pagination-numbers" id="pagination-numbers">
+                <!-- Números das páginas serão gerados via JavaScript -->
+            </span>
+            <button class="btn-pagination" id="btn-next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>

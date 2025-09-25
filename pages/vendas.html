@@ -142,21 +142,18 @@
 <body>
     <!-- Header -->
     <header class="header">
-        <div class="header-content">
-            <div class="header-left">
-                <button class="btn btn-outline btn-sm" onclick="window.location.href='dashboard.html'" style="margin-right: 1rem;">
-                    <i class="fas fa-arrow-left"></i> Voltar
-                </button>
-                <h1><i class="fas fa-cash-register"></i> Vendas & Pagamentos</h1>
-                <p>Gerencie vendas, pagamentos e relatórios</p>
-            </div>
-            <div class="header-right">
-                <span class="current-date" id="currentDate"></span>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-wrench"></i>
+                    <h1>Sistema de Gestão - Oficina Mecânica</h1>
+                </div>
                 <div class="user-info">
-                    <span class="user-name">Usuário</span>
-                    <button class="btn btn-outline btn-sm" onclick="logout()">
-                        <i class="fas fa-sign-out-alt"></i> Sair
-                    </button>
+                    <span id="currentDate"></span>
+                    <div class="user-menu">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Administrador</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -201,143 +198,85 @@
     <!-- Main Content -->
     <main class="main-content">
         <div class="container">
-            <!-- Page Header -->
-            <div class="page-header mb-xl">
-                <h1 class="page-title">
-                    <i class="fas fa-shopping-cart text-primary"></i>
-                    Vendas
-                </h1>
-                <p class="page-description">Gerencie vendas, pagamentos e relatórios</p>
-            </div>
-
-            <!-- Stats Cards -->
-            <div class="stats-grid mb-xl">
-                <div class="stat-card">
-                    <div class="stat-icon bg-primary">
-                        <i class="fas fa-shopping-cart"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 class="stat-value" id="total-vendas">156</h3>
-                        <p class="stat-label">Total de Vendas</p>
-                    </div>
+            <div class="page-header">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <button class="btn btn-outline btn-sm" onclick="window.location.href='dashboard.html'">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </button>
+                    <h1 class="page-title">Gerenciamento de Vendas</h1>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon bg-success">
-                        <i class="fas fa-dollar-sign"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 class="stat-value" id="faturamento-total">R$ 45.230,00</h3>
-                        <p class="stat-label">Faturamento</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon bg-warning">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 class="stat-value" id="vendas-pendentes">23</h3>
-                        <p class="stat-label">Pendentes</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon bg-info">
-                        <i class="fas fa-calendar-day"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 class="stat-value" id="vendas-hoje">8</h3>
-                        <p class="stat-label">Hoje</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Action Bar -->
-            <div class="action-bar mb-xl">
-                <button class="btn btn-primary" onclick="vendasManager.abrirModalVenda()">
-                    <i class="fas fa-plus"></i>
-                    Nova Venda
-                </button>
-                <button class="btn btn-success" onclick="vendasManager.abrirModalPagamento()">
-                    <i class="fas fa-credit-card"></i>
-                    Registrar Pagamento
-                </button>
-                <button class="btn btn-info" onclick="vendasManager.gerarNotaFiscal()">
-                    <i class="fas fa-file-invoice"></i>
-                    Gerar Nota Fiscal
-                </button>
-                <button class="btn btn-secondary" onclick="vendasManager.exportarDados()">
-                    <i class="fas fa-download"></i>
-                    Exportar
-                </button>
-                <button class="btn btn-outline" onclick="vendasManager.gerarRelatorio()">
-                    <i class="fas fa-chart-bar"></i>
-                    Relatório
+                <button class="btn btn-primary" onclick="openSaleModal()">
+                    <i class="fas fa-plus"></i> Nova Venda
                 </button>
             </div>
-
-            <!-- Tabs Container -->
-            <div class="tabs-container mb-xl">
-                <nav class="tabs-nav">
-                    <button class="tab-button active" data-tab="aba-vendas">
-                        <span>Vendas</span>
-                    </button>
-                    <button class="tab-button" data-tab="aba-pagamentos">
-                        <span>Histórico de Pagamentos</span>
-                    </button>
-                    <button class="tab-button" data-tab="aba-relatorios">
-                        <span>Relatórios</span>
-                    </button>
-                </nav>
-
-                <!-- Aba Vendas -->
-        <!-- Aba Vendas -->
-        <div id="aba-vendas" class="tab-content">
-            <div class="page-section">
-                <div class="section-header">
-                    <h2 class="section-title">
-                        <i class="fas fa-shopping-cart"></i>
-                        Vendas
-                    </h2>
-                    <p class="section-description">Visualize e gere relatórios detalhados sobre vendas</p>
-                </div>
-                
-                <div class="vendas-grid">
-                    <!-- Card Venda -->
-                    <article class="venda-card card">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <i class="fas fa-calendar-alt text-primary"></i>
-                                <h3>Venda</h3>
+            
+            <div class="card">
+                <div class="card-body">
+                    <!-- Search and Filters -->
+                    <div class="search-filters">
+                        <div class="filter-row">
+                            <div class="form-group">
+                                <label class="form-label">Buscar Venda</label>
+                                <div class="input-group">
+                                    <i class="fas fa-search input-icon"></i>
+                                    <input type="text" id="searchSale" class="form-control" 
+                                           placeholder="Cliente, produto ou número da venda..." 
+                                           onkeyup="filterSales()">
+                                </div>
                             </div>
+                            <div class="form-group">
+                                <label class="form-label">Status</label>
+                                <select id="filterStatus" class="form-control" onchange="filterSales()">
+                                    <option value="">Todos</option>
+                                    <option value="pendente">Pendente</option>
+                                    <option value="pago">Pago</option>
+                                    <option value="cancelado">Cancelado</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Ordenar por</label>
+                                <select id="sortBy" class="form-control" onchange="sortSales()">
+                                    <option value="data">Data</option>
+                                    <option value="cliente">Cliente</option>
+                                    <option value="valor">Valor</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-outline" onclick="clearFilters()">
+                                <i class="fas fa-times"></i> Limpar
+                            </button>
                         </div>
-                        <div class="card-body">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="search-venda">Buscar Venda</label>
-                                    <input type="text" id="search-venda" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label for="filter-cliente">Cliente</label>
-                                    <select id="filter-cliente" class="form-control">
-                                        <option value="">Todos os clientes</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="filter-status">Status</label>
-                                    <select id="filter-status" class="form-control">
-                                        <option value="">Todos os status</option>
-                                        <option value="pendente">Pendente</option>
-                                        <option value="pago">Pago</option>
-                                        <option value="parcial">Parcial</option>
-                                        <option value="cancelado">Cancelado</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="data-inicio">Data Início</label>
-                                    <input type="date" id="data-inicio" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label for="data-fim">Data Fim</label>
-                                    <input type="date" id="data-fim" class="form-control">
+                    </div>
+
+                    <!-- Sales Table -->
+                    <div class="sales-table-container">
+                        <div class="table-header">
+                            <h3><i class="fas fa-list"></i> Lista de Vendas</h3>
+                            <span id="saleCount">0 vendas encontradas</span>
+                        </div>
+                        
+                        <table class="sales-table">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Cliente</th>
+                                    <th>Produtos</th>
+                                    <th>Valor</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salesTableBody">
+                                <!-- Sales will be loaded here -->
+                            </tbody>
+                        </table>
+                        
+                        <!-- Pagination -->
+                        <div class="pagination" id="pagination">
+                            <!-- Pagination buttons will be generated here -->
+                        </div>
+                    </div>
+        </div>
+    </main>
                                 </div>
                                 <div class="form-group">
                                     <button class="btn btn-outline" onclick="limparFiltros()">

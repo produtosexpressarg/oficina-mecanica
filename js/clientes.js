@@ -25,11 +25,8 @@ class ClientesManager {
         
         if (btnNovoCliente) {
             console.log('ClientesManager: Adicionando event listener ao botão Novo Cliente');
-            btnNovoCliente.addEventListener('click', (e) => {
-                console.log('ClientesManager: Botão Novo Cliente clicado!');
-                e.preventDefault();
-                this.abrirModal();
-            });
+            btnNovoCliente.removeEventListener('click', this.handleNovoCliente);
+            btnNovoCliente.addEventListener('click', this.handleNovoCliente);
         } else {
             console.error('ClientesManager: Botão btn-novo-cliente não encontrado no DOM!');
         }
@@ -37,10 +34,9 @@ class ClientesManager {
         // Botão Salvar Cliente
         const btnSalvar = document.getElementById('salvarCliente');
         if (btnSalvar) {
-            btnSalvar.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.salvarCliente();
-            });
+            btnSalvar.removeEventListener('click', this.handleSalvarCliente);
+            btnSalvar.addEventListener('click', this.handleSalvarCliente);
+            console.log('ClientesManager: Event listener adicionado ao botão Salvar Cliente');
         } else {
             console.warn('ClientesManager: Botão salvarCliente não encontrado no DOM');
         }
@@ -61,6 +57,17 @@ class ClientesManager {
         if (inputBusca) {
             inputBusca.addEventListener('input', (e) => this.filtrarClientes(e.target.value));
         }
+    }
+
+    handleNovoCliente = () => {
+        console.log('ClientesManager: Botão Novo Cliente clicado!');
+        this.abrirModal();
+    }
+
+    handleSalvarCliente = (e) => {
+        e.preventDefault();
+        console.log('ClientesManager: Botão Salvar Cliente clicado!');
+        this.salvarCliente();
 
         const filtroStatus = document.getElementById('filtro-status');
         if (filtroStatus) {
@@ -157,12 +164,20 @@ class ClientesManager {
     }
 
     salvarCliente() {
+        console.log('ClientesManager: Iniciando salvarCliente...');
         const form = document.getElementById('clientForm');
+        if (!form) {
+            console.error('ClientesManager: Formulário clienteForm não encontrado!');
+            return;
+        }
+
         if (!form.checkValidity()) {
+            console.log('ClientesManager: Formulário inválido, mostrando validação...');
             form.reportValidity();
             return;
         }
 
+        console.log('ClientesManager: Formulário válido, coletando dados...');
         const formData = new FormData(form);
         const cliente = {
             id: this.clienteEditando ? this.clienteEditando.id : Date.now(),
@@ -181,19 +196,23 @@ class ClientesManager {
             bairro: formData.get('bairro'),
             cidade: formData.get('cidade'),
             estado: formData.get('estado'),
-            status: formData.get('status'),
+            status: formData.get('status') || 'ativo',
             observacoes: formData.get('observacoes'),
             data_cadastro: this.clienteEditando ? this.clienteEditando.data_cadastro : new Date().toISOString(),
             data_atualizacao: new Date().toISOString()
         };
 
+        console.log('ClientesManager: Dados do cliente coletados:', cliente);
+
         if (this.clienteEditando) {
             const index = this.clientes.findIndex(c => c.id === this.clienteEditando.id);
             this.clientes[index] = cliente;
             this.mostrarNotificacao('Cliente atualizado com sucesso!', 'success');
+            console.log('ClientesManager: Cliente atualizado');
         } else {
             this.clientes.push(cliente);
             this.mostrarNotificacao('Cliente cadastrado com sucesso!', 'success');
+            console.log('ClientesManager: Novo cliente adicionado');
         }
 
         this.salvarClientes();
@@ -202,6 +221,7 @@ class ClientesManager {
         
         // Fechar modal
         this.fecharModal();
+        console.log('ClientesManager: Cliente salvo com sucesso!');
     }
 
     excluirCliente(id) {

@@ -56,7 +56,13 @@ class ServicosManager {
         // Reset do modal ao fechar
         const modal = document.getElementById('servicoModal');
         if (modal) {
-            modal.addEventListener('hidden.bs.modal', () => this.limparForm());
+            // Adicionar event listener para fechar modal ao clicar no X ou fora
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal || e.target.classList.contains('modal-close')) {
+                    modal.classList.remove('show');
+                    this.limparForm();
+                }
+            });
         }
     }
 
@@ -133,9 +139,11 @@ class ServicosManager {
         this.renderizarServicos();
         this.atualizarEstatisticas();
         
-        // Fechar modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById('servicoModal'));
-        modal.hide();
+        // Fechar modal usando CSS puro
+        const modal = document.getElementById('servicoModal');
+        if (modal) {
+            modal.classList.remove('show');
+        }
         
         this.servicoEditando = null;
     }
@@ -165,21 +173,23 @@ class ServicosManager {
 
         this.servicos.forEach(servico => {
             const row = document.createElement('tr');
+            row.setAttribute('data-categoria', servico.categoria); // Adiciona atributo para filtro
             row.innerHTML = `
+                <td>${servico.id}</td>
                 <td>${servico.nome}</td>
-                <td>${servico.categoria}</td>
-                <td>R$ ${servico.preco.toFixed(2)}</td>
-                <td>${servico.tempo_estimado}</td>
+                <td>${servico.descricao}</td>
+                <td>R$ ${servico.valor.toFixed(2)}</td>
+                <td>${servico.tempoPrevisto} min</td>
                 <td>
-                    <span class="service-status status-${servico.status}">
-                        ${servico.status === 'ativo' ? 'Ativo' : 'Inativo'}
+                    <span class="service-status status-${servico.ativo ? 'ativo' : 'inativo'}">
+                        ${servico.ativo ? 'Ativo' : 'Inativo'}
                     </span>
                 </td>
                 <td>
-                    <button class="btn btn-sm btn-outline-primary" onclick="servicosManager.editarServico(${servico.id})">
+                    <button class="btn btn-sm btn-outline-primary" onclick="servicosManager.editarServico('${servico.id}')">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="servicosManager.excluirServico(${servico.id})">
+                    <button class="btn btn-sm btn-outline-danger" onclick="servicosManager.excluirServico('${servico.id}')">
                         <i class="fas fa-trash"></i>
                     </button>
                 </td>
@@ -210,11 +220,14 @@ class ServicosManager {
         const rows = document.querySelectorAll('#servicos-table-body tr');
         
         rows.forEach(row => {
-            const nome = row.cells[0]?.textContent.toLowerCase() || '';
-            const categoriaServico = row.cells[1]?.textContent.toLowerCase() || '';
+            const nome = row.cells[1]?.textContent.toLowerCase() || ''; // Nome está na coluna 1, não 0
+            const descricao = row.cells[2]?.textContent.toLowerCase() || ''; // Descrição na coluna 2
+            const categoriaServico = row.getAttribute('data-categoria')?.toLowerCase() || '';
             
-            const matchTermo = !termo || nome.includes(termo.toLowerCase());
-            const matchCategoria = !categoria || categoriaServico.includes(categoria.toLowerCase());
+            const matchTermo = !termo || 
+                nome.includes(termo.toLowerCase()) || 
+                descricao.includes(termo.toLowerCase());
+            const matchCategoria = !categoria || categoriaServico === categoria.toLowerCase();
             
             row.style.display = (matchTermo && matchCategoria) ? '' : 'none';
         });
@@ -227,9 +240,9 @@ class ServicosManager {
 
     atualizarEstatisticas() {
         const totalServicos = this.servicos.length;
-        const servicosAtivos = this.servicos.filter(s => s.status === 'ativo').length;
+        const servicosAtivos = this.servicos.filter(s => s.ativo === true).length;
         const precoMedio = this.servicos.length > 0 
-            ? this.servicos.reduce((sum, s) => sum + s.preco, 0) / this.servicos.length 
+            ? this.servicos.reduce((sum, s) => sum + s.valor, 0) / this.servicos.length 
             : 0;
 
         // Atualizar elementos da interface se existirem
@@ -245,7 +258,62 @@ class ServicosManager {
 
     carregarServicos() {
         const dados = localStorage.getItem('servicos');
-        return dados ? JSON.parse(dados) : [];
+        if (dados) {
+            return JSON.parse(dados);
+        }
+        
+        // Se não há dados no localStorage, carrega dados mock
+        const servicosMock = [
+            {
+                "id": "1",
+                "nome": "Troca de óleo",
+                "descricao": "Troca de óleo do motor e filtro de óleo",
+                "valor": 120.00,
+                "tempoPrevisto": 30,
+                "categoria": "manutencao_preventiva",
+                "ativo": true
+            },
+            {
+                "id": "2",
+                "nome": "Alinhamento e balanceamento",
+                "descricao": "Alinhamento de direção e balanceamento das rodas",
+                "valor": 150.00,
+                "tempoPrevisto": 60,
+                "categoria": "manutencao_preventiva",
+                "ativo": true
+            },
+            {
+                "id": "3",
+                "nome": "Revisão completa",
+                "descricao": "Revisão completa do veículo incluindo verificação de fluidos, freios, suspensão e motor",
+                "valor": 350.00,
+                "tempoPrevisto": 120,
+                "categoria": "manutencao_preventiva",
+                "ativo": true
+            },
+            {
+                "id": "4",
+                "nome": "Troca de pastilhas de freio",
+                "descricao": "Substituição das pastilhas de freio dianteiras ou traseiras",
+                "valor": 180.00,
+                "tempoPrevisto": 60,
+                "categoria": "freios",
+                "ativo": true
+            },
+            {
+                "id": "5",
+                "nome": "Troca de amortecedores",
+                "descricao": "Substituição dos amortecedores dianteiros ou traseiros",
+                "valor": 450.00,
+                "tempoPrevisto": 120,
+                "categoria": "suspensao",
+                "ativo": true
+            }
+        ];
+        
+        // Salva os dados mock no localStorage para próximas sessões
+        localStorage.setItem('servicos', JSON.stringify(servicosMock));
+        return servicosMock;
     }
 
     salvarServicos() {

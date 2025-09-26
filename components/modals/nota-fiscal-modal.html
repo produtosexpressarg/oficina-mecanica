@@ -8,7 +8,7 @@
             </button>
         </div>
         <div class="modal-body">
-            <form id="nota-fiscal-form" onsubmit="salvarNotaFiscal(event)">
+            <form id="nota-fiscal-form" method="post" action="" onsubmit="return salvarNotaFiscal(event)">
                 <input type="hidden" id="nota-fiscal-id" name="id">
                 
                 <!-- Informações da Empresa -->
@@ -69,21 +69,21 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="cliente-nome">Nome/Razão Social *</label>
-                            <input type="text" id="cliente-nome" name="cliente_nome" class="form-control" required readonly>
+                            <input type="text" id="cliente-nome" name="cliente_nome" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="cliente-documento">CPF/CNPJ *</label>
-                            <input type="text" id="cliente-documento" name="cliente_documento" class="form-control" required readonly>
+                            <input type="text" id="cliente-documento" name="cliente_documento" class="form-control" required>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="cliente-endereco">Endereço</label>
-                            <input type="text" id="cliente-endereco" name="cliente_endereco" class="form-control" readonly>
+                            <input type="text" id="cliente-endereco" name="cliente_endereco" class="form-control">
                         </div>
                         <div class="form-group">
                             <label for="cliente-cidade">Cidade</label>
-                            <input type="text" id="cliente-cidade" name="cliente_cidade" class="form-control" readonly>
+                            <input type="text" id="cliente-cidade" name="cliente_cidade" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -94,7 +94,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="nf-numero">Número da NF *</label>
-                            <input type="text" id="nf-numero" name="numero" class="form-control" required readonly>
+                            <input type="text" id="nf-numero" name="numero" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="nf-serie">Série *</label>
@@ -131,7 +131,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="item-tipo">Tipo de Item</label>
-                            <select id="item-tipo" class="form-control" onchange="carregarItensNF()">
+                            <select id="item-tipo" class="form-control">
                                 <option value="">Selecione o tipo</option>
                                 <option value="produto">Produto</option>
                                 <option value="servico">Serviço</option>
@@ -148,7 +148,7 @@
                             <input type="number" id="item-quantidade-nf" class="form-control" min="1" step="0.01" value="1">
                         </div>
                         <div class="form-group">
-                            <button type="button" class="btn btn-success" onclick="adicionarItemNF()">
+                            <button type="button" class="btn btn-success" id="btn-adicionar-item">
                                 <i class="fas fa-plus"></i> Adicionar
                             </button>
                         </div>
@@ -257,17 +257,27 @@ function abrirModalNotaFiscal(id = null) {
     const modal = document.getElementById('nota-fiscal-modal');
     const title = document.getElementById('nota-fiscal-modal-title');
     
-    if (id) {
-        title.textContent = 'Editar Nota Fiscal';
-        carregarDadosNotaFiscal(id);
-    } else {
-        title.textContent = 'Nova Nota Fiscal';
-        document.getElementById('nota-fiscal-form').reset();
-        itensNotaFiscal = [];
-        gerarNumeroNotaFiscal();
-        definirDataEmissaoAtual();
-        atualizarTabelaItensNF();
-        calcularTotaisNF();
+    if (!modal) {
+        console.error('Modal de nota fiscal não encontrado');
+        return;
+    }
+    
+    if (title) {
+        if (id) {
+            title.textContent = 'Editar Nota Fiscal';
+            carregarDadosNotaFiscal(id);
+        } else {
+            title.textContent = 'Nova Nota Fiscal';
+            const form = document.getElementById('nota-fiscal-form');
+            if (form) {
+                form.reset();
+            }
+            itensNotaFiscal = [];
+            gerarNumeroNotaFiscal();
+            definirDataEmissaoAtual();
+            atualizarTabelaItensNF();
+            calcularTotaisNF();
+        }
     }
     
     carregarClientesNF();
@@ -277,23 +287,45 @@ function abrirModalNotaFiscal(id = null) {
 
 function fecharModalNotaFiscal() {
     const modal = document.getElementById('nota-fiscal-modal');
-    modal.style.display = 'none';
-    modal.classList.remove('show');
-    document.getElementById('nota-fiscal-form').reset();
+    if (modal) {
+        modal.style.display = 'none';
+        modal.classList.remove('show');
+    }
+    
+    const form = document.getElementById('nota-fiscal-form');
+    if (form) {
+        form.reset();
+    }
+    
     itensNotaFiscal = [];
+    
+    // Limpar tabela de itens
+    const tbody = document.getElementById('itens-nf-body');
+    if (tbody) {
+        tbody.innerHTML = '<tr class="empty-state"><td colspan="9" class="text-center">Nenhum item adicionado</td></tr>';
+    }
+    
+    // Resetar totais
+    calcularTotaisNF();
 }
 
 function gerarNumeroNotaFiscal() {
     // Simular geração de número sequencial
     const numeroAtual = localStorage.getItem('ultimoNumeroNF') || '0';
     numeroNotaFiscal = parseInt(numeroAtual) + 1;
-    document.getElementById('nf-numero').value = numeroNotaFiscal.toString().padStart(9, '0');
+    const numeroInput = document.getElementById('nf-numero');
+    if (numeroInput) {
+        numeroInput.value = numeroNotaFiscal.toString().padStart(9, '0');
+    }
 }
 
 function definirDataEmissaoAtual() {
     const agora = new Date();
     const dataFormatada = agora.toISOString().slice(0, 16);
-    document.getElementById('nf-data-emissao').value = dataFormatada;
+    const dataInput = document.getElementById('nf-data-emissao');
+    if (dataInput) {
+        dataInput.value = dataFormatada;
+    }
 }
 
 function carregarClientesNF() {
@@ -449,6 +481,11 @@ function removerItemNF(id) {
 function atualizarTabelaItensNF() {
     const tbody = document.getElementById('itens-nf-body');
     
+    if (!tbody) {
+        console.error('Tabela de itens não encontrada');
+        return;
+    }
+    
     if (itensNotaFiscal.length === 0) {
         tbody.innerHTML = '<tr class="empty-state"><td colspan="9" class="text-center">Nenhum item adicionado</td></tr>';
         return;
@@ -475,9 +512,14 @@ function atualizarTabelaItensNF() {
 
 function calcularTotaisNF() {
     const totalProdutos = itensNotaFiscal.reduce((total, item) => total + item.valor_total, 0);
-    const frete = parseFloat(document.getElementById('nf-frete').value) || 0;
-    const seguro = parseFloat(document.getElementById('nf-seguro').value) || 0;
-    const outrasDespesas = parseFloat(document.getElementById('nf-outras-despesas').value) || 0;
+    
+    const freteInput = document.getElementById('nf-frete');
+    const seguroInput = document.getElementById('nf-seguro');
+    const outrasInput = document.getElementById('nf-outras-despesas');
+    
+    const frete = freteInput ? (parseFloat(freteInput.value) || 0) : 0;
+    const seguro = seguroInput ? (parseFloat(seguroInput.value) || 0) : 0;
+    const outrasDespesas = outrasInput ? (parseFloat(outrasInput.value) || 0) : 0;
     
     const totalGeral = totalProdutos + frete + seguro + outrasDespesas;
     
@@ -485,12 +527,24 @@ function calcularTotaisNF() {
     const baseICMS = totalProdutos;
     const valorICMS = baseICMS * 0.18;
     
-    document.getElementById('nf-total-produtos').textContent = `R$ ${totalProdutos.toFixed(2)}`;
-    document.getElementById('nf-base-icms').textContent = `R$ ${baseICMS.toFixed(2)}`;
-    document.getElementById('nf-valor-icms').textContent = `R$ ${valorICMS.toFixed(2)}`;
-    document.getElementById('nf-base-icms-st').textContent = 'R$ 0,00';
-    document.getElementById('nf-valor-icms-st').textContent = 'R$ 0,00';
-    document.getElementById('nf-total-geral').textContent = `R$ ${totalGeral.toFixed(2)}`;
+    // Atualizar elementos com verificação de existência
+    const totalProdutosEl = document.getElementById('nf-total-produtos');
+    if (totalProdutosEl) totalProdutosEl.textContent = `R$ ${totalProdutos.toFixed(2)}`;
+    
+    const baseICMSEl = document.getElementById('nf-base-icms');
+    if (baseICMSEl) baseICMSEl.textContent = `R$ ${baseICMS.toFixed(2)}`;
+    
+    const valorICMSEl = document.getElementById('nf-valor-icms');
+    if (valorICMSEl) valorICMSEl.textContent = `R$ ${valorICMS.toFixed(2)}`;
+    
+    const baseICMSSTEl = document.getElementById('nf-base-icms-st');
+    if (baseICMSSTEl) baseICMSSTEl.textContent = 'R$ 0,00';
+    
+    const valorICMSSTEl = document.getElementById('nf-valor-icms-st');
+    if (valorICMSSTEl) valorICMSSTEl.textContent = 'R$ 0,00';
+    
+    const totalGeralEl = document.getElementById('nf-total-geral');
+    if (totalGeralEl) totalGeralEl.textContent = `R$ ${totalGeral.toFixed(2)}`;
 }
 
 function visualizarNotaFiscal() {
@@ -508,7 +562,7 @@ function salvarNotaFiscal(event) {
     
     if (itensNotaFiscal.length === 0) {
         alert('Adicione pelo menos um item à nota fiscal.');
-        return;
+        return false;
     }
     
     const formData = new FormData(event.target);
@@ -523,6 +577,11 @@ function salvarNotaFiscal(event) {
     
     console.log('Emitindo nota fiscal:', notaFiscal);
     
+    // Salvar no localStorage
+    const notasFiscais = JSON.parse(localStorage.getItem('notasFiscais') || '[]');
+    notasFiscais.push(notaFiscal);
+    localStorage.setItem('notasFiscais', JSON.stringify(notasFiscais));
+    
     // Salvar último número usado
     localStorage.setItem('ultimoNumeroNF', numeroNotaFiscal.toString());
     
@@ -535,13 +594,24 @@ function salvarNotaFiscal(event) {
     }
     
     alert('Nota fiscal emitida com sucesso!');
+    return false;
 }
 
 // Fechar modal ao clicar fora dele
 document.addEventListener('click', function(event) {
     const modal = document.getElementById('nota-fiscal-modal');
-    if (event.target === modal) {
+    if (modal && event.target === modal) {
         fecharModalNotaFiscal();
+    }
+});
+
+// Fechar modal com tecla ESC
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const modal = document.getElementById('nota-fiscal-modal');
+        if (modal && modal.style.display === 'block') {
+            fecharModalNotaFiscal();
+        }
     }
 });
 </script>

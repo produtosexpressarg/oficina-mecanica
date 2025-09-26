@@ -16,12 +16,12 @@
         .modal {
             display: none;
             position: fixed;
-            z-index: 1000;
+            z-index: var(--z-modal);
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.6);
             animation: fadeIn 0.3s ease;
         }
 
@@ -29,6 +29,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 1rem;
         }
 
         .modal-content {
@@ -39,6 +40,9 @@
             max-height: 90vh;
             overflow-y: auto;
             animation: slideIn 0.3s ease;
+            position: relative;
+            z-index: var(--z-modal);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .modal-header {
@@ -236,10 +240,30 @@
     <script src="../js/servicos.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('../components/sidebar.html').then(r => r.text()).then(d => document.getElementById('sidebar-container').innerHTML = d);
-            fetch('../components/header.html').then(r => r.text()).then(d => document.getElementById('header-container').innerHTML = d);
-            fetch('../components/modals/servico-modal.html').then(r => r.text()).then(d => document.getElementById('servico-modal-container').innerHTML = d);
-            fetch('../components/footer.html').then(r => r.text()).then(d => document.getElementById('footer-container').innerHTML = d);
+            fetch('../components/sidebar.html').then(r => r.text()).then(d => {
+            const sidebarContainer = document.getElementById('sidebar-container');
+            if (sidebarContainer) {
+                sidebarContainer.innerHTML = d;
+            }
+        });
+        fetch('../components/header.html').then(r => r.text()).then(d => {
+            const headerContainer = document.getElementById('header-container');
+            if (headerContainer) {
+                headerContainer.innerHTML = d;
+            }
+        });
+        fetch('../components/modals/servico-modal.html').then(r => r.text()).then(d => {
+            const modalContainer = document.getElementById('servico-modal-container');
+            if (modalContainer) {
+                modalContainer.innerHTML = d;
+            }
+        });
+        fetch('../components/footer.html').then(r => r.text()).then(d => {
+            const footerContainer = document.getElementById('footer-container');
+            if (footerContainer) {
+                footerContainer.innerHTML = d;
+            }
+        });
         });
     </script>
         </div>

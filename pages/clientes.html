@@ -167,7 +167,7 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
+            background-color: rgba(0, 0, 0, 0.5);
             animation: fadeIn 0.3s ease;
         }
 
@@ -175,7 +175,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1rem;
         }
 
         .modal-content {
@@ -186,9 +185,6 @@
             max-height: 90vh;
             overflow-y: auto;
             animation: slideIn 0.3s ease;
-            position: relative;
-            z-index: var(--z-modal);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .modal-header {
@@ -637,7 +633,7 @@
                        clientDate.getFullYear() === now.getFullYear();
             }).length;
             
-            // Atualizar contador de clientes na tabela
+            // Update client count in table header
             const clientCountElement = document.getElementById('clientCount');
             if (clientCountElement) {
                 clientCountElement.textContent = `${total} clientes encontrados`;

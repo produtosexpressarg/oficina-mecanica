@@ -56,13 +56,7 @@ class ServicosManager {
         // Reset do modal ao fechar
         const modal = document.getElementById('servicoModal');
         if (modal) {
-            // Adicionar event listener para fechar modal ao clicar no X ou fora
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal || e.target.classList.contains('modal-close')) {
-                    modal.classList.remove('show');
-                    this.limparForm();
-                }
-            });
+            modal.addEventListener('hidden.bs.modal', () => this.limparForm());
         }
     }
 
@@ -119,9 +113,10 @@ class ServicosManager {
             nome: formData.get('nome'),
             categoria: formData.get('categoria'),
             descricao: formData.get('descricao'),
-            preco: parseFloat(formData.get('preco')),
-            tempo_estimado: formData.get('tempo_estimado'),
-            status: formData.get('status') || 'ativo',
+            valor: parseFloat(formData.get('valor')),
+            tempoPrevisto: parseInt(formData.get('tempo')),
+            ativo: formData.get('status') === 'ativo',
+            observacoes: formData.get('observacoes') || '',
             data_cadastro: this.servicoEditando ? this.servicoEditando.data_cadastro : new Date().toISOString(),
             data_atualizacao: new Date().toISOString()
         };
@@ -139,11 +134,9 @@ class ServicosManager {
         this.renderizarServicos();
         this.atualizarEstatisticas();
         
-        // Fechar modal usando CSS puro
-        const modal = document.getElementById('servicoModal');
-        if (modal) {
-            modal.classList.remove('show');
-        }
+        // Fechar modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('servicoModal'));
+        modal.hide();
         
         this.servicoEditando = null;
     }
@@ -152,9 +145,10 @@ class ServicosManager {
         document.getElementById('nomeServico').value = servico.nome || '';
         document.getElementById('categoriaServico').value = servico.categoria || '';
         document.getElementById('descricaoServico').value = servico.descricao || '';
-        document.getElementById('precoServico').value = servico.preco || '';
-        document.getElementById('tempoEstimado').value = servico.tempo_estimado || '';
-        document.getElementById('statusServico').value = servico.status || 'ativo';
+        document.getElementById('valorServico').value = servico.valor || '';
+        document.getElementById('tempoEstimado').value = servico.tempoPrevisto || '';
+        document.getElementById('statusServico').value = servico.ativo ? 'ativo' : 'inativo';
+        document.getElementById('observacoesServico').value = servico.observacoes || '';
     }
 
     limparForm() {
@@ -364,3 +358,110 @@ let servicosManager;
 document.addEventListener('DOMContentLoaded', function() {
     servicosManager = new ServicosManager();
 });
+
+// Funções globais para os botões do modal (seguindo o padrão do modal de veículos)
+function fecharModalServico() {
+    const modal = document.getElementById('servicoModal');
+    if (modal) {
+        modal.classList.remove('show');
+        
+        // Limpar formulário
+        const form = document.getElementById('servicoForm');
+        if (form) {
+            form.reset();
+        }
+        
+        // Reset do estado de edição
+        if (servicosManager) {
+            servicosManager.servicoEditando = null;
+        }
+    }
+}
+
+function salvarServicoModal() {
+    if (servicosManager) {
+        const form = document.getElementById('servicoForm');
+        if (!form) {
+            console.error('Formulário de serviço não encontrado');
+            return;
+        }
+
+        // Validação do formulário
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
+        const formData = new FormData(form);
+        
+        // Validações específicas
+        const nome = formData.get('nome')?.trim();
+        const categoria = formData.get('categoria');
+        const valor = parseFloat(formData.get('valor'));
+
+        if (!nome) {
+            alert('Por favor, informe o nome do serviço.');
+            document.getElementById('nomeServico').focus();
+            return;
+        }
+
+        if (!categoria) {
+            alert('Por favor, selecione uma categoria.');
+            document.getElementById('categoriaServico').focus();
+            return;
+        }
+
+        if (isNaN(valor) || valor <= 0) {
+            alert('Por favor, informe um valor válido.');
+            document.getElementById('valorServico').focus();
+            return;
+        }
+
+        // Criar objeto serviço
+        const servico = {
+            id: servicosManager.servicoEditando ? servicosManager.servicoEditando.id : Date.now().toString(),
+            nome: nome,
+            categoria: categoria,
+            descricao: formData.get('descricao')?.trim() || '',
+            valor: valor,
+            tempoPrevisto: parseInt(formData.get('tempo')) || 0,
+            ativo: formData.get('status') === 'ativo',
+            observacoes: formData.get('observacoes')?.trim() || '',
+            dataCadastro: servicosManager.servicoEditando ? servicosManager.servicoEditando.dataCadastro : new Date().toISOString(),
+            dataAtualizacao: new Date().toISOString()
+        };
+
+        try {
+            // Salvar serviço
+            if (servicosManager.servicoEditando) {
+                // Edição
+                const index = servicosManager.servicos.findIndex(s => s.id === servicosManager.servicoEditando.id);
+                if (index !== -1) {
+                    servicosManager.servicos[index] = servico;
+                    servicosManager.mostrarNotificacao('Serviço atualizado com sucesso!', 'success');
+                }
+            } else {
+                // Novo serviço
+                servicosManager.servicos.push(servico);
+                servicosManager.mostrarNotificacao('Serviço cadastrado com sucesso!', 'success');
+            }
+
+            // Salvar no localStorage
+            servicosManager.salvarServicos();
+            
+            // Atualizar interface
+            servicosManager.renderizarServicos();
+            servicosManager.atualizarEstatisticas();
+            
+            // Fechar modal
+            fecharModalServico();
+            
+        } catch (error) {
+            console.error('Erro ao salvar serviço:', error);
+            alert('Erro ao salvar serviço. Tente novamente.');
+        }
+    } else {
+        console.error('ServicosManager não está disponível');
+        alert('Erro interno. Recarregue a página e tente novamente.');
+    }
+}

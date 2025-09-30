@@ -35,14 +35,6 @@ class VeiculosManager {
             console.error('VeiculosManager: Botão btn-novo-veiculo não encontrado no DOM!');
         }
 
-        // Botão Salvar Veículo
-        const btnSalvar = document.getElementById('salvarVeiculo');
-        if (btnSalvar) {
-            btnSalvar.addEventListener('click', () => this.salvarVeiculo());
-        } else {
-            console.warn('VeiculosManager: Botão salvarVeiculo não encontrado no DOM');
-        }
-
         // Filtros e busca
         const inputBusca = document.getElementById('busca-veiculo');
         if (inputBusca) {
@@ -58,12 +50,6 @@ class VeiculosManager {
         if (filtroStatus) {
             filtroStatus.addEventListener('change', (e) => this.filtrarPorStatus(e.target.value));
         }
-
-        // Reset do modal ao fechar
-        const modal = document.getElementById('veiculoModal');
-        if (modal) {
-            modal.addEventListener('hidden.bs.modal', () => this.resetModal());
-        }
     }
 
     abrirModal(veiculo = null) {
@@ -78,6 +64,9 @@ class VeiculosManager {
             console.error('VeiculosManager: Modal veiculoModal não encontrado no DOM!');
             return;
         }
+        
+        // Popular dropdown de clientes
+        this.popularDropdownClientes();
         
         const modalLabel = document.getElementById('veiculoModalLabel');
         console.log('VeiculosManager: Modal label encontrado:', modalLabel);
@@ -100,10 +89,32 @@ class VeiculosManager {
             }
         }
         
-        console.log('VeiculosManager: Tentando mostrar modal usando CSS...');
-        // Usar CSS puro - adicionar classe show
+        console.log('VeiculosManager: Mostrando modal...');
+        // Usar CSS puro - adicionar classe show e display block
+        modalElement.style.display = 'flex';
         modalElement.classList.add('show');
-        console.log('VeiculosManager: Modal mostrado usando classe show');
+        console.log('VeiculosManager: Modal mostrado');
+    }
+
+    popularDropdownClientes() {
+        const selectCliente = document.getElementById('clienteVeiculo');
+        if (!selectCliente) {
+            console.error('Dropdown de clientes não encontrado!');
+            return;
+        }
+
+        // Limpar opções existentes (exceto a primeira)
+        selectCliente.innerHTML = '<option value="">Selecione o cliente</option>';
+
+        // Adicionar clientes do localStorage
+        this.clientes.forEach(cliente => {
+            const option = document.createElement('option');
+            option.value = cliente.id;
+            option.textContent = `${cliente.nome} - ${cliente.telefone || cliente.email}`;
+            selectCliente.appendChild(option);
+        });
+
+        console.log(`Carregados ${this.clientes.length} clientes no dropdown`);
     }
 
     preencherModal(veiculo) {
@@ -193,9 +204,8 @@ class VeiculosManager {
         this.renderizarVeiculos();
         this.atualizarEstatisticas();
         
-        // Fechar modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById('veiculoModal'));
-        modal.hide();
+        // Fechar modal usando a função global
+        fecharModalVeiculo();
     }
 
     excluirVeiculo(id) {
@@ -600,4 +610,123 @@ class VeiculosManager {
 let veiculosManager;
 document.addEventListener('DOMContentLoaded', function() {
     veiculosManager = new VeiculosManager();
+    // Tornar disponível globalmente
+    window.veiculosManager = veiculosManager;
 });
+
+
+// Funções globais para o modal de veículo
+function fecharModalVeiculo() {
+    const modal = document.getElementById('veiculoModal');
+    if (modal) {
+        modal.style.display = 'none';
+        modal.classList.remove('show');
+        
+        // Limpar formulário
+        const form = document.getElementById('veiculoForm');
+        if (form) {
+            form.reset();
+        }
+        
+        // Limpar datalist de modelos
+        const datalist = document.getElementById('modelosList');
+        if (datalist) {
+            datalist.innerHTML = '';
+        }
+        
+        console.log('Modal de veículo fechado e formulário limpo');
+    }
+}
+
+function salvarVeiculoModal() {
+    console.log('Função salvarVeiculoModal chamada');
+    
+    // Verificar se existe o gerenciador de veículos
+    if (typeof window.veiculosManager !== 'undefined' && window.veiculosManager) {
+        console.log('Chamando salvarVeiculo do VeiculosManager');
+        window.veiculosManager.salvarVeiculo();
+    } else {
+        console.error('VeiculosManager não encontrado. Tentando salvar diretamente...');
+        
+        // Fallback: validação básica e salvamento direto
+        const form = document.getElementById('veiculoForm');
+        if (!form) {
+            alert('Formulário não encontrado!');
+            return;
+        }
+        
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+        
+        // Coletar dados do formulário
+        const formData = new FormData(form);
+        const veiculo = {
+            id: Date.now(),
+            cliente_id: formData.get('cliente_id'),
+            marca: formData.get('marca'),
+            modelo: formData.get('modelo'),
+            ano: formData.get('ano'),
+            placa: formData.get('placa'),
+            cor: formData.get('cor'),
+            combustivel: formData.get('combustivel'),
+            cambio: formData.get('cambio'),
+            quilometragem: formData.get('quilometragem'),
+            chassi: formData.get('chassi'),
+            renavam: formData.get('renavam'),
+            categoria: formData.get('categoria'),
+            status: formData.get('status'),
+            observacoes: formData.get('observacoes'),
+            data_cadastro: new Date().toISOString()
+        };
+        
+        // Salvar no localStorage
+        let veiculos = JSON.parse(localStorage.getItem('oficina_veiculos') || '[]');
+        veiculos.push(veiculo);
+        localStorage.setItem('oficina_veiculos', JSON.stringify(veiculos));
+        
+        alert('Veículo salvo com sucesso!');
+        fecharModalVeiculo();
+        
+        // Recarregar página para atualizar lista
+        if (typeof window.veiculosManager !== 'undefined' && window.veiculosManager) {
+            window.veiculosManager.renderizarVeiculos();
+            window.veiculosManager.atualizarEstatisticas();
+        } else {
+            window.location.reload();
+        }
+    }
+}
+
+function carregarModelos() {
+    const marca = document.getElementById('marcaVeiculo').value;
+    const modeloInput = document.getElementById('modeloVeiculo');
+    
+    // Modelos populares por marca (pode ser expandido)
+    const modelos = {
+        'Chevrolet': ['Onix', 'Prisma', 'Cruze', 'Tracker', 'Equinox', 'S10', 'Spin'],
+        'Ford': ['Ka', 'Fiesta', 'Focus', 'EcoSport', 'Fusion', 'Ranger', 'Edge'],
+        'Volkswagen': ['Gol', 'Voyage', 'Polo', 'Virtus', 'T-Cross', 'Tiguan', 'Amarok'],
+        'Fiat': ['Uno', 'Argo', 'Cronos', 'Mobi', 'Toro', 'Strada', 'Ducato'],
+        'Toyota': ['Etios', 'Yaris', 'Corolla', 'RAV4', 'Hilux', 'SW4', 'Prius'],
+        'Honda': ['Fit', 'City', 'Civic', 'HR-V', 'CR-V', 'Accord', 'Pilot'],
+        'Hyundai': ['HB20', 'HB20S', 'Elantra', 'Tucson', 'Santa Fe', 'Creta', 'ix35'],
+        'Nissan': ['March', 'Versa', 'Sentra', 'Kicks', 'X-Trail', 'Frontier', 'Leaf']
+    };
+
+    if (modelos[marca]) {
+        // Criar datalist para sugestões
+        let datalist = document.getElementById('modelosList');
+        if (!datalist) {
+            datalist = document.createElement('datalist');
+            datalist.id = 'modelosList';
+            document.body.appendChild(datalist);
+        }
+        
+        datalist.innerHTML = modelos[marca].map(modelo => `<option value="${modelo}">`).join('');
+        modeloInput.setAttribute('list', 'modelosList');
+    } else {
+        modeloInput.removeAttribute('list');
+    }
+}

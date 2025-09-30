@@ -1,13 +1,12 @@
 <!-- Modal Novo Veículo -->
-<div class="modal fade" id="veiculoModal" tabindex="-1" aria-labelledby="veiculoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="veiculoModalLabel">Novo Veículo</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
+<div class="modal" id="veiculoModal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="veiculoModalLabel">Novo Veículo</h5>
+            <button type="button" class="modal-close" onclick="fecharModalVeiculo()" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
             <div class="modal-body">
                 <form id="veiculoForm">
                     <!-- Informações do Proprietário -->
@@ -186,10 +185,10 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <button type="button" class="btn btn-secondary" onclick="fecharModalVeiculo()">
                     <i class="fas fa-times"></i> Cancelar
                 </button>
-                <button type="button" class="btn btn-primary" id="salvarVeiculo">
+                <button type="button" class="btn btn-primary" onclick="salvarVeiculoModal()">
                     <i class="fas fa-save"></i> Salvar Veículo
                 </button>
             </div>
@@ -198,6 +197,100 @@
 </div>
 
 <script>
+// As funções JavaScript foram movidas para veiculos.js para evitar problemas de escopo
+
+// Função para carregar clientes no select
+function carregarClientesSelect() {
+    const select = document.getElementById('clienteVeiculo');
+    if (!select) return;
+    
+    const clientes = JSON.parse(localStorage.getItem('oficina_clientes') || '[]');
+    
+    // Limpar opções existentes (exceto a primeira)
+    select.innerHTML = '<option value="">Selecione um cliente</option>';
+    
+    // Adicionar clientes
+    clientes.forEach(cliente => {
+        const option = document.createElement('option');
+        option.value = cliente.id;
+        option.textContent = `${cliente.nome} - ${cliente.telefone}`;
+        select.appendChild(option);
+    });
+}
+
+// Carregar clientes quando o modal for carregado
+document.addEventListener('DOMContentLoaded', function() {
+    // Aguardar um pouco para garantir que o modal foi inserido no DOM
+    setTimeout(() => {
+        carregarClientesSelect();
+    }, 100);
+});
+
+// Máscaras e validações para os campos
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        // Máscara para placa
+        const placaInput = document.getElementById('placaVeiculo');
+        if (placaInput) {
+            placaInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+                
+                if (value.length <= 7) {
+                    // Formato antigo: ABC-1234
+                    if (value.length > 3) {
+                        value = value.substring(0, 3) + '-' + value.substring(3);
+                    }
+                } else if (value.length === 7) {
+                    // Formato Mercosul: ABC1D23
+                    value = value.substring(0, 3) + value.substring(3, 4) + value.substring(4, 5) + value.substring(5);
+                }
+                
+                e.target.value = value;
+            });
+        }
+
+        // Máscara para RENAVAM (apenas números)
+        const renavamInput = document.getElementById('renavamVeiculo');
+        if (renavamInput) {
+            renavamInput.addEventListener('input', function(e) {
+                e.target.value = e.target.value.replace(/\D/g, '');
+            });
+        }
+
+        // Máscara para chassi (alfanumérico)
+        const chassiInput = document.getElementById('chassiVeiculo');
+        if (chassiInput) {
+            chassiInput.addEventListener('input', function(e) {
+                e.target.value = e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+            });
+        }
+
+        // Validação de ano
+        const anoInput = document.getElementById('anoVeiculo');
+        if (anoInput) {
+            anoInput.addEventListener('input', function(e) {
+                const ano = parseInt(e.target.value);
+                const anoAtual = new Date().getFullYear();
+                
+                if (ano < 1900 || ano > anoAtual + 1) {
+                    e.target.setCustomValidity('Ano deve estar entre 1900 e ' + (anoAtual + 1));
+                } else {
+                    e.target.setCustomValidity('');
+                }
+            });
+        }
+
+        // Máscara para quilometragem (apenas números)
+        const kmInput = document.getElementById('quilometragemVeiculo');
+        if (kmInput) {
+            kmInput.addEventListener('input', function(e) {
+                e.target.value = e.target.value.replace(/\D/g, '');
+            });
+        }
+    }, 200);
+});
+</script>
+
 function carregarModelos() {
     const marca = document.getElementById('marcaVeiculo').value;
     const modeloInput = document.getElementById('modeloVeiculo');
@@ -244,87 +337,3 @@ function abrirModalCliente() {
         alert('Sistema de clientes não está disponível. Recarregue a página e tente novamente.');
     }
 }
-
-// Máscaras e validações
-document.addEventListener('DOMContentLoaded', function() {
-    // Máscara para placa (formato antigo e Mercosul)
-    document.getElementById('placaVeiculo').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
-        
-        // Formato antigo: ABC1234 -> ABC-1234
-        if (value.length <= 7 && /^[A-Z]{0,3}[0-9]{0,4}$/.test(value)) {
-            if (value.length > 3) {
-                value = value.substring(0, 3) + '-' + value.substring(3);
-            }
-        }
-        // Formato Mercosul: ABC1D23 -> ABC1D23
-        else if (value.length <= 7 && /^[A-Z]{0,3}[0-9]{1}[A-Z]{0,1}[0-9]{0,2}$/.test(value)) {
-            // Mantém sem hífen para Mercosul
-        }
-        
-        e.target.value = value;
-    });
-
-    // Máscara para RENAVAM (apenas números)
-    document.getElementById('renavamVeiculo').addEventListener('input', function(e) {
-        e.target.value = e.target.value.replace(/\D/g, '');
-    });
-
-    // Máscara para Chassi (apenas letras e números)
-    document.getElementById('chassiVeiculo').addEventListener('input', function(e) {
-        e.target.value = e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
-    });
-
-    // Validação de ano
-    document.getElementById('anoVeiculo').addEventListener('input', function(e) {
-        const ano = parseInt(e.target.value);
-        const anoAtual = new Date().getFullYear();
-        
-        if (ano > anoAtual + 1) {
-            e.target.value = anoAtual + 1;
-        }
-    });
-
-    // Formatação de quilometragem
-    document.getElementById('quilometragemVeiculo').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value) {
-            // Adicionar pontos para milhares
-            value = parseInt(value).toLocaleString('pt-BR');
-            e.target.value = value;
-        }
-    });
-});
-
-// Função para carregar clientes no select
-function carregarClientesSelect() {
-    const select = document.getElementById('clienteVeiculo');
-    if (!select) return;
-
-    // Limpar opções existentes (exceto a primeira)
-    select.innerHTML = '<option value="">Selecione o cliente</option>';
-
-    // Carregar clientes do localStorage
-    const clientes = JSON.parse(localStorage.getItem('oficina_clientes') || '[]');
-    
-    clientes.forEach(cliente => {
-        const option = document.createElement('option');
-        option.value = cliente.id;
-        option.textContent = `${cliente.nome} - ${cliente.telefone || 'Sem telefone'}`;
-        select.appendChild(option);
-    });
-
-    if (clientes.length === 0) {
-        const option = document.createElement('option');
-        option.value = '';
-        option.textContent = 'Nenhum cliente cadastrado';
-        option.disabled = true;
-        select.appendChild(option);
-    }
-}
-
-// Carregar clientes quando o modal for aberto
-document.getElementById('veiculoModal').addEventListener('show.bs.modal', function() {
-    carregarClientesSelect();
-});
-</script>

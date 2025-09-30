@@ -140,8 +140,6 @@
     <div id="nota-fiscal-modal-container"></div>
 
     <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="../assets/js/app.js"></script>
     <script>
         // Carregar componentes
@@ -199,7 +197,7 @@
                             console.log('Verificando função após execução manual:', typeof abrirModalNotaFiscal);
                             configurarBotaoNovaNota();
                             configurarEventListenersModal();
-                        }, 200);
+                        }, 100);
                     }
                 })
                 .catch(error => {
@@ -268,21 +266,7 @@
                 
                 window.definirDataEmissaoAtual = function() {
                     const agora = new Date();
-                    // Formatação para horário de Brasília (UTC-3)
-                    const brasiliaOffset = -3 * 60; // -3 horas em minutos
-                    const localTime = agora.getTime();
-                    const localOffset = agora.getTimezoneOffset() * 60000;
-                    const utc = localTime + localOffset;
-                    const brasilia = new Date(utc + (brasiliaOffset * 60000));
-                    
-                    // Formato DD/MM/AAAA HH:MM
-                    const dia = brasilia.getDate().toString().padStart(2, '0');
-                    const mes = (brasilia.getMonth() + 1).toString().padStart(2, '0');
-                    const ano = brasilia.getFullYear();
-                    const horas = brasilia.getHours().toString().padStart(2, '0');
-                    const minutos = brasilia.getMinutes().toString().padStart(2, '0');
-                    
-                    const dataFormatada = `${dia}/${mes}/${ano} ${horas}:${minutos}`;
+                    const dataFormatada = agora.toISOString().slice(0, 16);
                     const dataInput = document.getElementById('nf-data-emissao');
                     if (dataInput) {
                         dataInput.value = dataFormatada;
@@ -314,38 +298,20 @@
                         if (window.itensNotaFiscal.length === 0) {
                             tbody.innerHTML = '<tr class="empty-state"><td colspan="9" class="text-center">Nenhum item adicionado</td></tr>';
                         }
-                    } else {
-                        console.warn('Elemento itens-nf-body não encontrado');
                     }
                 };
                 
                 window.calcularTotaisNF = function() {
                     const totalProdutos = window.itensNotaFiscal.reduce((total, item) => total + (item.valor_total || 0), 0);
                     const totalProdutosEl = document.getElementById('nf-total-produtos');
-                    if (totalProdutosEl) {
-                        totalProdutosEl.textContent = `R$ ${totalProdutos.toFixed(2)}`;
-                    } else {
-                        console.warn('Elemento nf-total-produtos não encontrado');
-                    }
+                    if (totalProdutosEl) totalProdutosEl.textContent = `R$ ${totalProdutos.toFixed(2)}`;
                 };
                 
                 // Função para carregar itens no select
                 window.carregarItensNF = function() {
-                    const tipoElement = document.getElementById('item-tipo');
-                    const selectElement = document.getElementById('item-codigo');
-                    
-                    if (!tipoElement) {
-                        console.warn('Elemento item-tipo não encontrado');
-                        return;
-                    }
-                    
-                    if (!selectElement) {
-                        console.warn('Elemento item-codigo não encontrado');
-                        return;
-                    }
-                    
-                    const tipo = tipoElement.value;
-                    selectElement.innerHTML = '<option value="">Selecione um item</option>';
+                    const tipo = document.getElementById('item-tipo').value;
+                    const select = document.getElementById('item-codigo');
+                    select.innerHTML = '<option value="">Selecione um item</option>';
                     
                     if (!tipo) return;
                     
@@ -403,26 +369,6 @@
                     });
                 };
                 
-                // Função para carregar dados do cliente selecionado
-                window.carregarDadosCliente = function() {
-                    const clienteSelect = document.getElementById('cliente-select');
-                    if (!clienteSelect.value) return;
-                    
-                    const cliente = JSON.parse(clienteSelect.value);
-                    
-                    document.getElementById('cliente-nome').value = cliente.nome;
-                    document.getElementById('cliente-endereco').value = cliente.endereco || '';
-                    document.getElementById('cliente-cidade').value = cliente.cidade || '';
-                    
-                    if (cliente.cpf) {
-                        document.getElementById('cliente-tipo-documento').value = 'cpf';
-                        document.getElementById('cliente-documento').value = cliente.cpf;
-                    } else if (cliente.cnpj) {
-                        document.getElementById('cliente-tipo-documento').value = 'cnpj';
-                        document.getElementById('cliente-documento').value = cliente.cnpj;
-                    }
-                };
-                
                 // Função para adicionar item à nota fiscal
                 window.adicionarItemNF = function() {
                     const itemSelect = document.getElementById('item-codigo');
@@ -456,295 +402,9 @@
                     document.getElementById('item-tipo').value = '';
                     document.getElementById('item-codigo').innerHTML = '<option value="">Selecione um item</option>';
                     document.getElementById('item-quantidade-nf').value = 1;
-                };
-                
-                // Função para salvar nota fiscal
-                window.salvarNotaFiscal = function(event) {
-                    event.preventDefault();
-                    
-                    if (window.itensNotaFiscal.length === 0) {
-                        alert('Adicione pelo menos um item à nota fiscal.');
-                        return false;
-                    }
-                    
-                    const formData = new FormData(event.target);
-                    const notaFiscal = Object.fromEntries(formData.entries());
-                    
-                    notaFiscal.itens = window.itensNotaFiscal;
-                    notaFiscal.total_produtos = window.itensNotaFiscal.reduce((total, item) => total + item.valor_total, 0);
-                    notaFiscal.total_geral = notaFiscal.total_produtos + 
-                                            (parseFloat(notaFiscal.valor_frete) || 0) + 
-                                            (parseFloat(notaFiscal.valor_seguro) || 0) + 
-                                            (parseFloat(notaFiscal.outras_despesas) || 0);
-                    
-                    console.log('Emitindo nota fiscal:', notaFiscal);
-                    
-                    // Salvar no localStorage
-                    const notasFiscais = JSON.parse(localStorage.getItem('notasFiscais') || '[]');
-                    notasFiscais.push(notaFiscal);
-                    localStorage.setItem('notasFiscais', JSON.stringify(notasFiscais));
-                    
-                    // Salvar último número usado
-                    localStorage.setItem('ultimoNumeroNF', window.numeroNotaFiscal.toString());
-                    
-                    // Fechar modal
-                    window.fecharModalNotaFiscal();
-                    
-                    // Recarregar a tabela de notas fiscais
-                    if (typeof carregarNotasFiscais === 'function') {
-                        carregarNotasFiscais();
-                    }
-                    
-                    alert('Nota fiscal emitida com sucesso!');
-                    return false;
-                };
-                
-                // Função para remover item da nota fiscal
-                window.removerItemNF = function(id) {
-                    window.itensNotaFiscal = window.itensNotaFiscal.filter(item => item.id !== id);
-                    window.atualizarTabelaItensNF();
-                    window.calcularTotaisNF();
-                };
-                
-                // Função para atualizar tabela de itens
-                window.atualizarTabelaItensNF = function() {
-                    const tbody = document.getElementById('itens-nf-body');
-                    if (tbody) {
-                        if (window.itensNotaFiscal.length === 0) {
-                            tbody.innerHTML = '<tr class="empty-state"><td colspan="9" class="text-center">Nenhum item adicionado</td></tr>';
-                        }
-                    } else {
-                        console.warn('Elemento itens-nf-body não encontrado');
-                    }
-                };
-                
-                window.calcularTotaisNF = function() {
-                    const totalProdutos = window.itensNotaFiscal.reduce((total, item) => total + (item.valor_total || 0), 0);
-                    const totalProdutosEl = document.getElementById('nf-total-produtos');
-                    if (totalProdutosEl) {
-                        totalProdutosEl.textContent = `R$ ${totalProdutos.toFixed(2)}`;
-                    } else {
-                        console.warn('Elemento nf-total-produtos não encontrado');
-                    }
-                };
-                
-                // Função para carregar itens no select
-                window.carregarItensNF = function() {
-                    const tipoElement = document.getElementById('item-tipo');
-                    const selectElement = document.getElementById('item-codigo');
-                    
-                    if (!tipoElement) {
-                        console.warn('Elemento item-tipo não encontrado');
-                        return;
-                    }
-                    
-                    if (!selectElement) {
-                        console.warn('Elemento item-codigo não encontrado');
-                        return;
-                    }
-                    
-                    const tipo = tipoElement.value;
-                    selectElement.innerHTML = '<option value="">Selecione um item</option>';
-                    
-                    if (!tipo) return;
-                    
-                    let itensMock = [];
-                    
-                    if (tipo === 'produto') {
-                        itensMock = [
-                            { 
-                                id: 1, 
-                                codigo: 'PROD001',
-                                nome: 'Óleo Motor 5W30', 
-                                preco: 35.00,
-                                ncm: '27101932',
-                                cfop: '5102',
-                                unidade: 'LT'
-                            },
-                            { 
-                                id: 2, 
-                                codigo: 'PROD002',
-                                nome: 'Filtro de Ar', 
-                                preco: 25.00,
-                                ncm: '84213100',
-                                cfop: '5102',
-                                unidade: 'UN'
-                            }
-                        ];
-                    } else if (tipo === 'servico') {
-                        itensMock = [
-                            { 
-                                id: 1, 
-                                codigo: 'SERV001',
-                                nome: 'Troca de Óleo', 
-                                preco: 50.00,
-                                ncm: '00000000',
-                                cfop: '5933',
-                                unidade: 'UN'
-                            },
-                            { 
-                                id: 2, 
-                                codigo: 'SERV002',
-                                nome: 'Alinhamento', 
-                                preco: 80.00,
-                                ncm: '00000000',
-                                cfop: '5933',
-                                unidade: 'UN'
-                            }
-                        ];
-                    }
-                    
-                    itensMock.forEach(item => {
-                        const option = document.createElement('option');
-                        option.value = JSON.stringify(item);
-                        option.textContent = `${item.codigo} - ${item.nome}`;
-                        select.appendChild(option);
-                    });
-                };
-                
-                // Função para carregar dados do cliente selecionado
-                window.carregarDadosCliente = function() {
-                    const clienteSelect = document.getElementById('cliente-select');
-                    if (!clienteSelect.value) return;
-                    
-                    const cliente = JSON.parse(clienteSelect.value);
-                    
-                    document.getElementById('cliente-nome').value = cliente.nome;
-                    document.getElementById('cliente-endereco').value = cliente.endereco || '';
-                    document.getElementById('cliente-cidade').value = cliente.cidade || '';
-                    
-                    if (cliente.cpf) {
-                        document.getElementById('cliente-tipo-documento').value = 'cpf';
-                        document.getElementById('cliente-documento').value = cliente.cpf;
-                    } else if (cliente.cnpj) {
-                        document.getElementById('cliente-tipo-documento').value = 'cnpj';
-                        document.getElementById('cliente-documento').value = cliente.cnpj;
-                    }
-                };
-                
-                // Função para adicionar item à nota fiscal
-                window.adicionarItemNF = function() {
-                    const itemSelect = document.getElementById('item-codigo');
-                    const quantidadeInput = document.getElementById('item-quantidade-nf');
-                    
-                    if (!itemSelect.value || !quantidadeInput.value) {
-                        alert('Por favor, selecione um item e informe a quantidade.');
-                        return;
-                    }
-                    
-                    const item = JSON.parse(itemSelect.value);
-                    const quantidade = parseFloat(quantidadeInput.value);
-                    
-                    const itemNF = {
-                        id: Date.now(),
-                        codigo: item.codigo,
-                        descricao: item.nome,
-                        ncm: item.ncm,
-                        cfop: item.cfop,
-                        unidade: item.unidade,
-                        quantidade: quantidade,
-                        valor_unitario: item.preco,
-                        valor_total: item.preco * quantidade
-                    };
-                    
-                    window.itensNotaFiscal.push(itemNF);
-                    atualizarTabelaItensNF();
-                    calcularTotaisNF();
-                    
-                    // Limpar campos
-                    document.getElementById('item-tipo').value = '';
-                    document.getElementById('item-codigo').innerHTML = '<option value="">Selecione um item</option>';
-                    document.getElementById('item-quantidade-nf').value = 1;
-                };
-                
-                // Função para salvar nota fiscal
-                window.salvarNotaFiscal = function(event) {
-                    event.preventDefault();
-                    
-                    if (window.itensNotaFiscal.length === 0) {
-                        alert('Adicione pelo menos um item à nota fiscal.');
-                        return false;
-                    }
-                    
-                    const formData = new FormData(event.target);
-                    const notaFiscal = Object.fromEntries(formData.entries());
-                    
-                    notaFiscal.itens = window.itensNotaFiscal;
-                    notaFiscal.total_produtos = window.itensNotaFiscal.reduce((total, item) => total + item.valor_total, 0);
-                    notaFiscal.total_geral = notaFiscal.total_produtos + 
-                                            (parseFloat(notaFiscal.valor_frete) || 0) + 
-                                            (parseFloat(notaFiscal.valor_seguro) || 0) + 
-                                            (parseFloat(notaFiscal.outras_despesas) || 0);
-                    
-                    console.log('Emitindo nota fiscal:', notaFiscal);
-                    
-                    // Salvar no localStorage
-                    const notasFiscais = JSON.parse(localStorage.getItem('notasFiscais') || '[]');
-                    notasFiscais.push(notaFiscal);
-                    localStorage.setItem('notasFiscais', JSON.stringify(notasFiscais));
-                    
-                    // Salvar último número usado
-                    localStorage.setItem('ultimoNumeroNF', window.numeroNotaFiscal.toString());
-                    
-                    // Fechar modal
-                    window.fecharModalNotaFiscal();
-                    
-                    // Recarregar a tabela de notas fiscais
-                    if (typeof carregarNotasFiscais === 'function') {
-                        carregarNotasFiscais();
-                    }
-                    
-                    alert('Nota fiscal emitida com sucesso!');
-                    return false;
-                };
-                
-                // Função para remover item da nota fiscal
-                window.removerItemNF = function(id) {
-                    window.itensNotaFiscal = window.itensNotaFiscal.filter(item => item.id !== id);
-                    window.atualizarTabelaItensNF();
-                    window.calcularTotaisNF();
-                };
-                
-                // Função para atualizar tabela de itens
-                window.atualizarTabelaItensNF = function() {
-                    const tbody = document.getElementById('itens-nf-body');
-                    
-                    if (!tbody) {
-                        console.error('Tabela de itens não encontrada');
-                        return;
-                    }
-                    
-                    if (window.itensNotaFiscal.length === 0) {
-                        tbody.innerHTML = '<tr class="empty-state"><td colspan="9" class="text-center">Nenhum item adicionado</td></tr>';
-                        return;
-                    }
-                    
-                    tbody.innerHTML = window.itensNotaFiscal.map(item => `
-                        <tr>
-                            <td>${item.codigo}</td>
-                            <td>${item.descricao}</td>
-                            <td>${item.ncm}</td>
-                            <td>${item.cfop}</td>
-                            <td>${item.unidade}</td>
-                            <td>${item.quantidade}</td>
-                            <td>R$ ${item.valor_unitario.toFixed(2)}</td>
-                            <td>R$ ${item.valor_total.toFixed(2)}</td>
-                            <td>
-                                <button type="button" class="btn btn-sm btn-danger" onclick="removerItemNF(${item.id})">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `).join('');
                 };
                 
                 console.log('Script do modal executado com sucesso!');
-                
-                // Carregar notas fiscais na tabela após executar o script
-                setTimeout(() => {
-                    carregarNotasFiscais();
-                    updateCurrentDate();
-                }, 100);
             }
             
             // Configurar event listeners do modal
@@ -770,308 +430,8 @@
                 }
             }
             
-            // Função para carregar notas fiscais na tabela
-            function carregarNotasFiscais() {
-                const notasFiscais = JSON.parse(localStorage.getItem('notasFiscais') || '[]');
-                const tbody = document.querySelector('#notas-table-body');
-                
-                if (!tbody) {
-                    console.error('Tabela de notas fiscais não encontrada');
-                    return;
-                }
-                
-                tbody.innerHTML = '';
-                
-                if (notasFiscais.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="7" class="text-center">Nenhuma nota fiscal encontrada</td></tr>';
-                    return;
-                }
-                
-                notasFiscais.forEach((nf, index) => {
-                    const row = document.createElement('tr');
-                    // Formatação da data para exibição na tabela (DD/MM/AAAA HH:MM)
-                    let dataFormatada = 'Não informada';
-                    if (nf.data_emissao) {
-                        // Se a data contém 'T' (formato antigo), converte
-                        if (nf.data_emissao.includes('T')) {
-                            dataFormatada = nf.data_emissao.replace('T', ' ').replace(/-/g, '/');
-                        } else {
-                            dataFormatada = nf.data_emissao;
-                        }
-                    }
-                    
-                    row.innerHTML = `
-                        <td>${nf.numero}</td>
-                        <td>${dataFormatada}</td>
-                        <td>${nf.cliente_nome}</td>
-                        <td>R$ ${parseFloat(nf.total_geral || 0).toFixed(2)}</td>
-                        <td><span class="badge badge-success">Emitida</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-primary" onclick="visualizarNF(${index})">
-                                <i class="fas fa-eye"></i> Ver
-                            </button>
-                            <button class="btn btn-sm btn-secondary" onclick="imprimirNF(${index})">
-                                <i class="fas fa-print"></i> Imprimir
-                            </button>
-                        </td>
-                    `;
-                    tbody.appendChild(row);
-                });
-            }
-            
-            // Função para visualizar nota fiscal
-            window.visualizarNF = function(index) {
-                const notasFiscais = JSON.parse(localStorage.getItem('notasFiscais') || '[]');
-                const nf = notasFiscais[index];
-                
-                if (!nf) {
-                    alert('Nota fiscal não encontrada');
-                    return;
-                }
-                
-                // Criar janela de visualização
-                const janela = window.open('', '_blank', 'width=800,height=600');
-                janela.document.write(`
-                    <html>
-                    <head>
-                        <title>Nota Fiscal ${nf.numero}</title>
-                        <style>
-                            body { font-family: Arial, sans-serif; margin: 20px; }
-                            .header { text-align: center; margin-bottom: 30px; }
-                            .info-section { margin-bottom: 20px; }
-                            .info-section h3 { background: #f0f0f0; padding: 10px; margin: 0; }
-                            .info-content { padding: 10px; border: 1px solid #ddd; }
-                            table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-                            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-                            th { background-color: #f2f2f2; }
-                            .totals { text-align: right; margin-top: 20px; }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="header">
-                            <h1>NOTA FISCAL ELETRÔNICA</h1>
-                            <h2>Nº ${nf.numero}</h2>
-                        </div>
-                        
-                        <div class="info-section">
-                            <h3>Dados do Cliente</h3>
-                            <div class="info-content">
-                                <p><strong>Nome/Razão Social:</strong> ${nf.cliente_nome}</p>
-                                <p><strong>CPF/CNPJ:</strong> ${nf.cliente_documento}</p>
-                                <p><strong>Endereço:</strong> ${nf.cliente_endereco}</p>
-                                <p><strong>Cidade:</strong> ${nf.cliente_cidade}</p>
-                            </div>
-                        </div>
-                        
-                        <div class="info-section">
-                            <h3>Dados da Nota Fiscal</h3>
-                            <div class="info-content">
-                                <p><strong>Data de Emissão:</strong> ${nf.data_emissao ? (nf.data_emissao.includes('T') ? nf.data_emissao.replace('T', ' ').replace(/-/g, '/') : nf.data_emissao) : 'Não informada'}</p>
-                                <p><strong>Natureza da Operação:</strong> ${nf.natureza_operacao}</p>
-                            </div>
-                        </div>
-                        
-                        <div class="info-section">
-                            <h3>Itens</h3>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Código</th>
-                                        <th>Descrição</th>
-                                        <th>Qtd</th>
-                                        <th>Valor Unit.</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${nf.itens.map(item => `
-                                        <tr>
-                                            <td>${item.codigo}</td>
-                                            <td>${item.descricao}</td>
-                                            <td>${item.quantidade}</td>
-                                            <td>R$ ${parseFloat(item.valor_unitario).toFixed(2)}</td>
-                                            <td>R$ ${parseFloat(item.valor_total).toFixed(2)}</td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                        <div class="totals">
-                            <p><strong>Total dos Produtos: R$ ${parseFloat(nf.total_produtos || 0).toFixed(2)}</strong></p>
-                            <p><strong>Frete: R$ ${parseFloat(nf.valor_frete || 0).toFixed(2)}</strong></p>
-                            <p><strong>Seguro: R$ ${parseFloat(nf.valor_seguro || 0).toFixed(2)}</strong></p>
-                            <p><strong>Outras Despesas: R$ ${parseFloat(nf.outras_despesas || 0).toFixed(2)}</strong></p>
-                            <h2><strong>TOTAL GERAL: R$ ${parseFloat(nf.total_geral || 0).toFixed(2)}</strong></h2>
-                        </div>
-                    </body>
-                    </html>
-                `);
-                janela.document.close();
-            };
-            
-            // Função para imprimir nota fiscal em PDF
-            window.imprimirNF = function(index) {
-                const notasFiscais = JSON.parse(localStorage.getItem('notasFiscais') || '[]');
-                const nf = notasFiscais[index];
-                
-                if (!nf) {
-                    alert('Nota fiscal não encontrada');
-                    return;
-                }
-                
-                // Criar elemento temporário para o PDF
-                const tempDiv = document.createElement('div');
-                tempDiv.style.position = 'absolute';
-                tempDiv.style.left = '-9999px';
-                tempDiv.style.width = '210mm';
-                tempDiv.style.padding = '20px';
-                tempDiv.style.fontFamily = 'Arial, sans-serif';
-                tempDiv.style.fontSize = '12px';
-                tempDiv.style.backgroundColor = 'white';
-                
-                tempDiv.innerHTML = `
-                    <div style="text-align: center; margin-bottom: 30px;">
-                        <h1 style="margin: 0; font-size: 24px;">NOTA FISCAL ELETRÔNICA</h1>
-                        <h2 style="margin: 10px 0; font-size: 20px;">Nº ${nf.numero}</h2>
-                    </div>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <h3 style="background: #f0f0f0; padding: 10px; margin: 0; font-size: 14px;">Dados do Cliente</h3>
-                        <div style="padding: 10px; border: 1px solid #ddd;">
-                            <p style="margin: 5px 0;"><strong>Nome/Razão Social:</strong> ${nf.cliente_nome}</p>
-                            <p style="margin: 5px 0;"><strong>CPF/CNPJ:</strong> ${nf.cliente_documento}</p>
-                            <p style="margin: 5px 0;"><strong>Endereço:</strong> ${nf.cliente_endereco}</p>
-                            <p style="margin: 5px 0;"><strong>Cidade:</strong> ${nf.cliente_cidade}</p>
-                        </div>
-                    </div>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <h3 style="background: #f0f0f0; padding: 10px; margin: 0; font-size: 14px;">Dados da Nota Fiscal</h3>
-                        <div style="padding: 10px; border: 1px solid #ddd;">
-                            <p style="margin: 5px 0;"><strong>Data de Emissão:</strong> ${nf.data_emissao}</p>
-                            <p style="margin: 5px 0;"><strong>Natureza da Operação:</strong> ${nf.natureza_operacao}</p>
-                        </div>
-                    </div>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <h3 style="background: #f0f0f0; padding: 10px; margin: 0; font-size: 14px;">Itens</h3>
-                        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-                            <thead>
-                                <tr>
-                                    <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Código</th>
-                                    <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Descrição</th>
-                                    <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Qtd</th>
-                                    <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Valor Unit.</th>
-                                    <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${nf.itens.map(item => `
-                                    <tr>
-                                        <td style="border: 1px solid #ddd; padding: 8px;">${item.codigo}</td>
-                                        <td style="border: 1px solid #ddd; padding: 8px;">${item.descricao}</td>
-                                        <td style="border: 1px solid #ddd; padding: 8px;">${item.quantidade}</td>
-                                        <td style="border: 1px solid #ddd; padding: 8px;">R$ ${parseFloat(item.valor_unitario).toFixed(2)}</td>
-                                        <td style="border: 1px solid #ddd; padding: 8px;">R$ ${parseFloat(item.valor_total).toFixed(2)}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div style="text-align: right; margin-top: 20px;">
-                        <p style="margin: 5px 0;"><strong>Total dos Produtos: R$ ${parseFloat(nf.total_produtos || 0).toFixed(2)}</strong></p>
-                        <p style="margin: 5px 0;"><strong>Frete: R$ ${parseFloat(nf.valor_frete || 0).toFixed(2)}</strong></p>
-                        <p style="margin: 5px 0;"><strong>Seguro: R$ ${parseFloat(nf.valor_seguro || 0).toFixed(2)}</strong></p>
-                        <p style="margin: 5px 0;"><strong>Outras Despesas: R$ ${parseFloat(nf.outras_despesas || 0).toFixed(2)}</strong></p>
-                        <h2 style="margin: 10px 0; font-size: 18px;"><strong>TOTAL GERAL: R$ ${parseFloat(nf.total_geral || 0).toFixed(2)}</strong></h2>
-                    </div>
-                `;
-                
-                document.body.appendChild(tempDiv);
-                
-                // Gerar PDF usando html2canvas e jsPDF
-                html2canvas(tempDiv, {
-                    scale: 2,
-                    useCORS: true,
-                    allowTaint: true
-                }).then(canvas => {
-                    const imgData = canvas.toDataURL('image/png');
-                    const { jsPDF } = window.jspdf;
-                    const pdf = new jsPDF('p', 'mm', 'a4');
-                    
-                    const imgWidth = 210;
-                    const pageHeight = 295;
-                    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                    let heightLeft = imgHeight;
-                    
-                    let position = 0;
-                    
-                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                    heightLeft -= pageHeight;
-                    
-                    while (heightLeft >= 0) {
-                        position = heightLeft - imgHeight;
-                        pdf.addPage();
-                        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                        heightLeft -= pageHeight;
-                    }
-                    
-                    // Remover elemento temporário
-                    document.body.removeChild(tempDiv);
-                    
-                    // Salvar PDF
-                    pdf.save(`nota-fiscal-${nf.numero}.pdf`);
-                }).catch(error => {
-                    console.error('Erro ao gerar PDF:', error);
-                    document.body.removeChild(tempDiv);
-                    alert('Erro ao gerar PDF. Tente novamente.');
-                });
-            };
-
-            // Função para atualizar data atual
-        function updateCurrentDate() {
-            const currentDateElement = document.getElementById('currentDate');
-            if (currentDateElement) {
-                const now = new Date();
-                const options = { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                };
-                currentDateElement.textContent = now.toLocaleDateString('pt-BR', options);
-            } else {
-                console.warn('Elemento currentDate não encontrado no DOM');
-            }
-        }
-
-            // Função global buscarVeiculo para evitar erros de referência
-            window.buscarVeiculo = function() {
-                console.log('Função buscarVeiculo chamada - redirecionando para página de veículos se necessário');
-                // Esta função pode ser chamada por componentes que esperam ela existir
-                // Se estivermos na página de veículos, usar a função local
-                if (typeof buscarVeiculo === 'function' && window.location.pathname.includes('veiculos')) {
-                    return buscarVeiculo();
-                }
-                // Caso contrário, apenas log para debug
-                console.log('buscarVeiculo: Função chamada fora do contexto de veículos');
-            };
-            
-            // Função global buscarCliente para evitar erros de referência
-            window.buscarCliente = function() {
-                console.log('Função buscarCliente chamada - redirecionando para página de clientes se necessário');
-                // Esta função pode ser chamada por componentes que esperam ela existir
-                if (typeof buscarCliente === 'function' && window.location.pathname.includes('clientes')) {
-                    return buscarCliente();
-                }
-                // Caso contrário, apenas log para debug
-                console.log('buscarCliente: Função chamada fora do contexto de clientes');
-            };
-
             // Configurar botão Nova Nota Fiscal após carregamento do DOM
-            window.configurarBotaoNovaNota = function() {
+            function configurarBotaoNovaNota() {
                 const btnNovaNota = document.getElementById('btn-nova-nota');
                 console.log('Configurando botão Nova Nota Fiscal:', btnNovaNota);
                 
@@ -1107,7 +467,7 @@
                 } else {
                     console.error('Botão btn-nova-nota não encontrado no DOM!');
                 }
-            };
+            }
             
             // Carregar footer
             fetch('../components/footer.html')

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nota para la Aduana - Argentina</title>
+  <style>
+    :root { --primary:#1976D2; --text:#2c3e50; --muted:#6c757d; }
+    body{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:24px; color:var(--text); }
+    header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+    h1{ font-size:20px; margin:0; }
+    .badge{ color:#fff; background:var(--primary); padding:4px 8px; border-radius:6px; font-size:12px; }
+    .grid{ display:grid; grid-template-columns: repeat(12, 1fr); gap:12px; }
+    .col-6{ grid-column: span 6; }
+    .col-12{ grid-column: span 12; }
+    .card{ border:1px solid #e1e8f0; border-radius:8px; padding:12px; margin-bottom:14px; }
+    label{ font-size:12px; color:var(--muted); }
+    .value{ font-weight:600; }
+    table{ width:100%; border-collapse:collapse; }
+    th, td{ border:1px solid #e1e8f0; padding:8px; text-align:left; }
+    th{ background:#f8fafc; }
+    .actions{ margin: 18px 0; }
+    .btn{ padding:8px 12px; border:1px solid #dfe6ee; border-radius:6px; background:#fff; cursor:pointer; }
+    .btn-primary{ background:var(--primary); border-color:var(--primary); color:#fff; }
+    .note{ font-size:12px; color:var(--muted); }
+    @media print { .actions{ display:none; } body{ margin:0; } }
+  </style>
+</head>
+<body>
+  <!-- Plantilla informativa. Reemplace los campos entre {{llaves}} antes de imprimir. -->
+  <header>
+    <h1>Nota para la Aduana — Argentina <span class="badge">DGA — AFIP</span></h1>
+    <div class="actions">
+      <button class="btn" onclick="window.history.back()">Volver</button>
+      <button class="btn btn-primary" onclick="window.print()">Imprimir</button>
+    </div>
+  </header>
+
+  <div class="card">
+    <div class="grid">
+      <div class="col-6">
+        <label>Remitente / Exportador</label>
+        <div class="value">{{remitente_nombre}}</div>
+        <div>CUIT/Tax ID: {{remitente_tax}}</div>
+        <div>{{remitente_direccion}}</div>
+        <div>{{remitente_ciudad}} — {{remitente_pais}}</div>
+      </div>
+      <div class="col-6">
+        <label>Destinatario / Importador</label>
+        <div class="value">{{destinatario_nombre}}</div>
+        <div>CUIT/Tax ID: {{destinatario_tax}}</div>
+        <div>{{destinatario_direccion}}</div>
+        <div>{{destinatario_ciudad}} — {{destinatario_pais}}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="grid">
+      <div class="col-6">
+        <label>Pedido / Embarque</label>
+        <div>Nº de Pedido: <span class="value">{{pedido_numero}}</span></div>
+        <div>BL/AWB: <span class="value">{{bl_awb}}</span></div>
+        <div>Incoterm: {{incoterm}} · Modo: {{modo_transporte}}</div>
+      </div>
+      <div class="col-6">
+        <label>Rutas y Fechas</label>
+        <div>Origen: {{origen}}</div>
+        <div>Destino: {{destino}}</div>
+        <div>ETA/ETD: {{eta_etd}}</div>
+      </div>
+      <div class="col-12">
+        <label>Valores</label>
+        <div>Moneda: {{moneda}} · Valor: {{valor_total}} · Condiciones: {{condiciones_pago}}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <label>Descripción de los bienes</label>
+    <table>
+      <thead>
+        <tr>
+          <th>Producto / Descripción</th>
+          <th>NCM/HS</th>
+          <th>Cant.</th>
+          <th>Unidad</th>
+          <th>Valor ({{moneda}})</th>
+          <th>Peso Bruto</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{item_1_descripcion}}</td>
+          <td>{{item_1_ncm}}</td>
+          <td>{{item_1_cantidad}}</td>
+          <td>{{item_1_unidad}}</td>
+          <td>{{item_1_valor}}</td>
+          <td>{{item_1_peso_bruto}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <label>Declaración</label>
+    <p>
+      Por medio de la presente, declaramos que los bienes arriba detallados forman parte del embarque identificado, destinados a {{finalidad}}.
+      Esta nota se emite para apoyar el despacho aduanero, aportando información complementaria de identificación, clasificación y valor,
+      conforme a la normativa vigente. Los documentos oficiales exigidos (p.ej., Conocimiento de Embarque, Factura Comercial, Packing List,
+      Declaraciones/Registros aduaneros, certificados) acompañan el trámite.
+    </p>
+    <p>
+      Responsable: {{responsable_nombre}} · Cargo: {{responsable_cargo}} · Contacto: {{responsable_contacto}}
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="grid">
+      <div class="col-6">
+        <label>Lugar y fecha</label>
+        <div>{{lugar}}, {{fecha}}</div>
+      </div>
+      <div class="col-6">
+        <label>Firma</label>
+        <div>________________________________________</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="note">
+    Nota: Esta plantilla es informativa y no sustituye documentos oficiales aduaneros/fiscales. Verifique requisitos específicos con la
+    Dirección General de Aduanas (DGA — AFIP) y su despachante.
+  </p>
+</body>
+</html>

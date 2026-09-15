@@ -1,70 +1,92 @@
 /**
- * Utilitários de formatação
- * Funções para formatação de dados como datas, moedas, CPF, etc.
+ * Utilitarios de Formato
+ * Funciones para formateo de datos como fechas, monedas, DNI/CUIT, etc.
  */
 
 /**
- * Formata um valor para moeda brasileira
- * @param {number} value - Valor a ser formatado
- * @returns {string} Valor formatado como moeda
+ * Formatea un valor a moneda Argentina
+ * @param {number} value - Valor a formatear
+ * @returns {string} Valor formateado como moneda ARS
  */
-function formatCurrency(value) {
-    return new Intl.NumberFormat('pt-BR', {
+function formatCurrencyARS(value) {
+    return new Intl.NumberFormat('es-AR', {
         style: 'currency',
-        currency: 'BRL'
+        currency: 'ARS',
+        currencyDisplay: 'symbol'
     }).format(value);
 }
+/** @deprecated Usar formatCurrencyARS. Moneda Argentina (compatibilidad) */
+function formatCurrency(value) { return formatCurrencyARS(value); }
 
 /**
- * Formata uma data para o formato brasileiro
- * @param {Date|string} date - Data a ser formatada
- * @returns {string} Data formatada
+ * Formatea una fecha para el formato Argentino
+ * @param {Date|string} date - Fecha
+ * @returns {string} Fecha formateada DD/MM/AAAA
  */
 function formatDate(date) {
     if (!date) return '';
     const dateObj = typeof date === 'string' ? new Date(date) : date;
-    return dateObj.toLocaleDateString('pt-BR');
+    return dateObj.toLocaleDateString('es-AR');
 }
 
 /**
- * Formata um CPF (xxx.xxx.xxx-xx)
- * @param {string} cpf - CPF a ser formatado
- * @returns {string} CPF formatado
+ * Formatea DNI / CUIL argentino
+ * @param {string} dni - DNI o CUIL
+ * @returns {string}
  */
-function formatCPF(cpf) {
-    if (!cpf) return '';
-    const cpfClean = cpf.replace(/\D/g, '');
-    return cpfClean.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+function formatDNI(dni) {
+    if (!dni) return '';
+    const clean = dni.replace(/\D/g, '');
+    if (clean.length <= 8) return clean.replace(/(\d{2})(\d{3})(\d{0,3})/, (m, a, b, c) => `${a}.${b}${c ? '.' + c : ''}`);
+    if (clean.length === 11) return clean.slice(0,2) + '-' + clean.slice(2,10) + '-' + clean.slice(10);
+    return clean;
 }
+/** @deprecated usar formatDNI */
+function formatCPF(cpf) { return formatDNI(cpf); }
 
 /**
- * Formata um CNPJ (xx.xxx.xxx/xxxx-xx)
- * @param {string} cnpj - CNPJ a ser formatado
- * @returns {string} CNPJ formatado
+ * Formatea CUIT / CUIL (alias CUIT)
+ * @param {string} cuit
+ * @returns {string}
  */
-function formatCNPJ(cnpj) {
-    if (!cnpj) return '';
-    const cnpjClean = cnpj.replace(/\D/g, '');
-    return cnpjClean.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+function formatCUIT(cuit) { return formatDNI(cuit); }
+/** @deprecated usar formatCUIT */
+function formatCNPJ(cnpj) { return formatCUIT(cnpj); }
+
+/**
+ * Formatea CPA (Código Postal Argentino)
+ * @param {string} cpa
+ * @returns {string}
+ */
+function formatCPA(cpa) {
+    if (!cpa) return '';
+    const clean = cpa.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+    if (clean.length > 4) return clean.slice(0,4) + clean.slice(4);
+    return clean;
 }
 
 /**
- * Formata um telefone ((xx) xxxxx-xxxx)
- * @param {string} phone - Telefone a ser formatado
- * @returns {string} Telefone formatado
+ * Formatea teléfono (formato argentino)
+ * @param {string} phone
+ * @returns {string}
  */
 function formatPhone(phone) {
     if (!phone) return '';
-    const phoneClean = phone.replace(/\D/g, '');
-    if (phoneClean.length === 11) {
-        return phoneClean.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    const clean = phone.replace(/\D/g, '');
+    if (clean.length === 11) {
+        return clean.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    } else if (clean.length === 10) {
+        return clean.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
     }
-    return phoneClean.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+    return clean;
 }
 
 export {
-    formatCurrency,
+    formatCurrencyARS as formatCurrency,
     formatDate,
+    formatDNI,
+    formatCUIT,
+    formatCPA,
     formatCPF,
     formatCNPJ,
     formatPhone

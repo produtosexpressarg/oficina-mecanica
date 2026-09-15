@@ -1,486 +1,856 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="es-AR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Gestão de Notas Fiscais - Sistema de Gestão para Oficina Mecânica">
-    <title>Notas Fiscais - Sistema de Gestão Oficina</title>
-    
+    <meta name="description" content="Facturas - Sistema de Gestión para Taller Mecánico">
+    <title>Facturas - Sistema de Gestión Taller</title>
+
     <!-- Design System CSS -->
     <link rel="stylesheet" href="../assets/css/design-system.css">
-    
+    <link rel="stylesheet" href="../assets/css/layout.css">
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Constants -->
+    <script src="../assets/js/config/constants.js"></script>
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: var(--z-modal);
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.3s ease;
+        }
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            width: 95%;
+            max-width: 1000px;
+            max-height: 92vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease;
+            position: relative;
+            z-index: var(--z-modal);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        .modal-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem 1.5rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .modal-title { font-size: 1.2rem; font-weight: 600; margin: 0; }
+        .modal-close {
+            background: none; border: none; color: white;
+            font-size: 1.5rem; cursor: pointer; padding: 0;
+            width: 2rem; height: 2rem; display: flex; align-items: center;
+            justify-content: center; border-radius: 50%; transition: var(--transition);
+        }
+        .modal-close:hover { background: rgba(255,255,255,0.2); }
+        .modal-body { padding: 1.5rem; }
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            background: var(--background-secondary);
+            display: flex; justify-content: flex-end; gap: 1rem;
+        }
+        @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+        .col-span-2 { grid-column: span 2; }
+        .col-span-4 { grid-column: 1 / -1; }
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .col-span-2 { grid-column: auto; }
+        }
+
+        .nf-items-section {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background: #fafafa;
+        }
+        .nf-items-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 1rem;
+        }
+        .nf-items-add {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 0.8fr 0.8fr 1fr 1fr auto;
+            gap: 0.5rem;
+            align-items: end;
+            margin-bottom: 1rem;
+        }
+        @media (max-width: 900px) {
+            .nf-items-add { grid-template-columns: 1fr 1fr; }
+        }
+        .nf-items-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+        .nf-items-table th, .nf-items-table td {
+            padding: 0.6rem 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+        .nf-items-table th {
+            background: var(--background-secondary);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .nf-totales {
+            margin-top: 1rem;
+            padding: 1rem 1.25rem;
+            background: var(--background-secondary);
+            border-radius: var(--border-radius);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+        .nf-totales .total-final {
+            grid-column: 1 / -1;
+            padding-top: 0.75rem;
+            margin-top: 0.5rem;
+            border-top: 2px solid var(--primary-color);
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: flex; justify-content: space-between;
+        }
+        .nf-totales > div:not(.total-final) {
+            display: flex; justify-content: space-between;
+        }
+        .badge {
+            padding: 0.25rem 0.6rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-danger  { background: #f8d7da; color: #721c24; }
+        .badge-info    { background: #d1ecf1; color: #0c5460; }
+        .date-range {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+    </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <i class="fas fa-wrench"></i>
-                    <h1>Sistema de Gestão - Oficina Mecânica</h1>
-                </div>
-                <div class="user-info">
-                    <span id="currentDate"></span>
-                    <div class="user-menu">
-                        <i class="fas fa-user-circle"></i>
-                        <span>Administrador</span>
+<div class="main-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo" style="justify-content:center;color:#fff;font-size:1.25rem;flex-direction:column;gap:8px;">
+                <i class="fas fa-wrench" style="font-size:2.5rem;"></i>
+                <span>Taller Mecánico</span>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="dashboard.html" class="nav-link"><i class="fas fa-tachometer-alt"></i><span>Panel Principal</span></a></li>
+                <li><a href="clientes.html" class="nav-link"><i class="fas fa-users"></i><span>Clientes</span></a></li>
+                <li><a href="veiculos.html" class="nav-link"><i class="fas fa-car"></i><span>Vehículos</span></a></li>
+                <li><a href="servicos.html" class="nav-link"><i class="fas fa-clipboard-list"></i><span>Órdenes de Servicio</span></a></li>
+                <li><a href="estoque.html" class="nav-link"><i class="fas fa-boxes"></i><span>Stock</span></a></li>
+                <li><a href="vendas.html" class="nav-link"><i class="fas fa-cash-register"></i><span>Ventas y Cobros</span></a></li>
+                <li><a href="notas-fiscais.html" class="nav-link active"><i class="fas fa-file-invoice"></i><span>Facturas</span></a></li>
+                <li><a href="../comercio-exterior/index.html" class="nav-link"><i class="fas fa-globe-americas"></i><span>Comercio Exterior</span></a></li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <div style="padding:12px 18px;border-top:1px solid #34495e;">
+                <div style="display:flex;align-items:center;gap:8px;color:#ecf0f1;">
+                    <i class="fas fa-user-circle" style="font-size:1.5rem;"></i>
+                    <div>
+                        <div style="font-weight:600;font-size:0.85rem;">Administrador</div>
+                        <div id="currentDate" style="font-size:0.7rem;color:#95a5a6;"></div>
                     </div>
                 </div>
+                <button style="margin-top:10px;width:100%;background:#e74c3c;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem;font-weight:500;" onclick="logoutSidebar()"><i class="fas fa-sign-out-alt" style="margin-right:4px;"></i>Cerrar Sesión</button>
             </div>
         </div>
-    </header>
-
-    <!-- Navigation -->
-    <nav class="nav-menu">
-        <div class="container">
-            <div class="nav-links">
-                <a href="dashboard.html" class="nav-link">
-                    <i class="fas fa-tachometer-alt"></i>
-                    Dashboard
-                </a>
-                <a href="clientes.html" class="nav-link">
-                    <i class="fas fa-users"></i>
-                    Clientes
-                </a>
-                <a href="veiculos.html" class="nav-link">
-                    <i class="fas fa-car"></i>
-                    Veículos
-                </a>
-                <a href="servicos.html" class="nav-link">
-                    <i class="fas fa-clipboard-list"></i>
-                    Ordens de Serviço
-                </a>
-                <a href="estoque.html" class="nav-link">
-                    <i class="fas fa-boxes"></i>
-                    Estoque
-                </a>
-                <a href="notas-fiscais.html" class="nav-link active">
-                    <i class="fas fa-file-invoice"></i>
-                    Notas Fiscais
-                </a>
-                <a href="vendas.html" class="nav-link">
-                    <i class="fas fa-cash-register"></i>
-                    Vendas & Pagamentos
-                </a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
+    </aside>
     <main class="main-content">
-        <div class="container">
-            <!-- Conteúdo da página -->
-            <div class="page-header">
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <button class="btn btn-outline btn-sm" onclick="window.location.href='dashboard.html'">
-                        <i class="fas fa-arrow-left"></i> Voltar
-                    </button>
-                    <h1 class="page-title">Gerenciamento de Notas Fiscais</h1>
-                </div>
-                <button class="btn btn-primary" id="btn-nova-nota">Nova Nota Fiscal</button>
+        <div class="page-header d-flex justify-between align-center" style="border-bottom:none;padding-bottom:0;margin-bottom:20px;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button class="btn btn-outline btn-sm" onclick="window.location.href='dashboard.html'">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </button>
+                <h1 class="page-title">Gestión de Facturas</h1>
             </div>
+            <button class="btn btn-primary" id="btn-nova-nota" onclick="abrirModalNotaFiscal()">
+                <i class="fas fa-plus"></i> Nueva Factura
+            </button>
+        </div>
+        <div class="container">
 
-            <!-- Filtros e busca -->
+            <!-- Filtros -->
             <div class="card">
                 <div class="card-body">
                     <div class="filter-container">
                         <div class="search-box">
-                            <input type="text" id="search-nota" placeholder="Buscar nota fiscal...">
-                            <button>Buscar</button>
+                            <input type="text" id="search-nota" class="form-control" placeholder="Buscar factura por N°, cliente..." oninput="renderizarNotas()">
+                            <button class="btn btn-outline-primary" onclick="renderizarNotas()"><i class="fas fa-search"></i></button>
                         </div>
                         <div class="filter-options">
                             <div class="date-range">
-                                <label for="data-inicio">De:</label>
-                                <input type="date" id="data-inicio">
-                                <label for="data-fim">Até:</label>
-                                <input type="date" id="data-fim">
+                                <label for="data-inicio">Desde:</label>
+                                <input type="date" id="data-inicio" class="form-control" style="max-width: 160px" onchange="renderizarNotas()">
+                                <label for="data-fim">Hasta:</label>
+                                <input type="date" id="data-fim" class="form-control" style="max-width: 160px" onchange="renderizarNotas()">
                             </div>
-                            <select id="filter-status">
-                                <option value="">Todos os status</option>
+                            <select id="filter-status" class="form-select" onchange="renderizarNotas()">
+                                <option value="">Todos los estados</option>
                                 <option value="emitida">Emitida</option>
-                                <option value="cancelada">Cancelada</option>
+                                <option value="cancelada">Anulada</option>
                             </select>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Tabela de notas fiscais -->
+            <!-- Tabla -->
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">Notas Fiscais</h2>
+                    <h2 class="card-title">Facturas Emitidas</h2>
+                    <span id="nf-total-info" class="text-muted small">0 facturas</span>
                 </div>
                 <div class="card-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Número</th>
-                                <th>Data Emissão</th>
-                                <th>Cliente</th>
-                                <th>Valor Total</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="notas-table-body">
-                            <!-- Dados serão carregados via JavaScript -->
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>N° Factura</th>
+                                    <th>Fecha Emisión</th>
+                                    <th>Cliente</th>
+                                    <th>CUIT / DNI</th>
+                                    <th>Cond. IVA</th>
+                                    <th>Cant. Items</th>
+                                    <th>Total</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="notas-table-body"></tbody>
+                        </table>
+                    </div>
                 </div>
+            </div>
+        </div>
+        </div>
+
+    <!-- Modal Factura (inlineado) -->
+    <div id="nota-fiscal-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="nota-fiscal-modal-title">Nueva Factura</h3>
+                <button class="modal-close" onclick="fecharModalNotaFiscal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="nota-fiscal-form">
+                    <!-- Datos cabecera -->
+                    <div class="form-grid">
+                        <div>
+                            <label for="nf-numero">N° Factura</label>
+                            <input type="text" id="nf-numero" class="form-control" readonly>
+                        </div>
+                        <div>
+                            <label for="nf-serie">Serie / Punto Vta.</label>
+                            <input type="text" id="nf-serie" class="form-control" value="0001" maxlength="4">
+                        </div>
+                        <div>
+                            <label for="nf-tipo">Tipo Comprobante</label>
+                            <select id="nf-tipo" class="form-control">
+                                <option value="A">Factura A</option>
+                                <option value="B" selected>Factura B</option>
+                                <option value="C">Factura C</option>
+                                <option value="X">Presupuesto</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="nf-data-emissao">Fecha Emisión *</label>
+                            <input type="datetime-local" id="nf-data-emissao" class="form-control" required>
+                        </div>
+
+                        <div class="col-span-2">
+                            <label for="nf-cliente">Cliente *</label>
+                            <select id="nf-cliente" class="form-control" required onchange="cargarDatosCliente()">
+                                <option value="">Seleccione un cliente</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="nf-doc">CUIT / DNI *</label>
+                            <input type="text" id="nf-doc" class="form-control" placeholder="CUIT sin guiones" required>
+                        </div>
+                        <div>
+                            <label for="nf-cond-iva">Condición IVA</label>
+                            <select id="nf-cond-iva" class="form-control">
+                                <option value="responsable">Responsable Inscripto</option>
+                                <option value="monotributo" selected>Monotributista</option>
+                                <option value="exento">Exento</option>
+                                <option value="final">Consumidor Final</option>
+                            </select>
+                        </div>
+                        <div class="col-span-2">
+                            <label for="nf-dom">Domicilio</label>
+                            <input type="text" id="nf-dom" class="form-control" placeholder="Calle y número, localidad...">
+                        </div>
+                        <div>
+                            <label for="nf-cond-pago">Condición de Pago</label>
+                            <select id="nf-cond-pago" class="form-control">
+                                <option value="contado">Contado</option>
+                                <option value="ctacte">Cuenta Corriente</option>
+                                <option value="30dias">30 días</option>
+                                <option value="60dias">60 días</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="nf-status">Estado</label>
+                            <select id="nf-status" class="form-control">
+                                <option value="emitida">Emitida</option>
+                                <option value="cancelada">Anulada</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Items -->
+                    <div class="nf-items-section">
+                        <div class="nf-items-header">
+                            <h4 style="margin:0"><i class="fas fa-list-ul"></i> Detalle de Ítems</h4>
+                        </div>
+                        <div class="nf-items-add">
+                            <div>
+                                <label>Tipo</label>
+                                <select id="item-tipo" class="form-control" onchange="carregarItensNF()">
+                                    <option value="">Seleccione</option>
+                                    <option value="produto">Producto</option>
+                                    <option value="servico">Servicio</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Producto / Servicio</label>
+                                <select id="item-codigo" class="form-control">
+                                    <option value="">Seleccione primero tipo</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Cantidad</label>
+                                <input type="number" id="item-quantidade-nf" class="form-control" min="1" value="1">
+                            </div>
+                            <div>
+                                <label>P. Unitario</label>
+                                <input type="number" id="item-preco-unitario" class="form-control" step="0.01" min="0" value="0">
+                            </div>
+                            <div>
+                                <label>% IVA</label>
+                                <select id="item-iva" class="form-control">
+                                    <option value="21">21%</option>
+                                    <option value="10.5">10.5%</option>
+                                    <option value="27">27%</option>
+                                    <option value="0">0% / Exento</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Subtotal</label>
+                                <input type="text" id="item-subtotal-preview" class="form-control" value="$ 0,00" readonly>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-primary" id="btn-adicionar-item" onclick="adicionarItemNF()">
+                                    <i class="fas fa-plus"></i> Agregar
+                                </button>
+                            </div>
+                        </div>
+
+                        <table class="nf-items-table">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Descripción</th>
+                                    <th style="text-align:center">UM</th>
+                                    <th style="text-align:right">Cant.</th>
+                                    <th style="text-align:right">P. Unit.</th>
+                                    <th style="text-align:right">% IVA</th>
+                                    <th style="text-align:right">Subtotal</th>
+                                    <th style="width:60px"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="itens-nf-body">
+                                <tr class="empty-state"><td colspan="8" style="text-align:center;padding:1.5rem;color:var(--text-secondary)">Ningún ítem agregado</td></tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Totales -->
+                        <div class="nf-totales">
+                            <div><span>Subtotal (sin IVA):</span><strong id="nf-total-produtos">$ 0,00</strong></div>
+                            <div><span>Descuento (%):</span>
+                                <input type="number" id="nf-descuento" class="form-control" style="width:120px;display:inline-block;max-width:unset;padding:0.2rem 0.5rem;height:auto"
+                                       min="0" max="100" step="0.01" value="0" onchange="calcularTotalesNF()">
+                            </div>
+                            <div><span>Total IVA:</span><strong id="nf-total-iva">$ 0,00</strong></div>
+                            <div><span>Importe Descuento:</span><strong id="nf-total-descuento">$ 0,00</strong></div>
+                            <div class="total-final">
+                                <span>TOTAL FACTURA:</span>
+                                <span id="nf-total-geral">$ 0,00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <label for="nf-observacoes">Observaciones / Notas</label>
+                        <textarea id="nf-observacoes" class="form-control" rows="2"
+                                  placeholder="Datos adicionales, forma de pago, remito asociado..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="fecharModalNotaFiscal()">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="imprimirPrevia()">
+                    <i class="fas fa-print"></i> Vista Previa
+                </button>
+                <button type="button" class="btn btn-primary" onclick="salvarNotaFiscal()">
+                    <i class="fas fa-save"></i> Guardar Factura
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <div id="footer-container"></div>
+    </main>
+</div>
 
-    <!-- Modal de Nota Fiscal -->
-    <div id="nota-fiscal-modal-container"></div>
-
-    <!-- Scripts -->
-    <script src="../assets/js/app.js"></script>
     <script>
-        // Carregar componentes
-        document.addEventListener('DOMContentLoaded', function() {
-            // Carregar sidebar
-            fetch('../components/sidebar.html')
-                .then(response => response.text())
-                .then(data => {
-                    const sidebarContainer = document.getElementById('sidebar-container');
-                    if (sidebarContainer) {
-                        sidebarContainer.innerHTML = data;
-                    }
+        // Storage
+        let notas = JSON.parse(localStorage.getItem('oficina_notas_fiscais')
+            || localStorage.getItem('notas_fiscais') || '[]');
+        let clientes = JSON.parse(localStorage.getItem('oficina_clientes')
+            || localStorage.getItem('clientes') || localStorage.getItem('clients') || '[]');
+        let produtos = JSON.parse(localStorage.getItem('oficina_produtos')
+            || localStorage.getItem('produtos') || '[]');
+        let servicosPredef = [];
+
+        window.itensNotaFiscal = [];
+        window.numeroNotaFiscal = null;
+        let editandoNfId = null;
+
+        const TIPOS_SERV = Object.assign({
+            revisao: 'Revisión General',
+            troca_oleo: 'Cambio Aceite + Filtro',
+            alinhamento: 'Alineación',
+            balanceamento: 'Balanceo',
+            freios: 'Frenos',
+            suspensao: 'Suspensión',
+            eletrica: 'Eléctrica',
+            outros: 'Otros Servicios'
+        }, window.TIPOS_SERVICO_LABELS || {});
+        Object.entries(TIPOS_SERV).forEach(([k, v]) => {
+            servicosPredef.push({ id: k, codigo: 'S-' + k.toUpperCase().slice(0, 4), nome: v, preco: 0, unidade: 'UN' });
+        });
+
+        const STATUS = {
+            emitida: { label: 'Emitida', cls: 'badge-success' },
+            cancelada: { label: 'Anulada', cls: 'badge-danger' }
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            persistir();
+            atualizarData();
+            carregarClientesNF();
+            renderizarNotas();
+
+            // Preview de item
+            ['item-quantidade-nf', 'item-preco-unitario', 'item-iva'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('input', atualizarItemPreview);
+            });
+        });
+
+        function persistir() {
+            localStorage.setItem('oficina_notas_fiscais', JSON.stringify(notas));
+        }
+
+        function atualizarData() {
+            const el = document.getElementById('currentDate');
+            if (el) el.textContent = new Date().toLocaleDateString('es-AR', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            });
+        }
+
+        function fmtARS(v) {
+            return '$ ' + Number(v || 0).toLocaleString('es-AR', {
+                minimumFractionDigits: 2, maximumFractionDigits: 2
+            });
+        }
+
+        function carregarClientesNF() {
+            const sel = document.getElementById('nf-cliente');
+            sel.innerHTML = '<option value="">Seleccione un cliente</option>';
+            if (clientes.length === 0) {
+                clientes = [
+                    { id: 'mock1', nome: 'Juan Pérez', cpf: '20123456789', endereco: 'Av. Rivadavia 1234, CABA' },
+                    { id: 'mock2', nome: 'María González SRL', cnpj: '30567890123', endereco: 'Córdoba 500, Rosario' }
+                ];
+                localStorage.setItem('oficina_clientes', JSON.stringify(clientes));
+            }
+            clientes.forEach(c => {
+                const o = document.createElement('option');
+                o.value = c.id;
+                o.textContent = (c.nome || c.name || 'Cliente');
+                o.dataset.doc = c.cpf || c.cnpj || c.dni || c.documento || '';
+                o.dataset.end = c.endereco || c.address || c.dom || '';
+                sel.appendChild(o);
+            });
+        }
+
+        function carregarDadosCliente() {
+            const sel = document.getElementById('nf-cliente');
+            const opt = sel.selectedOptions[0];
+            if (opt && opt.value) {
+                document.getElementById('nf-doc').value = opt.dataset.doc || '';
+                document.getElementById('nf-dom').value = opt.dataset.end || '';
+            }
+        }
+
+        function window_carregarItensNF_wrapper() { carregarItensNF(); }
+        function carregarItensNF() {
+            const tipo = document.getElementById('item-tipo').value;
+            const sel = document.getElementById('item-codigo');
+            sel.innerHTML = '<option value="">Seleccione un ítem</option>';
+            document.getElementById('item-preco-unitario').value = 0;
+            atualizarItemPreview();
+            if (!tipo) return;
+            let itens = tipo === 'produto' ? produtos : servicosPredef;
+            if (itens.length === 0 && tipo === 'produto') {
+                itens = [
+                    { id: 'mockp1', codigo: 'ACE-001', nome: 'Aceite 5W30 1L', preco: 8500, unidade: 'LT' },
+                    { id: 'mockp2', codigo: 'FIL-001', nome: 'Filtro Aire', preco: 5200, unidade: 'UN' }
+                ];
+            }
+            itens.forEach(i => {
+                const o = document.createElement('option');
+                o.value = JSON.stringify({
+                    id: i.id, codigo: i.codigo, nome: i.nome, preco: i.preco || 0,
+                    unidade: i.unidade || i.un || 'UN'
                 });
-            
-            // Carregar header
-            fetch('../components/header.html')
-                .then(response => response.text())
-                .then(data => {
-                    const headerContainer = document.getElementById('header-container');
-                    if (headerContainer) {
-                        headerContainer.innerHTML = data;
-                    }
-                });
-            
-            // Carregar modal de nota fiscal
-            console.log('=== INICIANDO CARREGAMENTO DO MODAL ===');
-            fetch('../components/modals/nota-fiscal-modal.html')
-                .then(response => {
-                    console.log('Response status:', response.status);
-                    return response.text();
-                })
-                .then(data => {
-                    console.log('Modal HTML carregado, tamanho:', data.length);
-                    const modalContainer = document.getElementById('nota-fiscal-modal-container');
-                    console.log('Modal container encontrado:', modalContainer);
-                    
-                    if (modalContainer) {
-                        // Extrair HTML e JavaScript separadamente
-                        const parser = new DOMParser();
-                        const doc = parser.parseFromString(data, 'text/html');
-                        
-                        // Extrair apenas o HTML (sem scripts)
-                        const scripts = doc.querySelectorAll('script');
-                        scripts.forEach(script => script.remove());
-                        
-                        // Inserir HTML
-                        modalContainer.innerHTML = doc.body.innerHTML;
-                        console.log('HTML inserido no container');
-                        
-                        // Executar JavaScript manualmente
-                        executarScriptModal();
-                        
-                        // Configurar botão após execução do script
-                        setTimeout(() => {
-                            console.log('Verificando função após execução manual:', typeof abrirModalNotaFiscal);
-                            configurarBotaoNovaNota();
-                            configurarEventListenersModal();
-                        }, 100);
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro ao carregar modal de nota fiscal:', error);
-                });
-            
-            // Função para executar o JavaScript do modal manualmente
-            function executarScriptModal() {
-                console.log('Executando script do modal manualmente...');
-                
-                // Variáveis globais do modal
-                window.itensNotaFiscal = [];
-                window.numeroNotaFiscal = 1;
-                
-                // Função principal que estava no modal
-                window.abrirModalNotaFiscal = function(id = null) {
-                    console.log('Função abrirModalNotaFiscal executada!');
-                    const modal = document.getElementById('nota-fiscal-modal');
-                    const title = document.getElementById('nota-fiscal-modal-title');
-                    
-                    if (!modal) {
-                        console.error('Modal de nota fiscal não encontrado');
-                        return;
-                    }
-                    
-                    if (title) {
-                        if (id) {
-                            title.textContent = 'Editar Nota Fiscal';
-                            // carregarDadosNotaFiscal(id);
-                        } else {
-                            title.textContent = 'Nova Nota Fiscal';
-                            const form = document.getElementById('nota-fiscal-form');
-                            if (form) {
-                                form.reset();
-                            }
-                            window.itensNotaFiscal = [];
-                            gerarNumeroNotaFiscal();
-                            definirDataEmissaoAtual();
-                            atualizarTabelaItensNF();
-                            calcularTotaisNF();
-                        }
-                    }
-                    
-                    carregarClientesNF();
-                    modal.style.display = 'block';
-                    modal.classList.add('show');
-                };
-                
-                // Outras funções essenciais do modal
-                window.fecharModalNotaFiscal = function() {
-                    const modal = document.getElementById('nota-fiscal-modal');
-                    if (modal) {
-                        modal.style.display = 'none';
-                        modal.classList.remove('show');
-                    }
-                };
-                
-                window.gerarNumeroNotaFiscal = function() {
-                    const numeroAtual = localStorage.getItem('ultimoNumeroNF') || '0';
-                    window.numeroNotaFiscal = parseInt(numeroAtual) + 1;
-                    const numeroInput = document.getElementById('nf-numero');
-                    if (numeroInput) {
-                        numeroInput.value = window.numeroNotaFiscal.toString().padStart(9, '0');
-                    }
-                };
-                
-                window.definirDataEmissaoAtual = function() {
-                    const agora = new Date();
-                    const dataFormatada = agora.toISOString().slice(0, 16);
-                    const dataInput = document.getElementById('nf-data-emissao');
-                    if (dataInput) {
-                        dataInput.value = dataFormatada;
-                    }
-                };
-                
-                window.carregarClientesNF = function() {
-                    const select = document.getElementById('cliente-select');
-                    if (select) {
-                        select.innerHTML = '<option value="">Selecione um cliente</option>';
-                        
-                        const clientesMock = [
-                            { id: 1, nome: 'João Silva', cpf: '123.456.789-00' },
-                            { id: 2, nome: 'Maria Santos LTDA', cnpj: '12.345.678/0001-90' }
-                        ];
-                        
-                        clientesMock.forEach(cliente => {
-                            const option = document.createElement('option');
-                            option.value = JSON.stringify(cliente);
-                            option.textContent = cliente.nome;
-                            select.appendChild(option);
-                        });
-                    }
-                };
-                
-                window.atualizarTabelaItensNF = function() {
-                    const tbody = document.getElementById('itens-nf-body');
-                    if (tbody) {
-                        if (window.itensNotaFiscal.length === 0) {
-                            tbody.innerHTML = '<tr class="empty-state"><td colspan="9" class="text-center">Nenhum item adicionado</td></tr>';
-                        }
-                    }
-                };
-                
-                window.calcularTotaisNF = function() {
-                    const totalProdutos = window.itensNotaFiscal.reduce((total, item) => total + (item.valor_total || 0), 0);
-                    const totalProdutosEl = document.getElementById('nf-total-produtos');
-                    if (totalProdutosEl) totalProdutosEl.textContent = `R$ ${totalProdutos.toFixed(2)}`;
-                };
-                
-                // Função para carregar itens no select
-                window.carregarItensNF = function() {
-                    const tipo = document.getElementById('item-tipo').value;
-                    const select = document.getElementById('item-codigo');
-                    select.innerHTML = '<option value="">Selecione um item</option>';
-                    
-                    if (!tipo) return;
-                    
-                    let itensMock = [];
-                    
-                    if (tipo === 'produto') {
-                        itensMock = [
-                            { 
-                                id: 1, 
-                                codigo: 'PROD001',
-                                nome: 'Óleo Motor 5W30', 
-                                preco: 35.00,
-                                ncm: '27101932',
-                                cfop: '5102',
-                                unidade: 'LT'
-                            },
-                            { 
-                                id: 2, 
-                                codigo: 'PROD002',
-                                nome: 'Filtro de Ar', 
-                                preco: 25.00,
-                                ncm: '84213100',
-                                cfop: '5102',
-                                unidade: 'UN'
-                            }
-                        ];
-                    } else if (tipo === 'servico') {
-                        itensMock = [
-                            { 
-                                id: 1, 
-                                codigo: 'SERV001',
-                                nome: 'Troca de Óleo', 
-                                preco: 50.00,
-                                ncm: '00000000',
-                                cfop: '5933',
-                                unidade: 'UN'
-                            },
-                            { 
-                                id: 2, 
-                                codigo: 'SERV002',
-                                nome: 'Alinhamento', 
-                                preco: 80.00,
-                                ncm: '00000000',
-                                cfop: '5933',
-                                unidade: 'UN'
-                            }
-                        ];
-                    }
-                    
-                    itensMock.forEach(item => {
-                        const option = document.createElement('option');
-                        option.value = JSON.stringify(item);
-                        option.textContent = `${item.codigo} - ${item.nome}`;
-                        select.appendChild(option);
-                    });
-                };
-                
-                // Função para adicionar item à nota fiscal
-                window.adicionarItemNF = function() {
-                    const itemSelect = document.getElementById('item-codigo');
-                    const quantidadeInput = document.getElementById('item-quantidade-nf');
-                    
-                    if (!itemSelect.value || !quantidadeInput.value) {
-                        alert('Por favor, selecione um item e informe a quantidade.');
-                        return;
-                    }
-                    
-                    const item = JSON.parse(itemSelect.value);
-                    const quantidade = parseFloat(quantidadeInput.value);
-                    
-                    const itemNF = {
-                        id: Date.now(),
-                        codigo: item.codigo,
-                        descricao: item.nome,
-                        ncm: item.ncm,
-                        cfop: item.cfop,
-                        unidade: item.unidade,
-                        quantidade: quantidade,
-                        valor_unitario: item.preco,
-                        valor_total: item.preco * quantidade
-                    };
-                    
-                    window.itensNotaFiscal.push(itemNF);
+                o.textContent = `${i.codigo} - ${i.nome}`;
+                o.dataset.preco = i.preco || 0;
+                sel.appendChild(o);
+            });
+            sel.onchange = function () {
+                const opt = this.selectedOptions[0];
+                if (opt && opt.dataset.preco) {
+                    document.getElementById('item-preco-unitario').value = Number(opt.dataset.preco).toFixed(2);
+                    atualizarItemPreview();
+                }
+            };
+        }
+
+        function atualizarItemPreview() {
+            const q = parseFloat(document.getElementById('item-quantidade-nf').value) || 0;
+            const p = parseFloat(document.getElementById('item-preco-unitario').value) || 0;
+            document.getElementById('item-subtotal-preview').value = fmtARS(q * p);
+        }
+
+        function adicionarItemNF() {
+            const codSel = document.getElementById('item-codigo');
+            const opt = codSel.selectedOptions[0];
+            if (!opt || !opt.value) { alert('Seleccione un producto o servicio'); return; }
+            const itemBase = JSON.parse(opt.value);
+            const qty = parseFloat(document.getElementById('item-quantidade-nf').value) || 1;
+            const preco = parseFloat(document.getElementById('item-preco-unitario').value) || 0;
+            const iva = parseFloat(document.getElementById('item-iva').value) || 0;
+
+            window.itensNotaFiscal.push({
+                itemInternoId: Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+                codigo: itemBase.codigo,
+                descricao: itemBase.nome,
+                unidade: itemBase.unidade || 'UN',
+                quantidade: qty,
+                preco_unitario: preco,
+                iva_porcentaje: iva,
+                valor_subtotal: qty * preco,
+                valor_iva: qty * preco * (iva / 100)
+            });
+            atualizarTabelaItensNF();
+            calcularTotalesNF();
+
+            codSel.value = '';
+            document.getElementById('item-tipo').value = '';
+            document.getElementById('item-quantidade-nf').value = 1;
+            document.getElementById('item-preco-unitario').value = 0;
+            atualizarItemPreview();
+        }
+
+        function removerItemNF(idInterno) {
+            window.itensNotaFiscal = window.itensNotaFiscal.filter(x => x.itemInternoId !== idInterno);
+            atualizarTabelaItensNF();
+            calcularTotalesNF();
+        }
+
+        function atualizarTabelaItensNF() {
+            const tbody = document.getElementById('itens-nf-body');
+            if (window.itensNotaFiscal.length === 0) {
+                tbody.innerHTML = `<tr class="empty-state"><td colspan="8" style="text-align:center;padding:1.5rem;color:var(--text-secondary)">Ningún ítem agregado</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = '';
+            window.itensNotaFiscal.forEach(it => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${it.codigo || '-'}</td>
+                    <td>${it.descricao}</td>
+                    <td style="text-align:center">${it.unidade}</td>
+                    <td style="text-align:right">${Number(it.quantidade).toLocaleString('es-AR')}</td>
+                    <td style="text-align:right">${fmtARS(it.preco_unitario)}</td>
+                    <td style="text-align:right">${it.iva_porcentaje}%</td>
+                    <td style="text-align:right">${fmtARS(it.valor_subtotal)}</td>
+                    <td style="text-align:center">
+                        <button type="button" class="btn btn-outline btn-sm" onclick="removerItemNF('${it.itemInternoId}')">
+                            <i class="fas fa-trash" style="color:#dc3545"></i>
+                        </button>
+                    </td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function calcularTotalesNF() {
+            const subtotal = window.itensNotaFiscal.reduce((s, it) => s + (it.valor_subtotal || 0), 0);
+            const ivaTotal = window.itensNotaFiscal.reduce((s, it) => s + (it.valor_iva || 0), 0);
+            const descPct = parseFloat(document.getElementById('nf-descuento').value) || 0;
+            const base = subtotal;
+            const descValor = base * (descPct / 100);
+            const total = (base - descValor) + ivaTotal;
+            document.getElementById('nf-total-produtos').textContent = fmtARS(subtotal);
+            document.getElementById('nf-total-iva').textContent = fmtARS(ivaTotal);
+            document.getElementById('nf-total-descuento').textContent = fmtARS(descValor);
+            document.getElementById('nf-total-geral').textContent = fmtARS(total);
+        }
+
+        function gerarNumeroNotaFiscal() {
+            const ultimo = parseInt(localStorage.getItem('oficina_ultimo_numero_nf') || localStorage.getItem('ultimoNumeroNF') || '0');
+            window.numeroNotaFiscal = ultimo + 1;
+            localStorage.setItem('oficina_ultimo_numero_nf', window.numeroNotaFiscal);
+            document.getElementById('nf-numero').value = String(window.numeroNotaFiscal).padStart(8, '0');
+        }
+
+        function definirDataEmissaoAtual() {
+            const d = new Date();
+            const local = new Date(d.getTime() - (d.getTimezoneOffset() * 60000));
+            document.getElementById('nf-data-emissao').value = local.toISOString().slice(0, 16);
+        }
+
+        function abrirModalNotaFiscal(id = null) {
+            editandoNfId = id;
+            const modal = document.getElementById('nota-fiscal-modal');
+            const title = document.getElementById('nota-fiscal-modal-title');
+            carregarClientesNF();
+            document.getElementById('nf-descuento').value = 0;
+
+            if (id) {
+                const nf = notas.find(x => String(x.id) === String(id));
+                if (nf) {
+                    title.textContent = 'Editar Factura N° ' + nf.numero;
+                    editandoNfId = nf.id;
+                    window.numeroNotaFiscal = parseInt(nf.numero);
+                    document.getElementById('nf-numero').value = String(nf.numero).padStart(8, '0');
+                    document.getElementById('nf-serie').value = nf.serie || '0001';
+                    document.getElementById('nf-tipo').value = nf.tipo || 'B';
+                    document.getElementById('nf-data-emissao').value = nf.dataEmissao;
+                    document.getElementById('nf-cliente').value = nf.clienteId || '';
+                    document.getElementById('nf-doc').value = nf.documento || '';
+                    document.getElementById('nf-cond-iva').value = nf.condicionIva || 'final';
+                    document.getElementById('nf-dom').value = nf.domicilio || '';
+                    document.getElementById('nf-cond-pago').value = nf.condPago || 'contado';
+                    document.getElementById('nf-status').value = nf.status || 'emitida';
+                    document.getElementById('nf-descuento').value = nf.descuentoPct || 0;
+                    document.getElementById('nf-observacoes').value = nf.observacoes || '';
+                    window.itensNotaFiscal = nf.itens || [];
                     atualizarTabelaItensNF();
-                    calcularTotaisNF();
-                    
-                    // Limpar campos
-                    document.getElementById('item-tipo').value = '';
-                    document.getElementById('item-codigo').innerHTML = '<option value="">Selecione um item</option>';
-                    document.getElementById('item-quantidade-nf').value = 1;
-                };
-                
-                console.log('Script do modal executado com sucesso!');
-            }
-            
-            // Configurar event listeners do modal
-            function configurarEventListenersModal() {
-                // Event listener para o select de tipo de item
-                const itemTipoSelect = document.getElementById('item-tipo');
-                if (itemTipoSelect) {
-                    itemTipoSelect.addEventListener('change', function() {
-                        if (typeof carregarItensNF === 'function') {
-                            carregarItensNF();
-                        }
-                    });
+                    calcularTotalesNF();
                 }
-                
-                // Event listener para o botão adicionar item
-                const btnAdicionarItem = document.getElementById('btn-adicionar-item');
-                if (btnAdicionarItem) {
-                    btnAdicionarItem.addEventListener('click', function() {
-                        if (typeof adicionarItemNF === 'function') {
-                            adicionarItemNF();
-                        }
-                    });
-                }
+            } else {
+                title.textContent = 'Nueva Factura';
+                document.getElementById('nota-fiscal-form').reset();
+                window.itensNotaFiscal = [];
+                gerarNumeroNotaFiscal();
+                definirDataEmissaoAtual();
+                document.getElementById('nf-serie').value = '0001';
+                document.getElementById('nf-tipo').value = 'B';
+                document.getElementById('nf-cond-pago').value = 'contado';
+                document.getElementById('nf-status').value = 'emitida';
+                document.getElementById('nf-descuento').value = 0;
+                document.getElementById('nf-cond-iva').value = 'monotributo';
+                atualizarTabelaItensNF();
+                calcularTotalesNF();
             }
-            
-            // Configurar botão Nova Nota Fiscal após carregamento do DOM
-            function configurarBotaoNovaNota() {
-                const btnNovaNota = document.getElementById('btn-nova-nota');
-                console.log('Configurando botão Nova Nota Fiscal:', btnNovaNota);
-                
-                if (btnNovaNota) {
-                    // Remover event listeners anteriores para evitar duplicação
-                    btnNovaNota.replaceWith(btnNovaNota.cloneNode(true));
-                    const newBtn = document.getElementById('btn-nova-nota');
-                    
-                    newBtn.addEventListener('click', function(e) {
-                        console.log('Botão Nova Nota Fiscal clicado!');
-                        e.preventDefault();
-                        
-                        // Verificar se a função existe com retry
-                        let tentativas = 0;
-                        const maxTentativas = 5;
-                        
-                        function tentarAbrirModal() {
-                            if (typeof abrirModalNotaFiscal === 'function') {
-                                console.log('Função abrirModalNotaFiscal encontrada, abrindo modal...');
-                                abrirModalNotaFiscal();
-                            } else if (tentativas < maxTentativas) {
-                                tentativas++;
-                                console.log(`Tentativa ${tentativas} de ${maxTentativas} - função não encontrada ainda`);
-                                setTimeout(tentarAbrirModal, 100);
-                            } else {
-                                console.error('Função abrirModalNotaFiscal não encontrada após múltiplas tentativas');
-                                alert('Erro ao abrir o formulário de nota fiscal. Tente recarregar a página.');
-                            }
-                        }
-                        
-                        tentarAbrirModal();
-                    });
-                } else {
-                    console.error('Botão btn-nova-nota não encontrado no DOM!');
-                }
+            modal.classList.add('show');
+        }
+
+        function fecharModalNotaFiscal() {
+            document.getElementById('nota-fiscal-modal').classList.remove('show');
+            editandoNfId = null;
+        }
+
+        function salvarNotaFiscal() {
+            const clienteId = document.getElementById('nf-cliente').value;
+            if (!clienteId) { alert('Debe seleccionar un cliente'); return; }
+            if (window.itensNotaFiscal.length === 0) { alert('Agregue al menos un ítem'); return; }
+
+            const subtotal = window.itensNotaFiscal.reduce((s, i) => s + (i.valor_subtotal || 0), 0);
+            const ivaTotal = window.itensNotaFiscal.reduce((s, i) => s + (i.valor_iva || 0), 0);
+            const descPct = parseFloat(document.getElementById('nf-descuento').value) || 0;
+            const descValor = subtotal * (descPct / 100);
+            const clienteOpt = document.getElementById('nf-cliente').selectedOptions[0];
+
+            const dados = {
+                numero: window.numeroNotaFiscal,
+                serie: document.getElementById('nf-serie').value,
+                tipo: document.getElementById('nf-tipo').value,
+                dataEmissao: document.getElementById('nf-data-emissao').value,
+                clienteId: clienteId,
+                clienteNome: clienteOpt ? clienteOpt.textContent : '',
+                documento: document.getElementById('nf-doc').value,
+                condicionIva: document.getElementById('nf-cond-iva').value,
+                domicilio: document.getElementById('nf-dom').value,
+                condPago: document.getElementById('nf-cond-pago').value,
+                status: document.getElementById('nf-status').value,
+                itens: window.itensNotaFiscal,
+                subtotal,
+                ivaTotal,
+                descuentoPct: descPct,
+                descuentoValor: descValor,
+                total: (subtotal - descValor) + ivaTotal,
+                observacoes: document.getElementById('nf-observacoes').value
+            };
+
+            if (editandoNfId) {
+                const idx = notas.findIndex(x => String(x.id) === String(editandoNfId));
+                if (idx >= 0) notas[idx] = { ...notas[idx], ...dados, atualizadoEm: new Date().toISOString() };
+            } else {
+                dados.id = Date.now().toString();
+                dados.criadoEm = new Date().toISOString();
+                notas.push(dados);
             }
-            
-            // Carregar footer
-            fetch('../components/footer.html')
-                .then(response => response.text())
-                .then(data => {
-                    const footerContainer = document.getElementById('footer-container');
-                    if (footerContainer) {
-                        footerContainer.innerHTML = data;
-                    }
-                });
+            persistir();
+            fecharModalNotaFiscal();
+            renderizarNotas();
+            notificar('Factura guardada correctamente', 'success');
+        }
+
+        function renderizarNotas() {
+            const busca = (document.getElementById('search-nota').value || '').toLowerCase();
+            const di = document.getElementById('data-inicio').value;
+            const df = document.getElementById('data-fim').value;
+            const st = document.getElementById('filter-status').value;
+
+            let list = notas.filter(nf => {
+                const fecha = (nf.dataEmissao || '').slice(0, 10);
+                const matchBusca = !busca
+                    || String(nf.numero).includes(busca)
+                    || (nf.clienteNome || '').toLowerCase().includes(busca)
+                    || (nf.documento || '').toLowerCase().includes(busca);
+                return matchBusca
+                    && (!st || nf.status === st)
+                    && (!di || fecha >= di)
+                    && (!df || fecha <= df);
+            }).sort((a, b) => String(b.numero) - String(a.numero));
+
+            const tbody = document.getElementById('notas-table-body');
+            tbody.innerHTML = '';
+            document.getElementById('nf-total-info').textContent = `${list.length} factura(s)`;
+
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--text-secondary)">No hay facturas para mostrar</td></tr>`;
+                return;
+            }
+            list.forEach(nf => {
+                const tr = document.createElement('tr');
+                const s = STATUS[nf.status] || STATUS.emitida;
+                tr.innerHTML = `
+                    <td><strong>${nf.serie || '0001'}-${String(nf.numero).padStart(8, '0')}</strong> <small class="badge-info badge">${nf.tipo}</small></td>
+                    <td>${(nf.dataEmissao || '').slice(0, 10)}</td>
+                    <td>${nf.clienteNome || '—'}</td>
+                    <td>${nf.documento || '—'}</td>
+                    <td>${nf.condicionIva ? (
+                        nf.condicionIva === 'responsable' ? 'Resp. Inscripto' :
+                        nf.condicionIva === 'monotributo' ? 'Monotributo' :
+                        nf.condicionIva === 'exento' ? 'Exento' : 'Cons. Final'
+                    ) : '—'}</td>
+                    <td style="text-align:center">${(nf.itens || []).length}</td>
+                    <td><strong>${fmtARS(nf.total)}</strong></td>
+                    <td><span class="badge ${s.cls}">${s.label}</span></td>
+                    <td>
+                        <button class="btn btn-outline btn-sm" onclick="abrirModalNotaFiscal('${nf.id}')" title="Editar"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-outline btn-sm" onclick="verFactura('${nf.id}')" title="Ver/Imprimir"><i class="fas fa-print"></i></button>
+                        <button class="btn btn-outline btn-sm" onclick="anularFactura('${nf.id}')" title="Anular"><i class="fas fa-ban" style="color:#dc3545"></i></button>
+                    </td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function anularFactura(id) {
+            const nf = notas.find(x => String(x.id) === String(id));
+            if (!nf) return;
+            if (!confirm(`¿Anular Factura N° ${nf.numero}?`)) return;
+            nf.status = 'cancelada';
+            persistir();
+            renderizarNotas();
+            notificar('Factura anulada', 'info');
+        }
+
+        function verFactura(id) {
+            abrirModalNotaFiscal(id);
+            setTimeout(() => imprimirPrevia(), 100);
+        }
+
+        function imprimirPrevia() {
+            alert('Función de impresión: la factura se procesa y está lista. En producción se envía a imprimir usando window.print() sobre un template de factura A/B/C.');
+        }
+
+        function notificar(mensaje, tipo = 'info') {
+            const n = document.createElement('div');
+            n.textContent = mensaje;
+            n.style.cssText = `
+                position: fixed; top: 20px; right: 20px; padding: 1rem 1.5rem; color: white;
+                border-radius: 4px; z-index: 10000; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                background: ${tipo === 'success' ? '#28a745' : tipo === 'error' ? '#dc3545' : '#007bff'};
+            `;
+            document.body.appendChild(n);
+            setTimeout(() => n.remove(), 3000);
+        }
+
+        function logoutSidebar() {
+            if (!confirm('¿Desea realmente salir del sistema?')) return;
+            localStorage.removeItem('userLoggedIn');
+            localStorage.removeItem('usuarioLogado');
+            sessionStorage.removeItem('userLoggedIn');
+            sessionStorage.removeItem('usuarioLogado');
+            window.location.href = '../login.html';
+        }
+
+        document.getElementById('nota-fiscal-modal').addEventListener('click', e => {
+            if (e.target.id === 'nota-fiscal-modal') fecharModalNotaFiscal();
         });
     </script>
-        </div>
-    </main>
 </body>
 </html>

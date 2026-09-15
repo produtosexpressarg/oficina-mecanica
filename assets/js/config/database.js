@@ -25,24 +25,23 @@ function initDatabase() {
         const request = indexedDB.open(DB_CONFIG.name, DB_CONFIG.version);
         
         request.onerror = (event) => {
-            console.error('Erro ao abrir banco de dados:', event.target.error);
+            console.error('Error al abrir base de datos:', event.target.error);
             reject(event.target.error);
         };
         
         request.onsuccess = (event) => {
             const db = event.target.result;
-            console.log('Banco de dados inicializado com sucesso');
+            console.log('Base de datos inicializada con éxito');
             resolve(db);
         };
         
         request.onupgradeneeded = (event) => {
             const db = event.target.result;
             
-            // Criar stores se não existirem
             Object.entries(DB_CONFIG.stores).forEach(([storeName, storeConfig]) => {
                 if (!db.objectStoreNames.contains(storeName)) {
                     db.createObjectStore(storeName, storeConfig);
-                    console.log(`Store ${storeName} criada`);
+                    console.log(`Store ${storeName} creada`);
                 }
             });
         };

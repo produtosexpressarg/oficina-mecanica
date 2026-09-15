@@ -1,10 +1,10 @@
-<!-- Tabela de Clientes -->
+<!-- Tabla de Clientes -->
 <div class="table-container">
     <div class="table-header">
         <h3>Lista de Clientes</h3>
         <div class="table-actions">
             <button class="btn btn-primary" id="btn-novo-cliente">
-                <i class="fas fa-plus"></i> Novo Cliente
+                <i class="fas fa-plus"></i> Nuevo Cliente
             </button>
             <button class="btn btn-secondary" id="btn-exportar-clientes">
                 <i class="fas fa-download"></i> Exportar
@@ -16,9 +16,9 @@
         <div class="filter-group">
             <input type="text" placeholder="Buscar cliente..." id="search-cliente" class="search-input">
             <select id="filter-status" class="filter-select">
-                <option value="">Todos os Status</option>
-                <option value="ativo">Ativo</option>
-                <option value="inativo">Inativo</option>
+                <option value="">Todos los Estados</option>
+                <option value="ativo">Activo</option>
+                <option value="inativo">Inactivo</option>
             </select>
         </div>
     </div>
@@ -28,18 +28,18 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Nome</th>
-                    <th>CPF/CNPJ</th>
-                    <th>Telefone</th>
+                    <th>Nombre</th>
+                    <th>CUIL/CUIT</th>
+                    <th>Teléfono</th>
                     <th>Email</th>
-                    <th>Cidade</th>
-                    <th>Status</th>
-                    <th>Cadastro</th>
-                    <th>Ações</th>
+                    <th>Ciudad</th>
+                    <th>Estado</th>
+                    <th>Registro</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Dados serão carregados via JavaScript -->
+                <!-- Datos se cargarán via JavaScript -->
             </tbody>
         </table>
     </div>
@@ -53,7 +53,7 @@
                 <i class="fas fa-chevron-left"></i>
             </button>
             <span class="pagination-numbers" id="pagination-numbers">
-                <!-- Números das páginas serão gerados via JavaScript -->
+                <!-- Números de páginas se generarán via JavaScript -->
             </span>
             <button class="btn-pagination" id="btn-next">
                 <i class="fas fa-chevron-right"></i>

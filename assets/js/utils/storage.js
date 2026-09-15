@@ -27,7 +27,7 @@ class StorageManager {
             localStorage.removeItem(test);
             return true;
         } catch (e) {
-            console.warn('⚠️ localStorage não suportado:', e.message);
+            console.warn('⚠️ localStorage no soportado:', e.message);
             return false;
         }
     }
@@ -40,16 +40,13 @@ class StorageManager {
             const currentVersion = localStorage.getItem(`${this.prefix}version`);
             
             if (!currentVersion || currentVersion !== this.version) {
-                console.log('🔄 Migrando dados para versão', this.version);
-                
-                // Aqui você pode implementar lógica de migração
-                // Por exemplo, renomear chaves, converter formatos, etc.
+                console.log('🔄 Migrando datos para versión', this.version);
                 
                 localStorage.setItem(`${this.prefix}version`, this.version);
-                console.log('✅ Migração concluída');
+                console.log('✅ Migración completada');
             }
         } catch (error) {
-            console.error('❌ Erro na migração de dados:', error);
+            console.error('❌ Error en la migración de datos:', error);
         }
     }
     
@@ -108,7 +105,7 @@ class StorageManager {
             return true;
             
         } catch (error) {
-            console.error('❌ Erro ao salvar no localStorage:', error);
+            console.error('❌ Error al guardar en localStorage:', error);
             return false;
         }
     }
@@ -235,11 +232,11 @@ class StorageManager {
             // Emitir evento
             this.emitEvent('storage:clear');
             
-            console.log('🗑️ Dados da aplicação limpos');
+            console.log('🗑️ Datos de la aplicación limpiados');
             return true;
             
         } catch (error) {
-            console.error('❌ Erro ao limpar localStorage:', error);
+            console.error('❌ Error al limpiar localStorage:', error);
             return false;
         }
     }
@@ -424,10 +421,10 @@ class StorageManager {
             // Limpar cache
             this.cleanExpiredCache();
             
-            console.log('🔧 localStorage otimizado');
+            console.log('🔧 localStorage optimizado');
             
         } catch (error) {
-            console.error('❌ Erro na otimização:', error);
+            console.error('❌ Error en la optimización:', error);
         }
     }
     
@@ -507,11 +504,11 @@ class StorageManager {
                     }
                 }
             } catch (error) {
-                console.error('❌ Erro ao reparar item:', issue.key, error);
+                console.error('❌ Error al reparar ítem:', issue.key, error);
             }
         });
         
-        console.log(`🔧 ${repaired} itens reparados`);
+        console.log(`🔧 ${repaired} ítems reparados`);
         return repaired;
     }
     
@@ -594,4 +591,4 @@ setInterval(() => {
     storageManager.optimize();
 }, 60 * 60 * 1000); // A cada hora
 
-console.log('💾 Gerenciador de armazenamento inicializado');
+console.log('💾 Gestor de almacenamiento inicializado');

@@ -78,4 +78,4 @@ document.addEventListener('DOMContentLoaded', () => {
     window.app.init();
 });
 
-console.log('🚀 Sistema de Gestão - Oficina Mecânica carregado');
+console.log('🚀 Sistema de Gestión - Taller Mecánico cargado');

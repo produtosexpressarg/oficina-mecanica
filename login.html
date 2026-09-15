@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="es-AR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Oficina Mecânica</title>
+    <title>Iniciar Sesión - Taller Mecánico</title>
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/validations.css">
+    <link rel="stylesheet" href="assets/css/design-system.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="assets/js/validations.js"></script>
+    <script src="assets/js/utils/validators.js"></script>
     <style>
         body {
             margin: 0;
@@ -258,31 +259,31 @@
             <div class="login-logo">
                 <i class="fas fa-wrench"></i>
             </div>
-            <h1 class="login-title">Oficina Mecânica</h1>
+            <h1 class="login-title">Taller Mecánico</h1>
             <p class="login-subtitle">
-                Sistema completo de gerenciamento para oficinas mecânicas. 
-                Controle clientes, veículos, estoque, vendas e muito mais.
+                Sistema completo de gestión para talleres mecánicos.
+                Controlá clientes, vehículos, stock, ventas y mucho más.
             </p>
         </div>
 
         <div class="login-right">
-            <h2 class="login-form-title">Bem-vindo!</h2>
-            <p class="login-form-subtitle">Faça login para acessar o sistema</p>
+            <h2 class="login-form-title">¡Bienvenido!</h2>
+            <p class="login-form-subtitle">Iniciá sesión para acceder al sistema</p>
 
             <div class="error-message" id="error-message">
                 <i class="fas fa-exclamation-circle"></i>
-                <span id="error-text">Usuário ou senha incorretos</span>
+                <span id="error-text">Usuario o contraseña incorrectos</span>
             </div>
 
             <form id="login-form" onsubmit="realizarLogin(event)">
                 <div class="form-group">
-                    <label for="username">Usuário</label>
+                    <label for="username">Usuario</label>
                     <input type="text" id="username" name="username" required autocomplete="username">
                     <i class="fas fa-user input-icon"></i>
                 </div>
 
                 <div class="form-group">
-                    <label for="password">Senha</label>
+                    <label for="password">Contraseña</label>
                     <input type="password" id="password" name="password" required autocomplete="current-password">
                     <i class="fas fa-eye input-icon password-toggle" onclick="togglePassword()"></i>
                 </div>
@@ -290,23 +291,23 @@
                 <div class="login-options">
                     <label class="remember-me">
                         <input type="checkbox" id="remember" name="remember">
-                        <span>Lembrar-me</span>
+                        <span>Recordarme</span>
                     </label>
-                    <a href="#" class="forgot-password" onclick="esqueceuSenha()">Esqueceu a senha?</a>
+                    <a href="#" class="forgot-password" onclick="esqueceuSenha()">¿Olvidaste tu contraseña?</a>
                 </div>
 
                 <button type="submit" class="login-btn" id="login-btn">
                     <span class="loading-spinner" id="loading-spinner"></span>
-                    <span id="btn-text">Entrar</span>
+                    <span id="btn-text">Ingresar</span>
                 </button>
             </form>
 
             <div class="demo-credentials">
-                <h4><i class="fas fa-info-circle"></i> Credenciais de Demonstração</h4>
-                <p><strong>Usuário:</strong> admin</p>
-                <p><strong>Senha:</strong> admin123</p>
-                <p><strong>Usuário:</strong> mecanico</p>
-                <p><strong>Senha:</strong> mecanico123</p>
+                <h4><i class="fas fa-info-circle"></i> Credenciales de Demostración</h4>
+                <p><strong>Usuario:</strong> admin</p>
+                <p><strong>Contraseña:</strong> admin123</p>
+                <p><strong>Usuario:</strong> mecanico</p>
+                <p><strong>Contraseña:</strong> mecanico123</p>
             </div>
         </div>
     </div>
@@ -316,39 +317,39 @@
         const usuarios = {
             'admin': {
                 senha: 'admin123',
-                nome: 'Administrador',
+                nombre: 'Administrador',
                 perfil: 'admin',
                 permissoes: ['dashboard', 'clientes', 'veiculos', 'estoque', 'vendas', 'notas-fiscais', 'relatorios']
             },
             'mecanico': {
                 senha: 'mecanico123',
-                nome: 'Mecânico',
+                nombre: 'Mecánico',
                 perfil: 'mecanico',
                 permissoes: ['dashboard', 'clientes', 'veiculos', 'estoque', 'vendas']
             },
             'atendente': {
                 senha: 'atendente123',
-                nome: 'Atendente',
+                nombre: 'Atención al Cliente',
                 perfil: 'atendente',
                 permissoes: ['dashboard', 'clientes', 'veiculos', 'vendas']
             }
         };
 
-        // Verificar se já está logado
         document.addEventListener('DOMContentLoaded', function() {
-            const usuarioLogado = localStorage.getItem('usuarioLogado');
-            if (usuarioLogado) {
+            const usuarioLogadoLocal = localStorage.getItem('usuarioLogado') || localStorage.getItem('userLoggedIn');
+            const usuarioLogadoSession = sessionStorage.getItem('usuarioLogado') || sessionStorage.getItem('userLoggedIn');
+            if (usuarioLogadoLocal || usuarioLogadoSession) {
                 window.location.href = 'pages/dashboard.html';
+                return;
             }
 
-            // Focar no campo usuário
             document.getElementById('username').focus();
         });
 
         function togglePassword() {
             const passwordInput = document.getElementById('password');
             const toggleIcon = document.querySelector('.password-toggle');
-            
+
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
                 toggleIcon.classList.remove('fa-eye');
@@ -360,106 +361,107 @@
             }
         }
 
-        function mostrarErro(mensagem) {
+        function mostrarErro(mensaje) {
             const errorDiv = document.getElementById('error-message');
             const errorText = document.getElementById('error-text');
-            errorText.textContent = mensagem;
+            errorText.textContent = mensaje;
             errorDiv.style.display = 'block';
-            
+
             // Esconder erro após 5 segundos
             setTimeout(() => {
                 errorDiv.style.display = 'none';
             }, 5000);
         }
 
-        function mostrarCarregamento(mostrar) {
+        function mostrarCarregamiento(mostrar) {
             const spinner = document.getElementById('loading-spinner');
             const btnText = document.getElementById('btn-text');
             const btn = document.getElementById('login-btn');
-            
+
             if (mostrar) {
                 spinner.style.display = 'inline-block';
-                btnText.textContent = 'Entrando...';
+                btnText.textContent = 'Ingresando...';
                 btn.disabled = true;
             } else {
                 spinner.style.display = 'none';
-                btnText.textContent = 'Entrar';
+                btnText.textContent = 'Ingresar';
                 btn.disabled = false;
             }
         }
 
         function realizarLogin(event) {
             event.preventDefault();
-            
+
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             const remember = document.getElementById('remember').checked;
-            
-            // Validações básicas
+
+            // Validaciones básicas
             if (!username || !password) {
-                mostrarErro('Por favor, preencha todos os campos');
+                mostrarErro('Por favor completá todos los campos.');
                 return;
             }
-            
-            mostrarCarregamento(true);
-            
-            // Simular delay de autenticação
+
+            mostrarCarregamiento(true);
+
+            // Simular delay de autenticación
             setTimeout(() => {
-                // Verificar credenciais
+                // Verificar credenciales
                 if (usuarios[username] && usuarios[username].senha === password) {
                     const usuario = usuarios[username];
-                    
-                    // Salvar dados do usuário logado
-                    const dadosUsuario = {
+
+                    // Guardar datos del usuario logueado
+                    const datosUsuario = {
                         username: username,
-                        nome: usuario.nome,
+                        nombre: usuario.nombre,
                         perfil: usuario.perfil,
                         permissoes: usuario.permissoes,
                         loginTime: new Date().toISOString()
                     };
-                    
-                    // Salvar no localStorage ou sessionStorage
+
                     if (remember) {
-                        localStorage.setItem('usuarioLogado', JSON.stringify(dadosUsuario));
+                        localStorage.setItem('usuarioLogado', JSON.stringify(datosUsuario));
+                        localStorage.removeItem('userLoggedIn');
                     } else {
-                        sessionStorage.setItem('usuarioLogado', JSON.stringify(dadosUsuario));
+                        sessionStorage.setItem('usuarioLogado', JSON.stringify(datosUsuario));
+                        sessionStorage.removeItem('userLoggedIn');
                     }
-                    
-                    // Registrar log de acesso
+
+                    // Registrar log de acceso
                     const logsAcesso = JSON.parse(localStorage.getItem('logsAcesso') || '[]');
                     logsAcesso.push({
                         usuario: username,
-                        nome: usuario.nome,
+                        nombre: usuario.nombre,
                         timestamp: new Date().toISOString(),
-                        ip: 'localhost', // Em produção, capturar IP real
+                        ip: 'localhost',
                         userAgent: navigator.userAgent
                     });
-                    
-                    // Manter apenas os últimos 100 logs
+
+                    // Mantener solo los últimos 100 logs
                     if (logsAcesso.length > 100) {
                         logsAcesso.splice(0, logsAcesso.length - 100);
                     }
-                    
+
                     localStorage.setItem('logsAcesso', JSON.stringify(logsAcesso));
-                    
-                    // Redirecionar para o dashboard
+
+                    // Redireccionar al dashboard
                     window.location.href = 'pages/dashboard.html';
                 } else {
-                    mostrarCarregamento(false);
-                    mostrarErro('Usuário ou senha incorretos');
-                    
-                    // Limpar campo senha
+                    mostrarCarregamiento(false);
+                    mostrarErro('Usuario o contraseña incorrectos.');
+
+                    // Limpiar campo contraseña
                     document.getElementById('password').value = '';
                     document.getElementById('password').focus();
                 }
-            }, 1500); // Simular 1.5s de processamento
+            }, 1500); // Simular 1.5s de procesamiento
         }
 
         function esqueceuSenha() {
-            alert('Funcionalidade de recuperação de senha será implementada em breve.\n\nPara demonstração, use:\n• admin / admin123\n• mecanico / mecanico123');
+            alert('Funcionalidad de recuperación de contraseña estará disponible próximamente.\n\nPara la demo, usá:\n• admin / admin123\n• mecanico / mecanico123');
         }
 
-        // Permitir login com Enter
+        // Permitir login con Enter
         document.addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
                 const form = document.getElementById('login-form');
@@ -469,7 +471,7 @@
             }
         });
 
-        // Limpar mensagem de erro ao digitar
+        // Limpiar mensaje de error al escribir
         document.getElementById('username').addEventListener('input', function() {
             document.getElementById('error-message').style.display = 'none';
         });
@@ -478,8 +480,8 @@
             document.getElementById('error-message').style.display = 'none';
         });
     </script>
-    
-    <!-- Script para criar dados de exemplo -->
+
+    <!-- Script para crear datos de ejemplo -->
     <script src="js/dados-exemplo.js"></script>
 </body>
 </html>

@@ -1,123 +1,102 @@
 /**
  * HELPERS.JS
- * Funções auxiliares e utilitários para o Sistema de Gestão - Oficina Mecânica
- * Versão: 1.0.0
+ * Funciones auxiliares y utilitarios para Sistema de Gestión Taller Mecánico
+ * Versión: 2.0.0 (ES-AR)
  */
 
-// ===== FORMATAÇÃO E MÁSCARAS =====
+// ===== FORMATO Y MÁSCARAS (ARGENTINA) =====
 
 /**
- * Formata CPF/CNPJ
- * @param {string} value - Valor a ser formatado
- * @returns {string} CPF/CNPJ formatado
+ * Formatea DNI/CUIT/CUIL (versión Argentina)
+ * @param {string} value - Valor numérico
+ * @returns {string} Valor formateado
  */
-function formatCpfCnpj(value) {
+function formatCpfCnpj(value) { return formatDniCuit(value); }
+function formatDniCuit(value) {
     if (!value) return '';
-    
     const digits = value.replace(/\D/g, '');
-    
-    if (digits.length <= 11) {
-        // CPF: 000.000.000-00
-        return digits.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    if (digits.length <= 8) {
+        // DNI: 12.345.678
+        return digits.replace(/(\d{2})(\d{3})(\d{0,3})/, (m, a, b, c) =>
+            c ? `${a}.${b}.${c}` : b ? `${a}.${b}` : a);
+    } else if (digits.length === 11) {
+        // CUIT/CUIL: 00-00000000-0
+        return digits.slice(0,2) + '-' + digits.slice(2,10) + '-' + digits.slice(10);
     } else {
-        // CNPJ: 00.000.000/0000-00
-        return digits.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+        // Fallback (formatos largos):
+        if (digits.length === 14) return digits.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+        return digits.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
     }
 }
+/** @deprecated alias ES-AR */
+const formatDNI = formatDniCuit;
+const formatCUIT = formatDniCuit;
 
 /**
- * Formata telefone
- * @param {string} value - Número do telefone
- * @returns {string} Telefone formatado
+ * Formatea teléfono (estilo argentino)
+ * @param {string} value - Teléfono
+ * @returns {string}
  */
 function formatPhone(value) {
     if (!value) return '';
-    
     const digits = value.replace(/\D/g, '');
-    
-    if (digits.length <= 10) {
-        // (00) 0000-0000
-        return digits.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
-    } else {
-        // (00) 00000-0000
-        return digits.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-    }
+    if (digits.length === 11) return digits.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    if (digits.length === 10) return digits.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+    return digits;
 }
 
 /**
- * Formata CEP
- * @param {string} value - CEP
- * @returns {string} CEP formatado
+ * Formatea CPA (Código Postal Argentino, A0000AAA) o CEP (backward compat)
+ * @param {string} value
+ * @returns {string}
  */
-function formatCep(value) {
+function formatCep(value) { return formatCpa(value); }
+function formatCpa(value) {
     if (!value) return '';
-    const digits = value.replace(/\D/g, '');
-    return digits.replace(/(\d{5})(\d{3})/, '$1-$2');
+    const digits = value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+    if (/^\d{8}$/.test(digits)) return digits.replace(/(\d{5})(\d{3})/, '$1-$2');
+    if (digits.length > 4) return digits.slice(0,4) + digits.slice(4);
+    return digits;
 }
 
 /**
- * Formata placa de veículo (Mercosul e antiga)
- * @param {string} value - Placa
- * @returns {string} Placa formatada
+ * Formatea patente de vehículo (Mercosul / Argentina)
+ * @param {string} value
+ * @returns {string}
  */
 function formatPlaca(value) {
     if (!value) return '';
-    
     const cleaned = value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
-    
-    if (cleaned.length <= 7) {
-        // Formato antigo: ABC-1234
-        return cleaned.replace(/([A-Z]{3})([0-9]{4})/, '$1-$2');
-    } else {
-        // Formato Mercosul: ABC1D23
-        return cleaned.replace(/([A-Z]{3})([0-9][A-Z][0-9]{2})/, '$1$2');
-    }
+    if (cleaned.length <= 7) return cleaned.replace(/([A-Z]{3})([0-9]{4})/, '$1-$2');
+    return cleaned.replace(/([A-Z]{3})([0-9][A-Z][0-9]{2})/, '$1$2');
 }
 
 /**
- * Formata valor monetário
- * @param {number|string} value - Valor numérico
- * @param {string} currency - Moeda (default: 'BRL')
- * @returns {string} Valor formatado
+ * Formatea valor monetario
+ * @param {number|string} value - Valor
+ * @param {string} currency - Moneda (default 'ARS')
+ * @returns {string} Valor formateado
  */
-function formatCurrency(value, currency = 'BRL') {
-    if (value === null || value === undefined || value === '') return 'R$ 0,00';
-    
+function formatCurrency(value, currency = 'ARS') {
+    if (value === null || value === undefined || value === '') return '$ 0,00';
     const numValue = typeof value === 'string' ? parseFloat(value.replace(/[^\d,-]/g, '').replace(',', '.')) : value;
-    
-    if (isNaN(numValue)) return 'R$ 0,00';
-    
-    return new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: currency
-    }).format(numValue);
+    if (isNaN(numValue)) return '$ 0,00';
+    return new Intl.NumberFormat('es-AR', { style: 'currency', currency }).format(numValue);
 }
 
 /**
- * Formata data para exibição
- * @param {Date|string} date - Data
- * @param {boolean} includeTime - Incluir horário
- * @returns {string} Data formatada
+ * Formatea fecha para exibición (formato argentino ES-AR)
+ * @param {Date|string} date
+ * @param {boolean} includeTime
+ * @returns {string}
  */
 function formatDate(date, includeTime = false) {
     if (!date) return '';
-    
     const dateObj = date instanceof Date ? date : new Date(date);
-    
     if (isNaN(dateObj.getTime())) return '';
-    
-    const options = {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
-    };
-    
-    if (includeTime) {
-        options.hour = '2-digit';
-        options.minute = '2-digit';
-    }
-    
-    return dateObj.toLocaleDateString('pt-BR', options);
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    if (includeTime) { options.hour = '2-digit'; options.minute = '2-digit'; }
+    return dateObj.toLocaleDateString('es-AR', options);
 }
 
 /**
@@ -135,37 +114,35 @@ function formatDateForInput(date) {
     return dateObj.toISOString().split('T')[0];
 }
 
-// ===== VALIDAÇÕES E UTILIDADES =====
+// ===== VALIDACIONES Y UTILIDADES =====
 
 /**
- * Gera ID único
- * @returns {string} ID único
+ * Genera ID único
+ * @returns {string}
  */
 function generateId() {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
 /**
- * Gera número sequencial para OS
- * @returns {string} Número da OS
+ * Genera número secuencial para OS (Órdenes de Servicio)
+ * @returns {string}
  */
 function generateOSNumber() {
     const year = new Date().getFullYear();
     const stored = localStorage.getItem('lastOSNumber') || '0';
     const nextNumber = (parseInt(stored) + 1).toString().padStart(6, '0');
-    
     localStorage.setItem('lastOSNumber', nextNumber);
     return `OS${year}${nextNumber}`;
 }
 
 /**
- * Remove acentos e caracteres especiais
- * @param {string} str - String
- * @returns {string} String normalizada
+ * Remueve acentos y caracteres especiales
+ * @param {string} str
+ * @returns {string}
  */
 function normalizeString(str) {
     if (!str) return '';
-    
     return str
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
@@ -174,86 +151,75 @@ function normalizeString(str) {
 }
 
 /**
- * Busca em array de objetos
- * @param {Array} array - Array para buscar
- * @param {string} searchTerm - Termo de busca
- * @param {Array} fields - Campos para buscar
- * @returns {Array} Resultados filtrados
+ * Busca en array de objetos
+ * @param {Array} array
+ * @param {string} searchTerm
+ * @param {Array} fields
+ * @returns {Array}
  */
 function searchInArray(array, searchTerm, fields) {
     if (!searchTerm || !array?.length) return array;
-    
     const normalizedTerm = normalizeString(searchTerm);
-    
-    return array.filter(item => {
-        return fields.some(field => {
-            const value = getNestedValue(item, field);
-            return normalizeString(String(value || '')).includes(normalizedTerm);
-        });
-    });
+    return array.filter(item => fields.some(field => {
+        const value = getNestedValue(item, field);
+        return normalizeString(String(value || '')).includes(normalizedTerm);
+    }));
 }
 
 /**
- * Obtém valor aninhado de objeto
- * @param {Object} obj - Objeto
- * @param {string} path - Caminho (ex: 'cliente.nome')
- * @returns {*} Valor encontrado
+ * Obtiene valor anidado de objeto
+ * @param {Object} obj
+ * @param {string} path
+ * @returns {*}
  */
 function getNestedValue(obj, path) {
     return path.split('.').reduce((current, key) => current?.[key], obj);
 }
 
 /**
- * Debounce para otimizar buscas
- * @param {Function} func - Função a ser executada
- * @param {number} wait - Tempo de espera em ms
- * @returns {Function} Função com debounce
+ * Debounce para optimizar búsquedas
+ * @param {Function} func
+ * @param {number} wait
+ * @returns {Function}
  */
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
+        const later = () => { clearTimeout(timeout); func(...args); };
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
     };
 }
 
-// ===== MANIPULAÇÃO DE DOM =====
+// ===== MANIPULACIÓN DE DOM =====
 
 /**
- * Adiciona event listeners com cleanup automático
- * @param {Element} element - Elemento DOM
- * @param {string} event - Tipo de evento
- * @param {Function} handler - Handler do evento
+ * Agrega event listeners con cleanup automático
+ * @param {Element} element
+ * @param {string} event
+ * @param {Function} handler
  */
 function addEventListenerWithCleanup(element, event, handler) {
     element.addEventListener(event, handler);
-    
-    // Armazena referência para cleanup
     if (!element._eventHandlers) element._eventHandlers = [];
     element._eventHandlers.push({ event, handler });
 }
 
 /**
- * Remove todos os event listeners de um elemento
- * @param {Element} element - Elemento DOM
+ * Remueve todos los event listeners de un elemento
+ * @param {Element} element
  */
 function removeAllEventListeners(element) {
     if (element._eventHandlers) {
-        element._eventHandlers.forEach(({ event, handler }) => {
-            element.removeEventListener(event, handler);
-        });
+        element._eventHandlers.forEach(({ event, handler }) => element.removeEventListener(event, handler));
         element._eventHandlers = [];
     }
 }
 
 /**
  * Escapa HTML para prevenir XSS
- * @param {string} text - Texto a ser escapado
- * @returns {string} Texto escapado
+ * @param {string} text
+ * @returns {string}
  */
 function escapeHtml(text) {
     const div = document.createElement('div');
@@ -262,45 +228,33 @@ function escapeHtml(text) {
 }
 
 /**
- * Cria elemento DOM com atributos
- * @param {string} tag - Tag do elemento
- * @param {Object} attributes - Atributos
- * @param {string} content - Conteúdo interno
- * @returns {Element} Elemento criado
+ * Crea elemento DOM con atributos
+ * @param {string} tag
+ * @param {Object} attributes
+ * @param {string} content
+ * @returns {Element}
  */
 function createElement(tag, attributes = {}, content = '') {
     const element = document.createElement(tag);
-    
     Object.entries(attributes).forEach(([key, value]) => {
-        if (key === 'class') {
-            element.className = value;
-        } else if (key === 'data') {
-            Object.entries(value).forEach(([dataKey, dataValue]) => {
-                element.dataset[dataKey] = dataValue;
-            });
-        } else {
-            element.setAttribute(key, value);
-        }
+        if (key === 'class') { element.className = value; }
+        else if (key === 'data') { Object.entries(value).forEach(([k, v]) => element.dataset[k] = v); }
+        else { element.setAttribute(key, value); }
     });
-    
-    if (content) {
-        element.innerHTML = content;
-    }
-    
+    if (content) element.innerHTML = content;
     return element;
 }
 
-// ===== NOTIFICAÇÕES E FEEDBACK =====
+// ===== NOTIFICACIONES Y FEEDBACK =====
 
 /**
- * Exibe notificação toast
- * @param {string} message - Mensagem
- * @param {string} type - Tipo (success, error, warning, info)
- * @param {number} duration - Duração em ms
+ * Muestra notificación toast
+ * @param {string} message
+ * @param {string} type success|error|warning|info
+ * @param {number} duration
  */
 function showToast(message, type = 'info', duration = 3000) {
     const container = document.getElementById('notificationsContainer') || createNotificationContainer();
-    
     const toast = createElement('div', {
         class: `toast toast-${type}`,
         'data': { type }
@@ -313,15 +267,8 @@ function showToast(message, type = 'info', duration = 3000) {
             <i class="fas fa-times"></i>
         </button>
     `);
-    
     container.appendChild(toast);
-    
-    // Animação de entrada
-    requestAnimationFrame(() => {
-        toast.classList.add('toast-show');
-    });
-    
-    // Remoção automática
+    requestAnimationFrame(() => toast.classList.add('toast-show'));
     setTimeout(() => {
         toast.classList.add('toast-hide');
         setTimeout(() => toast.remove(), 300);
@@ -329,57 +276,43 @@ function showToast(message, type = 'info', duration = 3000) {
 }
 
 /**
- * Cria container de notificações se não existir
- * @returns {Element} Container criado
+ * Crea container de notificaciones
+ * @returns {Element}
  */
 function createNotificationContainer() {
-    const container = createElement('div', {
-        id: 'notificationsContainer',
-        class: 'notifications-container'
-    });
-    
+    const container = createElement('div', { id: 'notificationsContainer', class: 'notifications-container' });
     document.body.appendChild(container);
     return container;
 }
 
 /**
- * Retorna ícone para tipo de toast
- * @param {string} type - Tipo do toast
- * @returns {string} Classe do ícone
+ * Retorna ícono para tipo de toast
+ * @param {string} type
+ * @returns {string}
  */
 function getToastIcon(type) {
-    const icons = {
-        success: 'check-circle',
-        error: 'exclamation-circle',
-        warning: 'exclamation-triangle',
-        info: 'info-circle'
-    };
+    const icons = { success: 'check-circle', error: 'exclamation-circle', warning: 'exclamation-triangle', info: 'info-circle' };
     return icons[type] || 'info-circle';
 }
 
 /**
- * Exibe loading overlay
- * @param {string} message - Mensagem de loading
+ * Muestra loading overlay
+ * @param {string} message
  */
-function showLoading(message = 'Carregando...') {
+function showLoading(message = 'Cargando...') {
     const existingLoading = document.getElementById('loadingOverlay');
     if (existingLoading) return;
-    
-    const overlay = createElement('div', {
-        id: 'loadingOverlay',
-        class: 'loading-overlay active'
-    }, `
+    const overlay = createElement('div', { id: 'loadingOverlay', class: 'loading-overlay active' }, `
         <div class="loading-content">
             <div class="spinner"></div>
             <p>${escapeHtml(message)}</p>
         </div>
     `);
-    
     document.body.appendChild(overlay);
 }
 
 /**
- * Remove loading overlay
+ * Remueve loading overlay
  */
 function hideLoading() {
     const overlay = document.getElementById('loadingOverlay');
@@ -389,109 +322,87 @@ function hideLoading() {
     }
 }
 
-// ===== EXPORTAÇÃO E IMPORTAÇÃO =====
+// ===== EXPORTACIÓN E IMPORTACIÓN =====
 
 /**
- * Exporta dados para JSON
- * @param {Object} data - Dados para exportar
- * @param {string} filename - Nome do arquivo
+ * Exporta datos a JSON
+ * @param {Object} data
+ * @param {string} filename
  */
-function exportToJSON(data, filename = 'backup-oficina.json') {
+function exportToJSON(data, filename = 'backup-taller.json') {
     try {
         const jsonString = JSON.stringify(data, null, 2);
         const blob = new Blob([jsonString], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
-        
         const link = createElement('a', {
             href: url,
             download: `${filename}-${formatDate(new Date()).replace(/\//g, '-')}.json`
         });
-        
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        document.body.appendChild(link); link.click(); document.body.removeChild(link);
         URL.revokeObjectURL(url);
-        
-        showToast('Dados exportados com sucesso!', 'success');
+        showToast('Datos exportados con éxito!', 'success');
     } catch (error) {
-        console.error('Erro ao exportar:', error);
-        showToast('Erro ao exportar dados', 'error');
+        console.error('Error al exportar:', error);
+        showToast('Error al exportar datos', 'error');
     }
 }
 
 /**
- * Importa dados de arquivo JSON
- * @param {Function} callback - Callback com dados importados
+ * Importa datos de archivo JSON
+ * @param {Function} callback
  */
 function importFromJSON(callback) {
-    const input = createElement('input', {
-        type: 'file',
-        accept: '.json',
-        style: 'display: none'
-    });
-    
+    const input = createElement('input', { type: 'file', accept: '.json', style: 'display: none' });
     input.onchange = (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        
+        const file = e.target.files[0]; if (!file) return;
         const reader = new FileReader();
         reader.onload = (event) => {
             try {
                 const data = JSON.parse(event.target.result);
                 callback(data);
-                showToast('Dados importados com sucesso!', 'success');
+                showToast('Datos importados con éxito!', 'success');
             } catch (error) {
-                console.error('Erro ao importar:', error);
-                showToast('Erro ao ler arquivo. Verifique se é um JSON válido.', 'error');
+                console.error('Error al importar:', error);
+                showToast('Error al leer archivo. Verifique que sea un JSON válido.', 'error');
             }
         };
         reader.readAsText(file);
     };
-    
-    document.body.appendChild(input);
-    input.click();
-    document.body.removeChild(input);
+    document.body.appendChild(input); input.click(); document.body.removeChild(input);
 }
 
-// ===== CÁLCULOS E ESTATÍSTICAS =====
+// ===== CÁLCULOS Y ESTADÍSTICAS =====
 
 /**
- * Calcula estatísticas básicas de array numérico
- * @param {Array} numbers - Array de números
- * @returns {Object} Estatísticas
+ * Calcula estadísticas básicas de array numérico
+ * @param {Array} numbers
+ * @returns {Object}
  */
 function calculateStats(numbers) {
     if (!numbers?.length) return { sum: 0, avg: 0, min: 0, max: 0, count: 0 };
-    
     const validNumbers = numbers.filter(n => !isNaN(n) && n !== null && n !== undefined);
-    
     if (!validNumbers.length) return { sum: 0, avg: 0, min: 0, max: 0, count: 0 };
-    
     const sum = validNumbers.reduce((acc, n) => acc + Number(n), 0);
     const avg = sum / validNumbers.length;
-    const min = Math.min(...validNumbers);
-    const max = Math.max(...validNumbers);
-    
     return {
         sum,
         avg: Math.round(avg * 100) / 100,
-        min,
-        max,
+        min: Math.min(...validNumbers),
+        max: Math.max(...validNumbers),
         count: validNumbers.length
     };
 }
 
 /**
- * Agrupa array por propriedade
- * @param {Array} array - Array para agrupar
- * @param {string} key - Propriedade para agrupamento
- * @returns {Object} Objeto agrupado
+ * Agrupa array por propiedad
+ * @param {Array} array
+ * @param {string} key
+ * @returns {Object}
  */
 function groupBy(array, key) {
     if (!array?.length) return {};
-    
     return array.reduce((groups, item) => {
-        const group = getNestedValue(item, key) || 'Não definido';
+        const group = getNestedValue(item, key) || 'No definido';
         groups[group] = groups[group] || [];
         groups[group].push(item);
         return groups;
@@ -499,22 +410,20 @@ function groupBy(array, key) {
 }
 
 /**
- * Filtra dados por período
- * @param {Array} data - Dados para filtrar
- * @param {string} dateField - Campo de data
- * @param {string} period - Período (hoje, semana, mes, ano)
- * @returns {Array} Dados filtrados
+ * Filtra datos por período
+ * @param {Array} data
+ * @param {string} dateField
+ * @param {string} period hoy|semana|mes|ano (backward compat)
+ * @returns {Array}
  */
 function filterByPeriod(data, dateField, period) {
     if (!data?.length) return [];
-    
     const now = new Date();
     const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    
     let startDate, endDate;
-    
     switch (period) {
         case 'hoje':
+        case 'hoy':
             startDate = startOfDay;
             endDate = new Date(startOfDay.getTime() + 24 * 60 * 60 * 1000);
             break;
@@ -535,20 +444,19 @@ function filterByPeriod(data, dateField, period) {
         default:
             return data;
     }
-    
     return data.filter(item => {
         const itemDate = new Date(getNestedValue(item, dateField));
         return itemDate >= startDate && itemDate < endDate;
     });
 }
 
-// ===== UTILITÁRIOS DE PERFORMANCE =====
+// ===== UTILITARIOS DE RENDIMIENTO =====
 
 /**
- * Throttle para otimizar eventos frequentes
- * @param {Function} func - Função a ser executada
- * @param {number} limit - Limite de tempo em ms
- * @returns {Function} Função com throttle
+ * Throttle para optimizar eventos frecuentes
+ * @param {Function} func
+ * @param {number} limit
+ * @returns {Function}
  */
 function throttle(func, limit) {
     let inThrottle;
@@ -562,35 +470,27 @@ function throttle(func, limit) {
 }
 
 /**
- * Memoização simples para cache de funções
- * @param {Function} fn - Função a ser memoizada
- * @returns {Function} Função memoizada
+ * Memoización simple para cache de funciones
+ * @param {Function} fn
+ * @returns {Function}
  */
 function memoize(fn) {
     const cache = new Map();
     return function(...args) {
         const key = JSON.stringify(args);
-        if (cache.has(key)) {
-            return cache.get(key);
-        }
+        if (cache.has(key)) return cache.get(key);
         const result = fn.apply(this, args);
         cache.set(key, result);
         return result;
     };
 }
 
-// ===== EXPORTAÇÕES =====
-
-// Disponibiliza funções globalmente
+// ===== EXPORTACIONES GLOBALES =====
 window.OficinaHelpers = {
-    // Formatação
-    formatCpfCnpj,
-    formatPhone,
-    formatCep,
-    formatPlaca,
-    formatCurrency,
-    formatDate,
-    formatDateForInput,
+    // Formato
+    formatCpfCnpj, formatDniCuit, formatDNI, formatCUIT,
+    formatPhone, formatCep, formatCpa,
+    formatPlaca, formatCurrency, formatDate, formatDateForInput,
     
     // Utilidades
     generateId,
@@ -621,4 +521,4 @@ window.OficinaHelpers = {
     filterByPeriod
 };
 
-console.log('✅ Helpers.js carregado com sucesso');
+console.log('✅ Helpers.js cargado con éxito');

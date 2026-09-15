@@ -41,11 +41,11 @@ async function apiRequest(endpoint, options = {}) {
     try {
         const response = await fetch(url, requestOptions);
         if (!response.ok) {
-            throw new Error(`Erro na requisição: ${response.status}`);
+            throw new Error(`Error en la solicitud: ${response.status}`);
         }
         return await response.json();
     } catch (error) {
-        console.error('Erro na API:', error);
+        console.error('Error en la API:', error);
         throw error;
     }
 }

@@ -1,42 +1,41 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="es-AR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Vendas - Sistema de Gestão para Oficina Mecânica">
-    <title>Vendas - Sistema de Gestão Oficina</title>
-    
+    <meta name="description" content="Ventas y Cobros - Sistema de Gestión para Taller Mecánico">
+    <title>Ventas y Cobros - Sistema de Gestión Taller</title>
+
     <!-- Design System CSS -->
     <link rel="stylesheet" href="../assets/css/design-system.css">
-    
+    <link rel="stylesheet" href="../assets/css/layout.css">
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Constants -->
+    <script src="../assets/js/config/constants.js"></script>
     <style>
-        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
             z-index: var(--z-modal);
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
             background-color: rgba(0, 0, 0, 0.6);
             animation: fadeIn 0.3s ease;
         }
-
         .modal.show {
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 1rem;
         }
-
         .modal-content {
             background: white;
             border-radius: var(--border-radius);
             width: 90%;
-            max-width: 700px;
+            max-width: 900px;
             max-height: 90vh;
             overflow-y: auto;
             animation: slideIn 0.3s ease;
@@ -44,73 +43,36 @@
             z-index: var(--z-modal);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
-
         .modal-header {
             background: var(--primary-color);
             color: white;
             padding: 1rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: flex; justify-content: space-between; align-items: center;
         }
-
-        .modal-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin: 0;
-        }
-
+        .modal-title { font-size: 1.2rem; font-weight: 600; margin: 0; }
         .modal-close {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0;
-            width: 2rem;
-            height: 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
+            background: none; border: none; color: white;
+            font-size: 1.5rem; cursor: pointer; padding: 0;
+            width: 2rem; height: 2rem; display: flex; align-items: center;
+            justify-content: center; border-radius: 50%;
             transition: var(--transition);
         }
-
-        .modal-close:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .modal-body {
-            padding: 1.5rem;
-        }
-
+        .modal-close:hover { background: rgba(255,255,255,0.2); }
+        .modal-body { padding: 1.5rem; }
         .modal-footer {
             padding: 1rem 1.5rem;
             background: var(--background-secondary);
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
+            display: flex; justify-content: flex-end; gap: 1rem;
         }
+        @keyframes fadeIn   { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn  { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
         .modal-form {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: var(--spacing-md);
         }
-        
-        .form-group-full {
-            grid-column: 1 / -1;
-        }
+        .form-group-full { grid-column: 1 / -1; }
 
         .items-section {
             margin-top: 1.5rem;
@@ -118,14 +80,12 @@
             border-radius: var(--border-radius);
             padding: 1rem;
         }
-
         .items-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
         }
-
         .item-row {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr 1fr auto;
@@ -136,102 +96,115 @@
             border-radius: var(--border-radius);
             margin-bottom: 0.5rem;
         }
-
         .total-section {
             margin-top: 1rem;
             padding: 1rem;
             background: var(--background-secondary);
             border-radius: var(--border-radius);
         }
+        .payment-section {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border: 1px dashed var(--border-color);
+        }
+        .payment-section h4 { margin-top: 0; margin-bottom: 1rem; }
+        .juros-info {
+            background: white;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            border: 1px solid var(--border-color);
+        }
+        .juros-info div {
+            display: flex; justify-content: space-between; margin-bottom: 0.5rem;
+        }
+        .juros-info div:last-child {
+            font-weight: bold; margin-bottom: 0;
+        }
+        .badge {
+            padding: 0.25rem 0.6rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-warning { background: #fff3cd; color: #856404; }
+        .badge-danger  { background: #f8d7da; color: #721c24; }
+        .badge-info    { background: #d1ecf1; color: #0c5460; }
+
+        @media (max-width: 768px) {
+            .modal-form { grid-template-columns: 1fr; }
+            .item-row { grid-template-columns: 1fr 1fr; }
+            .item-row > *:last-child { grid-column: 1 / -1; }
+        }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <i class="fas fa-wrench"></i>
-                    <h1>Sistema de Gestão - Oficina Mecânica</h1>
-                </div>
-                <div class="user-info">
-                    <span id="currentDate"></span>
-                    <div class="user-menu">
-                        <i class="fas fa-user-circle"></i>
-                        <span>Administrador</span>
+<div class="main-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo" style="justify-content:center;color:#fff;font-size:1.25rem;flex-direction:column;gap:8px;">
+                <i class="fas fa-wrench" style="font-size:2.5rem;"></i>
+                <span>Taller Mecánico</span>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="dashboard.html" class="nav-link"><i class="fas fa-tachometer-alt"></i><span>Panel Principal</span></a></li>
+                <li><a href="clientes.html" class="nav-link"><i class="fas fa-users"></i><span>Clientes</span></a></li>
+                <li><a href="veiculos.html" class="nav-link"><i class="fas fa-car"></i><span>Vehículos</span></a></li>
+                <li><a href="servicos.html" class="nav-link"><i class="fas fa-clipboard-list"></i><span>Órdenes de Servicio</span></a></li>
+                <li><a href="estoque.html" class="nav-link"><i class="fas fa-boxes"></i><span>Stock</span></a></li>
+                <li><a href="vendas.html" class="nav-link active"><i class="fas fa-cash-register"></i><span>Ventas y Cobros</span></a></li>
+                <li><a href="notas-fiscais.html" class="nav-link"><i class="fas fa-file-invoice"></i><span>Facturas</span></a></li>
+                <li><a href="../comercio-exterior/index.html" class="nav-link"><i class="fas fa-globe-americas"></i><span>Comercio Exterior</span></a></li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <div style="padding:12px 18px;border-top:1px solid #34495e;">
+                <div style="display:flex;align-items:center;gap:8px;color:#ecf0f1;">
+                    <i class="fas fa-user-circle" style="font-size:1.5rem;"></i>
+                    <div>
+                        <div style="font-weight:600;font-size:0.85rem;">Administrador</div>
+                        <div id="currentDate" style="font-size:0.7rem;color:#95a5a6;"></div>
                     </div>
                 </div>
+                <button style="margin-top:10px;width:100%;background:#e74c3c;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem;font-weight:500;" onclick="logoutSidebar()"><i class="fas fa-sign-out-alt" style="margin-right:4px;"></i>Cerrar Sesión</button>
             </div>
         </div>
-    </header>
-
-    <!-- Navigation -->
-    <nav class="nav-menu">
-        <div class="container">
-            <div class="nav-links">
-                <a href="dashboard.html" class="nav-link">
-                    <i class="fas fa-tachometer-alt"></i>
-                    Dashboard
-                </a>
-                <a href="clientes.html" class="nav-link">
-                    <i class="fas fa-users"></i>
-                    Clientes
-                </a>
-                <a href="veiculos.html" class="nav-link">
-                    <i class="fas fa-car"></i>
-                    Veículos
-                </a>
-                <a href="servicos.html" class="nav-link">
-                    <i class="fas fa-clipboard-list"></i>
-                    Ordens de Serviço
-                </a>
-                <a href="estoque.html" class="nav-link">
-                    <i class="fas fa-boxes"></i>
-                    Estoque
-                </a>
-                <a href="notas-fiscais.html" class="nav-link">
-                    <i class="fas fa-file-invoice"></i>
-                    Notas Fiscais
-                </a>
-                <a href="vendas.html" class="nav-link active">
-                    <i class="fas fa-cash-register"></i>
-                    Vendas & Pagamentos
-                </a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
+    </aside>
     <main class="main-content">
-        <div class="container">
-            <div class="page-header">
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <button class="btn btn-outline btn-sm" onclick="window.location.href='dashboard.html'">
-                        <i class="fas fa-arrow-left"></i> Voltar
-                    </button>
-                    <h1 class="page-title">Gerenciamento de Vendas</h1>
-                </div>
-                <button id="btn-nova-venda" class="btn btn-primary" onclick="abrirModalVenda()">
-                    <i class="fas fa-plus"></i> Nova Venda
+        <div class="page-header d-flex justify-between align-center" style="border-bottom:none;padding-bottom:0;margin-bottom:20px;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button class="btn btn-outline btn-sm" onclick="window.location.href='dashboard.html'">
+                    <i class="fas fa-arrow-left"></i> Volver
                 </button>
+                <h1 class="page-title">Gestión de Ventas y Cobros</h1>
             </div>
-            
+            <button id="btn-nova-venda" class="btn btn-primary" onclick="abrirModalVenda()">
+                <i class="fas fa-plus"></i> Nueva Venta
+            </button>
+        </div>
+        <div class="container">
+
             <div class="card">
                 <div class="card-body">
                     <div class="filter-container">
                         <div class="search-box">
-                            <input type="text" id="search-venda" class="form-control" placeholder="Buscar venda...">
-                            <button class="btn btn-outline-primary"><i class="fas fa-search"></i></button>
+                            <input type="text" id="search-venda" class="form-control" placeholder="Buscar venta por cliente o N°..." oninput="filtrarVendas()">
+                            <button class="btn btn-outline-primary" onclick="filtrarVendas()"><i class="fas fa-search"></i></button>
                         </div>
                         <div class="filter-options">
-                            <select id="filter-status" class="form-select">
-                                <option value="">Todos os status</option>
-                                <option value="pendente">Pendente</option>
-                                <option value="pago">Pago</option>
-                                <option value="cancelado">Cancelado</option>
+                            <select id="filter-status" class="form-select" onchange="filtrarVendas()">
+                                <option value="">Todos los estados</option>
+                                <option value="pendente">Pendiente</option>
+                                <option value="pago">Cobrado</option>
+                                <option value="cancelado">Anulado</option>
                             </select>
-                            <select id="filter-cliente" class="form-select">
-                                <option value="">Todos os clientes</option>
+                            <select id="filter-cliente" class="form-select" onchange="filtrarVendas()">
+                                <option value="">Todos los clientes</option>
                             </select>
                         </div>
                     </div>
@@ -240,24 +213,23 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Data</th>
+                                    <th>N°</th>
+                                    <th>Fecha</th>
                                     <th>Cliente</th>
-                                    <th>Itens</th>
+                                    <th>Artículos</th>
+                                    <th>Forma Pago</th>
                                     <th>Total</th>
-                                    <th>Status</th>
-                                    <th>Ações</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="vendas-tbody">
-                                <!-- Vendas serão carregadas aqui -->
-                            </tbody>
+                            <tbody id="vendas-tbody"></tbody>
                         </table>
                     </div>
 
                     <div class="pagination-container">
                         <div class="pagination-info">
-                            <span id="pagination-info">Mostrando 1-10 de 0 vendas</span>
+                            <span id="pagination-info">Mostrando 1-10 de 0 ventas</span>
                         </div>
                         <div class="pagination">
                             <button class="btn btn-outline btn-sm" id="prev-page" onclick="mudarPagina(-1)">
@@ -272,13 +244,13 @@
                 </div>
             </div>
         </div>
-    </main>
+        </div>
 
-    <!-- Modal Nova Venda -->
+    <!-- Modal Venda -->
     <div id="modal-venda" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Nova Venda</h2>
+                <h2 class="modal-title" id="venda-modal-title">Nueva Venta</h2>
                 <button class="modal-close" onclick="fecharModalVenda()">&times;</button>
             </div>
             <div class="modal-body">
@@ -286,111 +258,92 @@
                     <div class="form-group">
                         <label for="venda-cliente">Cliente *</label>
                         <select id="venda-cliente" class="form-control" required>
-                            <option value="">Selecione um cliente</option>
+                            <option value="">Seleccione un cliente</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="venda-data">Data da Venda *</label>
+                        <label for="venda-data">Fecha de Venta *</label>
                         <input type="date" id="venda-data" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label for="venda-desconto">Desconto (%)</label>
-                        <input type="number" id="venda-desconto" class="form-control" min="0" max="100" step="0.01" value="0">
+                        <label for="venda-desconto">Descuento (%)</label>
+                        <input type="number" id="venda-desconto" class="form-control" min="0" max="100" step="0.01" value="0" oninput="calcularTotal()">
                     </div>
                     <div class="form-group">
-                        <label for="venda-status">Status</label>
+                        <label for="venda-status">Estado</label>
                         <select id="venda-status" class="form-control">
-                            <option value="pendente">Pendente</option>
-                            <option value="pago">Pago</option>
-                            <option value="cancelado">Cancelado</option>
+                            <option value="pendente">Pendiente</option>
+                            <option value="pago">Cobrado</option>
+                            <option value="cancelado">Anulado</option>
                         </select>
                     </div>
                     <div class="form-group-full">
-                        <label for="venda-observacoes">Observações</label>
-                        <textarea id="venda-observacoes" class="form-control" rows="3"></textarea>
+                        <label for="venda-observacoes">Observaciones</label>
+                        <textarea id="venda-observacoes" class="form-control" rows="2" placeholder="Notas internas..."></textarea>
                     </div>
 
-                    <!-- Seção de Pagamento -->
+                    <!-- Pago -->
                     <div class="form-group-full">
                         <div class="payment-section">
-                            <h4>Forma de Pagamento</h4>
+                            <h4><i class="fas fa-credit-card"></i> Forma de Pago</h4>
                             <div class="form-group">
-                                <label for="venda-forma-pagamento">Forma de Pagamento *</label>
+                                <label for="venda-forma-pagamento">Forma de Pago *</label>
                                 <select id="venda-forma-pagamento" class="form-control" required onchange="toggleParcelamento()">
-                                    <option value="">Selecione a forma de pagamento</option>
-                                    <option value="dinheiro">Dinheiro</option>
-                                    <option value="pix">PIX</option>
-                                    <option value="boleto">Boleto</option>
-                                    <option value="cartao-debito">Cartão de Débito</option>
-                                    <option value="cartao-credito">Cartão de Crédito</option>
+                                    <option value="">Seleccione forma de pago</option>
                                 </select>
                             </div>
-                            
-                            <!-- Seção de Parcelamento (visível apenas para cartão de crédito) -->
                             <div id="parcelamento-section" style="display: none;">
-                                <div class="form-group">
-                                    <label for="venda-parcelas">Número de Parcelas</label>
-                                    <select id="venda-parcelas" class="form-control" onchange="calcularJuros()">
-                                        <option value="1">1x (à vista)</option>
-                                        <option value="2">2x</option>
-                                        <option value="3">3x</option>
-                                        <option value="4">4x</option>
-                                        <option value="5">5x</option>
-                                        <option value="6">6x</option>
-                                        <option value="7">7x</option>
-                                        <option value="8">8x</option>
-                                        <option value="9">9x</option>
-                                        <option value="10">10x</option>
-                                        <option value="11">11x</option>
-                                        <option value="12">12x</option>
-                                    </select>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                    <div class="form-group">
+                                        <label for="venda-parcelas">Cantidad de Cuotas</label>
+                                        <select id="venda-parcelas" class="form-control" onchange="calcularJuros()">
+                                            <option value="1">1 (contado)</option>
+                                            <option value="2">2 cuotas</option>
+                                            <option value="3">3 cuotas</option>
+                                            <option value="4">4 cuotas</option>
+                                            <option value="5">5 cuotas</option>
+                                            <option value="6">6 cuotas</option>
+                                            <option value="7">7 cuotas</option>
+                                            <option value="8">8 cuotas</option>
+                                            <option value="9">9 cuotas</option>
+                                            <option value="10">10 cuotas</option>
+                                            <option value="11">11 cuotas</option>
+                                            <option value="12">12 cuotas</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="venda-taxa-juros">Tasa de Interés (% mensual)</label>
+                                        <input type="number" id="venda-taxa-juros" class="form-control" min="0" max="20" step="0.01" value="5.0" onchange="calcularJuros()">
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="venda-taxa-juros">Taxa de Juros (% a.m.)</label>
-                                    <input type="number" id="venda-taxa-juros" class="form-control" min="0" max="20" step="0.01" value="2.5" onchange="calcularJuros()">
-                                </div>
-                                <div class="juros-info" style="background: #f8f9fa; padding: 1rem; border-radius: 4px; margin-top: 0.5rem;">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                                        <span>Valor da Parcela:</span>
-                                        <span id="valor-parcela">R$ 0,00</span>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                                        <span>Total com Juros:</span>
-                                        <span id="total-com-juros">R$ 0,00</span>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between; font-weight: bold;">
-                                        <span>Juros Aplicados:</span>
-                                        <span id="juros-aplicados">R$ 0,00</span>
-                                    </div>
+                                <div class="juros-info">
+                                    <div><span>Valor Cuota:</span><span id="valor-parcela">$ 0,00</span></div>
+                                    <div><span>Total c/Intereses:</span><span id="total-com-juros">$ 0,00</span></div>
+                                    <div><span>Intereses:</span><span id="juros-aplicados">$ 0,00</span></div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Seção de Itens -->
+                    <!-- Items -->
                     <div class="form-group-full">
                         <div class="items-section">
                             <div class="items-header">
-                                <h4>Itens da Venda</h4>
+                                <h4><i class="fas fa-list"></i> Artículos de la Venta</h4>
                                 <button type="button" class="btn btn-outline btn-sm" onclick="adicionarItem()">
-                                    <i class="fas fa-plus"></i> Adicionar Item
+                                    <i class="fas fa-plus"></i> Agregar Artículo
                                 </button>
                             </div>
-                            <div id="items-container">
-                                <!-- Itens serão adicionados aqui -->
-                            </div>
+                            <div id="items-container"></div>
                             <div class="total-section">
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                                    <span>Subtotal:</span>
-                                    <span id="subtotal">R$ 0,00</span>
+                                    <span>Subtotal:</span><span id="subtotal">$ 0,00</span>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                                    <span>Desconto:</span>
-                                    <span id="desconto-valor">R$ 0,00</span>
+                                    <span>Descuento:</span><span id="desconto-valor">$ 0,00</span>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.1rem;">
-                                    <span>Total:</span>
-                                    <span id="total-venda">R$ 0,00</span>
+                                    <span>Total:</span><span id="total-venda">$ 0,00</span>
                                 </div>
                             </div>
                         </div>
@@ -399,185 +352,210 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline" onclick="fecharModalVenda()">Cancelar</button>
-                <button type="submit" form="form-venda" class="btn btn-primary">Salvar Venda</button>
+                <button type="submit" form="form-venda" class="btn btn-primary">Guardar Venta</button>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 Sistema de Gestão - Oficina Mecânica. Todos os direitos reservados.</p>
-        </div>
-    </footer>
+    </main>
+</div>
 
     <script>
-        // Variáveis globais
-        let vendas = [];
-        let clientes = [];
-        let produtos = [];
+        // Storage y migración
+        let vendas = JSON.parse(localStorage.getItem('oficina_vendas')
+            || localStorage.getItem('vendas') || '[]');
+        let clientes = JSON.parse(localStorage.getItem('oficina_clientes')
+            || localStorage.getItem('clientes') || localStorage.getItem('clients') || '[]');
+        let produtos = JSON.parse(localStorage.getItem('oficina_produtos')
+            || localStorage.getItem('produtos') || '[]');
+
         let vendaEditando = null;
         let paginaAtual = 1;
         const itensPorPagina = 10;
 
-        // Dados mockados
-        const clientesMock = [
-            { id: 1, nome: 'João Silva', email: 'joao@email.com', telefone: '(11) 99999-9999' },
-            { id: 2, nome: 'Maria Santos', email: 'maria@email.com', telefone: '(11) 88888-8888' },
-            { id: 3, nome: 'Pedro Oliveira', email: 'pedro@email.com', telefone: '(11) 77777-7777' }
-        ];
+        const STATUS_LOCAL = {
+            pendente: 'Pendiente',
+            pago: 'Cobrado',
+            cancelado: 'Anulado'
+        };
+        const STATUS_CLASS = {
+            pago: 'badge-success',
+            pendente: 'badge-warning',
+            cancelado: 'badge-danger'
+        };
 
-        const produtosMock = [
-            { id: 1, nome: 'Óleo Motor 5W30', preco: 45.90, categoria: 'Lubrificantes' },
-            { id: 2, nome: 'Filtro de Ar', preco: 25.50, categoria: 'Filtros' },
-            { id: 3, nome: 'Pastilha de Freio', preco: 89.90, categoria: 'Freios' },
-            { id: 4, nome: 'Vela de Ignição', preco: 15.90, categoria: 'Ignição' }
-        ];
+        if (clientes.length === 0) {
+            clientes = [
+                { id: 'mock1', nome: 'Juan Pérez', email: 'juan@email.com', telefone: '(011) 15-4444-5555' },
+                { id: 'mock2', nome: 'María González', email: 'maria@email.com', telefone: '(011) 15-5555-6666' },
+                { id: 'mock3', nome: 'Carlos Rodríguez', email: 'carlos@email.com', telefone: '(011) 15-6666-7777' }
+            ];
+        }
+        if (produtos.length === 0) {
+            produtos = [
+                { id: 'mockp1', nome: 'Aceite Motor 5W30 1L', preco: 8500, categoria: 'Aceites y Lubricantes' },
+                { id: 'mockp2', nome: 'Filtro de Aire', preco: 5200, categoria: 'Filtros' },
+                { id: 'mockp3', nome: 'Pastillas de Freno', preco: 18500, categoria: 'Frenos' },
+                { id: 'mockp4', nome: 'Bujía Encendido', preco: 3400, categoria: 'Encendido' }
+            ];
+        }
 
-        // Inicialização
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
+            persistir();
             atualizarDataHora();
             carregarDados();
             renderizarVendas();
             configurarEventos();
         });
 
+        function persistir() {
+            localStorage.setItem('oficina_vendas', JSON.stringify(vendas));
+            localStorage.setItem('oficina_clientes', JSON.stringify(clientes));
+            localStorage.setItem('oficina_produtos', JSON.stringify(produtos));
+        }
+
         function atualizarDataHora() {
-            const agora = new Date();
-            const dataFormatada = agora.toLocaleDateString('pt-BR', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
+            const el = document.getElementById('currentDate');
+            if (el) el.textContent = new Date().toLocaleDateString('es-AR', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
             });
-            document.getElementById('currentDate').textContent = dataFormatada;
         }
 
         function carregarDados() {
-            // Carregar dados do localStorage ou usar dados mockados
-            vendas = JSON.parse(localStorage.getItem('vendas')) || [];
-            clientes = JSON.parse(localStorage.getItem('clientes')) || clientesMock;
-            produtos = JSON.parse(localStorage.getItem('produtos')) || produtosMock;
-
-            // Preencher select de clientes
-            const selectCliente = document.getElementById('venda-cliente');
+            const selCliente = document.getElementById('venda-cliente');
             const filterCliente = document.getElementById('filter-cliente');
-            
-            clientes.forEach(cliente => {
-                const option = new Option(cliente.nome, cliente.id);
-                selectCliente.add(option.cloneNode(true));
-                filterCliente.add(option);
+            const selPag = document.getElementById('venda-forma-pagamento');
+
+            selCliente.innerHTML = '<option value="">Seleccione un cliente</option>';
+            filterCliente.innerHTML = '<option value="">Todos los clientes</option>';
+            clientes.forEach(c => {
+                const nome = c.nome || c.name || 'Cliente';
+                const opt = new Option(nome, c.id);
+                selCliente.add(opt.cloneNode(true));
+                filterCliente.add(opt);
             });
 
-            // Definir data atual
+            const formas = Object.assign({
+                dinheiro: 'Efectivo',
+                'cartao-debito': 'Débito',
+                'cartao-credito': 'Crédito',
+                pix: 'Transf. Inmediata CVU/CBU',
+                boleto: 'Pago Electrónico (RapiPago / PagoMisCuentas)',
+                transferencia: 'Transferencia Bancaria',
+                cheque: 'Cheque'
+            }, window.FORMAS_PAGAMENTO_LABELS || {});
+            selPag.innerHTML = '<option value="">Seleccione forma de pago</option>';
+            Object.entries(formas).forEach(([k, v]) => {
+                const o = document.createElement('option');
+                o.value = k; o.textContent = v;
+                selPag.appendChild(o);
+            });
+
             document.getElementById('venda-data').value = new Date().toISOString().split('T')[0];
         }
 
         function configurarEventos() {
-            // Filtros
             document.getElementById('search-venda').addEventListener('input', filtrarVendas);
             document.getElementById('filter-status').addEventListener('change', filtrarVendas);
             document.getElementById('filter-cliente').addEventListener('change', filtrarVendas);
-            
-            // Desconto
             document.getElementById('venda-desconto').addEventListener('input', calcularTotal);
-            
-            // Form submit
             document.getElementById('form-venda').addEventListener('submit', salvarVenda);
         }
 
         function filtrarVendas() {
+            paginaAtual = 1;
             renderizarVendas();
+        }
+
+        function fmtARS(val) {
+            return '$ ' + Number(val || 0).toLocaleString('es-AR', {
+                minimumFractionDigits: 2, maximumFractionDigits: 2
+            });
         }
 
         function renderizarVendas() {
             const busca = document.getElementById('search-venda').value.toLowerCase();
             const statusFiltro = document.getElementById('filter-status').value;
             const clienteFiltro = document.getElementById('filter-cliente').value;
+            const formasLabels = Object.assign({
+                dinheiro: 'Efectivo',
+                'cartao-debito': 'Débito',
+                'cartao-credito': 'Crédito',
+                pix: 'CVU/CBU',
+                boleto: 'RapiPago',
+                transferencia: 'Transferencia',
+                cheque: 'Cheque'
+            }, window.FORMAS_PAGAMENTO_LABELS || {});
 
-            let vendasFiltradas = vendas.filter(venda => {
-                const cliente = clientes.find(c => c.id == venda.clienteId);
-                const nomeCliente = cliente ? cliente.nome.toLowerCase() : '';
-                
-                return (
-                    (busca === '' || nomeCliente.includes(busca) || venda.id.toString().includes(busca)) &&
-                    (statusFiltro === '' || venda.status === statusFiltro) &&
-                    (clienteFiltro === '' || venda.clienteId == clienteFiltro)
-                );
-            });
+            let filtradas = vendas.filter(v => {
+                const cliente = clientes.find(c => String(c.id) === String(v.clienteId));
+                const nomeCliente = (cliente?.nome || cliente?.name || '').toLowerCase();
+                return (!busca || nomeCliente.includes(busca) || String(v.id).includes(busca))
+                    && (!statusFiltro || v.status === statusFiltro)
+                    && (!clienteFiltro || String(v.clienteId) === String(clienteFiltro));
+            }).sort((a, b) => new Date(b.data) - new Date(a.data));
 
             const inicio = (paginaAtual - 1) * itensPorPagina;
-            const fim = inicio + itensPorPagina;
-            const vendasPagina = vendasFiltradas.slice(inicio, fim);
-
+            const pagina = filtradas.slice(inicio, inicio + itensPorPagina);
             const tbody = document.getElementById('vendas-tbody');
             tbody.innerHTML = '';
 
-            vendasPagina.forEach(venda => {
-                const cliente = clientes.find(c => c.id == venda.clienteId);
-                const statusClass = venda.status === 'pago' ? 'success' : venda.status === 'cancelado' ? 'danger' : 'warning';
-                
-                const row = `
-                    <tr>
-                        <td>#${venda.id}</td>
-                        <td>${new Date(venda.data).toLocaleDateString('pt-BR')}</td>
-                        <td>${cliente ? cliente.nome : 'Cliente não encontrado'}</td>
-                        <td>${venda.itens.length} item(s)</td>
-                        <td>R$ ${venda.total.toFixed(2).replace('.', ',')}</td>
-                        <td><span class="badge badge-${statusClass}">${venda.status}</span></td>
+            if (pagina.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-secondary)">No hay ventas para mostrar</td></tr>`;
+            } else {
+                pagina.forEach(v => {
+                    const cliente = clientes.find(c => String(c.id) === String(v.clienteId));
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><strong>#${String(v.id).slice(-6)}</strong></td>
+                        <td>${new Date(v.data).toLocaleDateString('es-AR')}</td>
+                        <td>${cliente ? (cliente.nome || cliente.name) : '—'}</td>
+                        <td>${(v.itens || []).length} artículo(s)</td>
+                        <td>${formasLabels[v.formaPagamento] || v.formaPagamento || '—'}</td>
+                        <td>${fmtARS(v.total)}</td>
+                        <td><span class="badge ${STATUS_CLASS[v.status] || 'badge-info'}">${STATUS_LOCAL[v.status] || v.status || ''}</span></td>
                         <td>
-                            <button class="btn btn-outline btn-sm" onclick="editarVenda(${venda.id})" title="Editar">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-outline btn-sm" onclick="excluirVenda(${venda.id})" title="Excluir">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
+                            <button class="btn btn-outline btn-sm" onclick="editarVenda('${v.id}')" title="Editar"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-outline btn-sm" onclick="excluirVenda('${v.id}')" title="Eliminar"><i class="fas fa-trash"></i></button>
+                        </td>`;
+                    tbody.appendChild(row);
+                });
+            }
 
-            // Atualizar informações de paginação
-            const totalPaginas = Math.ceil(vendasFiltradas.length / itensPorPagina);
-            document.getElementById('pagination-info').textContent = 
-                `Mostrando ${inicio + 1}-${Math.min(fim, vendasFiltradas.length)} de ${vendasFiltradas.length} vendas`;
+            const totalPaginas = Math.max(1, Math.ceil(filtradas.length / itensPorPagina));
+            document.getElementById('pagination-info').textContent =
+                `Mostrando ${filtradas.length ? inicio + 1 : 0}-${Math.min(inicio + itensPorPagina, filtradas.length)} de ${filtradas.length} ventas`;
             document.getElementById('page-info').textContent = `Página ${paginaAtual} de ${totalPaginas}`;
-            
             document.getElementById('prev-page').disabled = paginaAtual === 1;
             document.getElementById('next-page').disabled = paginaAtual === totalPaginas;
         }
 
-        function mudarPagina(direcao) {
-            const totalPaginas = Math.ceil(vendas.length / itensPorPagina);
-            paginaAtual += direcao;
-            
-            if (paginaAtual < 1) paginaAtual = 1;
-            if (paginaAtual > totalPaginas) paginaAtual = totalPaginas;
-            
+        function mudarPagina(dir) {
+            const totalPaginas = Math.max(1, Math.ceil(vendas.length / itensPorPagina));
+            paginaAtual = Math.min(Math.max(1, paginaAtual + dir), totalPaginas);
             renderizarVendas();
         }
 
         function abrirModalVenda(vendaId = null) {
             vendaEditando = vendaId;
             const modal = document.getElementById('modal-venda');
-            const title = document.querySelector('.modal-title');
-            
+            const title = document.getElementById('venda-modal-title');
+            carregarDados();
+
             if (vendaId) {
-                const venda = vendas.find(v => v.id === vendaId);
-                title.textContent = 'Editar Venda';
-                preencherFormulario(venda);
+                const v = vendas.find(x => String(x.id) === String(vendaId));
+                if (v) {
+                    title.textContent = 'Editar Venta';
+                    preencherFormulario(v);
+                }
             } else {
-                title.textContent = 'Nova Venda';
+                title.textContent = 'Nueva Venta';
                 document.getElementById('form-venda').reset();
                 document.getElementById('venda-data').value = new Date().toISOString().split('T')[0];
-                const itemsContainer = document.getElementById('items-container');
-                if (itemsContainer) {
-                    itemsContainer.innerHTML = '';
-                }
+                document.getElementById('items-container').innerHTML = '';
+                document.getElementById('parcelamento-section').style.display = 'none';
                 calcularTotal();
             }
-            
             modal.classList.add('show');
         }
 
@@ -589,271 +567,227 @@
         function adicionarItem() {
             const container = document.getElementById('items-container');
             const itemId = Date.now();
-            
-            const itemHtml = `
-                <div class="item-row" data-item-id="${itemId}">
-                    <select class="form-control item-produto" onchange="atualizarPrecoItem(this)">
-                        <option value="">Selecione um produto</option>
-                        ${produtos.map(p => `<option value="${p.id}" data-preco="${p.preco}">${p.nome}</option>`).join('')}
-                    </select>
-                    <input type="number" class="form-control item-quantidade" placeholder="Qtd" min="1" value="1" onchange="calcularTotal()">
-                    <input type="number" class="form-control item-preco" placeholder="Preço" step="0.01" min="0" onchange="calcularTotal()">
-                    <input type="number" class="form-control item-total" placeholder="Total" readonly>
-                    <button type="button" class="btn btn-outline btn-sm" onclick="removerItem(${itemId})">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            `;
-            
-            container.insertAdjacentHTML('beforeend', itemHtml);
+            const options = produtos.map(p =>
+                `<option value="${p.id}" data-preco="${p.preco}">${p.nome} (${fmtARS(p.preco)})</option>`
+            ).join('');
+            const row = document.createElement('div');
+            row.className = 'item-row';
+            row.dataset.itemId = itemId;
+            row.innerHTML = `
+                <select class="form-control item-produto" onchange="atualizarPrecoItem(this)">
+                    <option value="">Seleccione un artículo</option>
+                    ${options}
+                </select>
+                <input type="number" class="form-control item-quantidade" placeholder="Cant." min="1" value="1" oninput="calcularTotal()">
+                <input type="number" class="form-control item-preco" placeholder="Precio" step="0.01" min="0" oninput="calcularTotal()">
+                <input type="number" class="form-control item-total" placeholder="Total" readonly>
+                <button type="button" class="btn btn-outline btn-sm" onclick="removerItem(${itemId})">
+                    <i class="fas fa-trash"></i>
+                </button>`;
+            container.appendChild(row);
         }
 
         function removerItem(itemId) {
-            document.querySelector(`[data-item-id="${itemId}"]`).remove();
+            const row = document.querySelector(`[data-item-id="${itemId}"]`);
+            if (row) row.remove();
             calcularTotal();
         }
 
-        function atualizarPrecoItem(select) {
-            const row = select.closest('.item-row');
+        function atualizarPrecoItem(sel) {
+            const row = sel.closest('.item-row');
             const precoInput = row.querySelector('.item-preco');
-            const selectedOption = select.selectedOptions[0];
-            
-            if (selectedOption && selectedOption.dataset.preco) {
-                precoInput.value = selectedOption.dataset.preco;
+            const opt = sel.selectedOptions[0];
+            if (opt && opt.dataset.preco) {
+                precoInput.value = Number(opt.dataset.preco).toFixed(2);
                 calcularTotal();
             }
         }
 
         function calcularTotal() {
             let subtotal = 0;
-            
             document.querySelectorAll('.item-row').forEach(row => {
-                const quantidade = parseFloat(row.querySelector('.item-quantidade').value) || 0;
-                const preco = parseFloat(row.querySelector('.item-preco').value) || 0;
-                const total = quantidade * preco;
-                
-                row.querySelector('.item-total').value = total.toFixed(2);
-                subtotal += total;
+                const q = parseFloat(row.querySelector('.item-quantidade').value) || 0;
+                const p = parseFloat(row.querySelector('.item-preco').value) || 0;
+                const tot = q * p;
+                row.querySelector('.item-total').value = tot.toFixed(2);
+                subtotal += tot;
             });
-            
-            const desconto = parseFloat(document.getElementById('venda-desconto').value) || 0;
-            const valorDesconto = subtotal * (desconto / 100);
-            const total = subtotal - valorDesconto;
-            
-            document.getElementById('subtotal').textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
-            document.getElementById('desconto-valor').textContent = `R$ ${valorDesconto.toFixed(2).replace('.', ',')}`;
-            
-            // Verificar se é cartão de crédito para aplicar juros
-            const formaPagamento = document.getElementById('venda-forma-pagamento').value;
-            if (formaPagamento === 'cartao-credito') {
-                calcularJuros();
+            const desc = parseFloat(document.getElementById('venda-desconto').value) || 0;
+            const valDesc = subtotal * (desc / 100);
+            const total = subtotal - valDesc;
+            document.getElementById('subtotal').textContent = fmtARS(subtotal);
+            document.getElementById('desconto-valor').textContent = fmtARS(valDesc);
+
+            const forma = document.getElementById('venda-forma-pagamento').value;
+            if (forma === 'cartao-credito') {
+                calcularJuros(total);
             } else {
-                document.getElementById('total-venda').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+                document.getElementById('total-venda').textContent = fmtARS(total);
             }
         }
 
-        function salvarVenda(event) {
-            event.preventDefault();
-            
-            const itens = [];
-            document.querySelectorAll('.item-row').forEach(row => {
-                const produtoId = row.querySelector('.item-produto').value;
-                const quantidade = parseFloat(row.querySelector('.item-quantidade').value);
-                const preco = parseFloat(row.querySelector('.item-preco').value);
-                
-                if (produtoId && quantidade && preco) {
-                    itens.push({
-                        produtoId: parseInt(produtoId),
-                        quantidade,
-                        preco,
-                        total: quantidade * preco
-                    });
-                }
-            });
-            
-            if (itens.length === 0) {
-                alert('Adicione pelo menos um item à venda!');
-                return;
-            }
-            
-            const subtotal = itens.reduce((sum, item) => sum + item.total, 0);
-            const desconto = parseFloat(document.getElementById('venda-desconto').value) || 0;
-            const valorDesconto = subtotal * (desconto / 100);
-            
-            // Calcular total com juros se for cartão de crédito
-            let total = subtotal - valorDesconto;
-            let totalComJuros = total;
-            let jurosAplicados = 0;
-            let valorParcela = 0;
-            
-            const formaPagamento = document.getElementById('venda-forma-pagamento').value;
-            if (formaPagamento === 'cartao-credito') {
-                const parcelas = parseInt(document.getElementById('venda-parcelas').value) || 1;
-                const taxaJuros = parseFloat(document.getElementById('venda-taxa-juros').value) || 0;
-                
-                if (parcelas > 1 && taxaJuros > 0) {
-                    // Cálculo de juros compostos
-                    const taxaMensal = taxaJuros / 100;
-                    const fatorJuros = Math.pow(1 + taxaMensal, parcelas);
-                    valorParcela = (total * taxaMensal * fatorJuros) / (fatorJuros - 1);
-                    totalComJuros = valorParcela * parcelas;
-                    jurosAplicados = totalComJuros - total;
-                } else {
-                    valorParcela = total;
-                }
-            }
-            
-            const venda = {
-                id: vendaEditando || Date.now(),
-                clienteId: parseInt(document.getElementById('venda-cliente').value),
-                data: document.getElementById('venda-data').value,
-                desconto,
-                status: document.getElementById('venda-status').value,
-                observacoes: document.getElementById('venda-observacoes').value,
-                formaPagamento,
-                parcelas: formaPagamento === 'cartao-credito' ? parseInt(document.getElementById('venda-parcelas').value) || 1 : 1,
-                taxaJuros: formaPagamento === 'cartao-credito' ? parseFloat(document.getElementById('venda-taxa-juros').value) || 0 : 0,
-                itens,
-                subtotal,
-                valorDesconto,
-                total: totalComJuros, // Total final com juros se aplicável
-                totalSemJuros: total, // Total sem juros para referência
-                jurosAplicados,
-                valorParcela,
-                dataAtualizacao: new Date().toISOString()
-            };
-            
-            if (vendaEditando) {
-                const index = vendas.findIndex(v => v.id === vendaEditando);
-                vendas[index] = venda;
-            } else {
-                vendas.push(venda);
-            }
-            
-            localStorage.setItem('vendas', JSON.stringify(vendas));
-            fecharModalVenda();
-            renderizarVendas();
-            
-            alert('Venda salva com sucesso!');
-        }
-
-        function editarVenda(id) {
-            abrirModalVenda(id);
-        }
-
-        function preencherFormulario(venda) {
-            document.getElementById('venda-cliente').value = venda.clienteId;
-            document.getElementById('venda-data').value = venda.data;
-            document.getElementById('venda-desconto').value = venda.desconto;
-            document.getElementById('venda-status').value = venda.status;
-            document.getElementById('venda-observacoes').value = venda.observacoes;
-            
-            // Preencher dados de pagamento
-            if (venda.formaPagamento) {
-                document.getElementById('venda-forma-pagamento').value = venda.formaPagamento;
-                toggleParcelamento();
-                
-                if (venda.formaPagamento === 'cartao-credito') {
-                    document.getElementById('venda-parcelas').value = venda.parcelas || 1;
-                    document.getElementById('venda-taxa-juros').value = venda.taxaJuros || 2.5;
-                    calcularJuros();
-                }
-            }
-            
-            // Limpar itens existentes
-            const itemsContainer = document.getElementById('items-container');
-            if (itemsContainer) {
-                itemsContainer.innerHTML = '';
-            }
-            
-            // Adicionar itens da venda
-            venda.itens.forEach(item => {
-                adicionarItem();
-                const lastRow = document.querySelector('.item-row:last-child');
-                lastRow.querySelector('.item-produto').value = item.produtoId;
-                lastRow.querySelector('.item-quantidade').value = item.quantidade;
-                lastRow.querySelector('.item-preco').value = item.preco;
-            });
-            
-            calcularTotal();
-        }
-
-        // Função para mostrar/ocultar seção de parcelamento
         function toggleParcelamento() {
-            const formaPagamento = document.getElementById('venda-forma-pagamento').value;
-            const parcelamentoSection = document.getElementById('parcelamento-section');
-            
-            if (formaPagamento === 'cartao-credito') {
-                parcelamentoSection.style.display = 'block';
+            const sec = document.getElementById('parcelamento-section');
+            const forma = document.getElementById('venda-forma-pagamento').value;
+            if (forma === 'cartao-credito') {
+                sec.style.display = 'block';
                 calcularJuros();
             } else {
-                parcelamentoSection.style.display = 'none';
-                // Recalcular total sem juros
+                sec.style.display = 'none';
                 calcularTotal();
             }
         }
 
-        // Função para calcular juros do parcelamento
-        function calcularJuros() {
-            const formaPagamento = document.getElementById('venda-forma-pagamento').value;
-            
-            if (formaPagamento !== 'cartao-credito') {
-                return;
-            }
-            
-            // Calcular subtotal atual
+        function calcularJuros(totalBase = null) {
+            const forma = document.getElementById('venda-forma-pagamento').value;
+            if (forma !== 'cartao-credito') return;
             let subtotal = 0;
             document.querySelectorAll('.item-row').forEach(row => {
-                const quantidade = parseFloat(row.querySelector('.item-quantidade').value) || 0;
-                const preco = parseFloat(row.querySelector('.item-preco').value) || 0;
-                subtotal += quantidade * preco;
+                subtotal += (parseFloat(row.querySelector('.item-quantidade').value) || 0)
+                          * (parseFloat(row.querySelector('.item-preco').value) || 0);
             });
-            
-            const desconto = parseFloat(document.getElementById('venda-desconto').value) || 0;
-            const valorDesconto = subtotal * (desconto / 100);
-            const totalSemJuros = subtotal - valorDesconto;
-            
-            const parcelas = parseInt(document.getElementById('venda-parcelas').value) || 1;
-            const taxaJuros = parseFloat(document.getElementById('venda-taxa-juros').value) || 0;
-            
-            let valorParcela = 0;
-            let totalComJuros = totalSemJuros;
-            let jurosAplicados = 0;
-            
-            if (parcelas > 1 && taxaJuros > 0) {
-                // Cálculo de juros compostos
-                const taxaMensal = taxaJuros / 100;
-                const fatorJuros = Math.pow(1 + taxaMensal, parcelas);
-                valorParcela = (totalSemJuros * taxaMensal * fatorJuros) / (fatorJuros - 1);
-                totalComJuros = valorParcela * parcelas;
-                jurosAplicados = totalComJuros - totalSemJuros;
-            } else {
-                valorParcela = totalSemJuros;
+            const desc = parseFloat(document.getElementById('venda-desconto').value) || 0;
+            const totalSin = totalBase !== null ? totalBase : (subtotal - subtotal * (desc / 100));
+            const cuotas = parseInt(document.getElementById('venda-parcelas').value) || 1;
+            const tasa = parseFloat(document.getElementById('venda-taxa-juros').value) || 0;
+
+            let valCuota = totalSin, totalCon = totalSin, juros = 0;
+            if (cuotas > 1 && tasa > 0) {
+                const mensual = tasa / 100;
+                const factor = Math.pow(1 + mensual, cuotas);
+                valCuota = (totalSin * mensual * factor) / (factor - 1);
+                totalCon = valCuota * cuotas;
+                juros = totalCon - totalSin;
             }
-            
-            // Atualizar interface
-            document.getElementById('valor-parcela').textContent = `R$ ${valorParcela.toFixed(2).replace('.', ',')}`;
-            document.getElementById('total-com-juros').textContent = `R$ ${totalComJuros.toFixed(2).replace('.', ',')}`;
-            document.getElementById('juros-aplicados').textContent = `R$ ${jurosAplicados.toFixed(2).replace('.', ',')}`;
-            
-            // Atualizar total da venda
-            document.getElementById('total-venda').textContent = `R$ ${totalComJuros.toFixed(2).replace('.', ',')}`;
+
+            document.getElementById('valor-parcela').textContent = fmtARS(valCuota);
+            document.getElementById('total-com-juros').textContent = fmtARS(totalCon);
+            document.getElementById('juros-aplicados').textContent = fmtARS(juros);
+            document.getElementById('total-venda').textContent = fmtARS(totalCon);
+        }
+
+        function salvarVenda(e) {
+            e.preventDefault();
+            const itens = [];
+            document.querySelectorAll('.item-row').forEach(row => {
+                const pid = row.querySelector('.item-produto').value;
+                const q = parseFloat(row.querySelector('.item-quantidade').value);
+                const p = parseFloat(row.querySelector('.item-preco').value);
+                if (pid && q && p) itens.push({
+                    produtoId: pid, quantidade: q, preco: p, total: q * p
+                });
+            });
+            if (itens.length === 0) {
+                alert('Agregue al menos un artículo a la venta'); return;
+            }
+            const subtotal = itens.reduce((s, i) => s + i.total, 0);
+            const desc = parseFloat(document.getElementById('venda-desconto').value) || 0;
+            const valDesc = subtotal * (desc / 100);
+            let total = subtotal - valDesc;
+            let totalCon = total, juros = 0, valCuota = 0;
+            const forma = document.getElementById('venda-forma-pagamento').value;
+            if (forma === 'cartao-credito') {
+                const cuotas = parseInt(document.getElementById('venda-parcelas').value) || 1;
+                const tasa = parseFloat(document.getElementById('venda-taxa-juros').value) || 0;
+                if (cuotas > 1 && tasa > 0) {
+                    const mensual = tasa / 100;
+                    const factor = Math.pow(1 + mensual, cuotas);
+                    valCuota = (total * mensual * factor) / (factor - 1);
+                    totalCon = valCuota * cuotas;
+                    juros = totalCon - total;
+                } else {
+                    valCuota = total;
+                }
+            }
+
+            const nova = {
+                id: vendaEditando ? (vendas.find(x => String(x.id) === String(vendaEditando))?.id ?? Date.now().toString()) : Date.now().toString(),
+                clienteId: document.getElementById('venda-cliente').value,
+                data: document.getElementById('venda-data').value,
+                desconto: desc,
+                status: document.getElementById('venda-status').value,
+                observacoes: document.getElementById('venda-observacoes').value,
+                formaPagamento: forma,
+                parcelas: forma === 'cartao-credito' ? parseInt(document.getElementById('venda-parcelas').value) || 1 : 1,
+                taxaJuros: forma === 'cartao-credito' ? parseFloat(document.getElementById('venda-taxa-juros').value) || 0 : 0,
+                itens, subtotal, valorDesconto: valDesc,
+                total: totalCon,
+                totalSemJuros: total,
+                jurosAplicados: juros,
+                valorParcela: valCuota,
+                dataAtualizacao: new Date().toISOString()
+            };
+
+            if (vendaEditando) {
+                const idx = vendas.findIndex(x => String(x.id) === String(vendaEditando));
+                if (idx >= 0) vendas[idx] = nova;
+            } else {
+                vendas.push(nova);
+            }
+            persistir();
+            fecharModalVenda();
+            renderizarVendas();
+            notificar('Venta guardada correctamente', 'success');
+        }
+
+        function editarVenda(id) { abrirModalVenda(id); }
+
+        function preencherFormulario(v) {
+            document.getElementById('venda-cliente').value = v.clienteId;
+            document.getElementById('venda-data').value = v.data;
+            document.getElementById('venda-desconto').value = v.desconto || 0;
+            document.getElementById('venda-status').value = v.status || 'pendente';
+            document.getElementById('venda-observacoes').value = v.observacoes || '';
+            if (v.formaPagamento) {
+                document.getElementById('venda-forma-pagamento').value = v.formaPagamento;
+                toggleParcelamento();
+                if (v.formaPagamento === 'cartao-credito') {
+                    document.getElementById('venda-parcelas').value = v.parcelas || 1;
+                    document.getElementById('venda-taxa-juros').value = v.taxaJuros ?? 5;
+                }
+            }
+            document.getElementById('items-container').innerHTML = '';
+            (v.itens || []).forEach(it => {
+                adicionarItem();
+                const row = document.querySelector('.item-row:last-child');
+                row.querySelector('.item-produto').value = it.produtoId;
+                row.querySelector('.item-quantidade').value = it.quantidade;
+                row.querySelector('.item-preco').value = Number(it.preco).toFixed(2);
+            });
+            calcularTotal();
         }
 
         function excluirVenda(id) {
-            if (confirm('Tem certeza que deseja excluir esta venda?')) {
-                vendas = vendas.filter(v => v.id !== id);
-                localStorage.setItem('vendas', JSON.stringify(vendas));
-                renderizarVendas();
-                alert('Venda excluída com sucesso!');
-            }
+            if (!confirm('¿Está seguro que desea eliminar esta venta?')) return;
+            vendas = vendas.filter(v => String(v.id) !== String(id));
+            persistir();
+            renderizarVendas();
+            notificar('Venta eliminada', 'success');
         }
 
-        // Fechar modal ao clicar fora
-        document.getElementById('modal-venda').addEventListener('click', function(e) {
-            if (e.target === this) {
-                fecharModalVenda();
-            }
+        function notificar(mensaje, tipo = 'info') {
+            const n = document.createElement('div');
+            n.textContent = mensaje;
+            n.style.cssText = `
+                position: fixed; top: 20px; right: 20px; padding: 1rem 1.5rem; color: white;
+                border-radius: 4px; z-index: 10000; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                background: ${tipo === 'success' ? '#28a745' : tipo === 'error' ? '#dc3545' : '#007bff'};
+            `;
+            document.body.appendChild(n);
+            setTimeout(() => n.remove(), 3000);
+        }
+
+        function logoutSidebar() {
+            if (!confirm('¿Desea realmente salir del sistema?')) return;
+            localStorage.removeItem('userLoggedIn');
+            localStorage.removeItem('usuarioLogado');
+            sessionStorage.removeItem('userLoggedIn');
+            sessionStorage.removeItem('usuarioLogado');
+            window.location.href = '../login.html';
+        }
+
+        document.getElementById('modal-venda').addEventListener('click', e => {
+            if (e.target.id === 'modal-venda') fecharModalVenda();
         });
     </script>
 </body>

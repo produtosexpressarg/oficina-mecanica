@@ -1,39 +1,39 @@
-<!-- Modal Novo Veículo -->
+<!-- Modal Nuevo Vehículo -->
 <div class="modal" id="veiculoModal" style="display: none;">
     <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="veiculoModalLabel">Novo Veículo</h5>
+            <h5 class="modal-title" id="veiculoModalLabel">Nuevo Vehículo</h5>
             <button type="button" class="modal-close" onclick="fecharModalVeiculo()" aria-label="Close">
                 <i class="fas fa-times"></i>
             </button>
         </div>
             <div class="modal-body">
                 <form id="veiculoForm">
-                    <!-- Informações do Proprietário -->
+                    <!-- Informaciones del Propietario -->
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
-                                <label for="clienteVeiculo" class="form-label">Cliente/Proprietário *</label>
+                                <label for="clienteVeiculo" class="form-label">Cliente/Propietario *</label>
                                 <select class="form-select" id="clienteVeiculo" name="cliente_id" required>
-                                    <option value="">Selecione o cliente</option>
+                                    <option value="">Seleccione el cliente</option>
                                 </select>
                                 <small class="form-text text-muted">
                                     <i class="fas fa-info-circle"></i> 
-                                    Não encontrou o cliente? 
-                                    <a href="#" onclick="abrirModalCliente()" class="text-primary">Cadastre aqui</a>
+                                    ¿No encontró al cliente? 
+                                    <a href="#" onclick="abrirModalCliente()" class="text-primary">Registre aquí</a>
                                 </small>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Informações do Veículo -->
-                    <h6 class="mt-4 mb-3"><i class="fas fa-car"></i> Dados do Veículo</h6>
+                    <!-- Informaciones del Vehículo -->
+                    <h6 class="mt-4 mb-3"><i class="fas fa-car"></i> Datos del Vehículo</h6>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="marcaVeiculo" class="form-label">Marca *</label>
                                 <select class="form-select" id="marcaVeiculo" name="marca" required onchange="carregarModelos()">
-                                    <option value="">Selecione a marca</option>
+                                    <option value="">Seleccione la marca</option>
                                     <option value="Chevrolet">Chevrolet</option>
                                     <option value="Ford">Ford</option>
                                     <option value="Volkswagen">Volkswagen</option>
@@ -49,14 +49,14 @@
                                     <option value="BMW">BMW</option>
                                     <option value="Mercedes-Benz">Mercedes-Benz</option>
                                     <option value="Audi">Audi</option>
-                                    <option value="Outro">Outro</option>
+                                    <option value="Outro">Otro</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="modeloVeiculo" class="form-label">Modelo *</label>
-                                <input type="text" class="form-control" id="modeloVeiculo" name="modelo" required placeholder="Ex: Civic, Corolla, Onix">
+                                <input type="text" class="form-control" id="modeloVeiculo" name="modelo" required placeholder="Ej: Civic, Corolla, Onix">
                             </div>
                         </div>
                     </div>
@@ -64,59 +64,59 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="anoVeiculo" class="form-label">Ano *</label>
+                                <label for="anoVeiculo" class="form-label">Año *</label>
                                 <input type="number" class="form-control" id="anoVeiculo" name="ano" required min="1900" max="2025" placeholder="2020">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="placaVeiculo" class="form-label">Placa *</label>
-                                <input type="text" class="form-control" id="placaVeiculo" name="placa" required placeholder="ABC-1234" style="text-transform: uppercase;">
+                                <label for="placaVeiculo" class="form-label">Patente *</label>
+                                <input type="text" class="form-control" id="placaVeiculo" name="placa" required placeholder="ABC123" style="text-transform: uppercase;">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="corVeiculo" class="form-label">Cor</label>
+                                <label for="corVeiculo" class="form-label">Color</label>
                                 <select class="form-select" id="corVeiculo" name="cor">
-                                    <option value="">Selecione</option>
-                                    <option value="Branco">Branco</option>
-                                    <option value="Preto">Preto</option>
-                                    <option value="Prata">Prata</option>
-                                    <option value="Cinza">Cinza</option>
-                                    <option value="Vermelho">Vermelho</option>
+                                    <option value="">Seleccione</option>
+                                    <option value="Branco">Blanco</option>
+                                    <option value="Preto">Negro</option>
+                                    <option value="Prata">Plata</option>
+                                    <option value="Cinza">Gris</option>
+                                    <option value="Vermelho">Rojo</option>
                                     <option value="Azul">Azul</option>
                                     <option value="Verde">Verde</option>
-                                    <option value="Amarelo">Amarelo</option>
-                                    <option value="Marrom">Marrom</option>
-                                    <option value="Bege">Bege</option>
-                                    <option value="Outro">Outro</option>
+                                    <option value="Amarelo">Amarillo</option>
+                                    <option value="Marrom">Marrón</option>
+                                    <option value="Bege">Beige</option>
+                                    <option value="Outro">Otro</option>
                                 </select>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Detalhes Técnicos -->
+                    <!-- Detalles Técnicos -->
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="combustivelVeiculo" class="form-label">Combustível</label>
+                                <label for="combustivelVeiculo" class="form-label">Combustible</label>
                                 <select class="form-select" id="combustivelVeiculo" name="combustivel">
-                                    <option value="">Selecione</option>
-                                    <option value="Gasolina">Gasolina</option>
+                                    <option value="">Seleccione</option>
+                                    <option value="Gasolina">Nafta</option>
                                     <option value="Etanol">Etanol</option>
                                     <option value="Flex">Flex</option>
-                                    <option value="Diesel">Diesel</option>
-                                    <option value="GNV">GNV</option>
-                                    <option value="Elétrico">Elétrico</option>
+                                    <option value="Diesel">Diésel</option>
+                                    <option value="GNV">GNC</option>
+                                    <option value="Elétrico">Eléctrico</option>
                                     <option value="Híbrido">Híbrido</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="cambioVeiculo" class="form-label">Câmbio</label>
+                                <label for="cambioVeiculo" class="form-label">Cambio</label>
                                 <select class="form-select" id="cambioVeiculo" name="cambio">
-                                    <option value="">Selecione</option>
+                                    <option value="">Seleccione</option>
                                     <option value="Manual">Manual</option>
                                     <option value="Automático">Automático</option>
                                     <option value="CVT">CVT</option>
@@ -126,17 +126,17 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="quilometragemVeiculo" class="form-label">Quilometragem</label>
+                                <label for="quilometragemVeiculo" class="form-label">Kilometraje</label>
                                 <input type="number" class="form-control" id="quilometragemVeiculo" name="quilometragem" placeholder="50000">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Informações Adicionais -->
+                    <!-- Informaciones Adicionales -->
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="chassiVeiculo" class="form-label">Chassi</label>
+                                <label for="chassiVeiculo" class="form-label">Chasis</label>
                                 <input type="text" class="form-control" id="chassiVeiculo" name="chassi" placeholder="9BWZZZ377VT004251" style="text-transform: uppercase;">
                             </div>
                         </div>
@@ -148,39 +148,39 @@
                         </div>
                     </div>
 
-                    <!-- Status e Categoria -->
+                    <!-- Estado y Categoría -->
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="categoriaVeiculo" class="form-label">Categoria</label>
+                                <label for="categoriaVeiculo" class="form-label">Categoría</label>
                                 <select class="form-select" id="categoriaVeiculo" name="categoria">
-                                    <option value="">Selecione</option>
-                                    <option value="Passeio">Passeio</option>
-                                    <option value="Utilitário">Utilitário</option>
+                                    <option value="">Seleccione</option>
+                                    <option value="Passeio">Paseo</option>
+                                    <option value="Utilitário">Utilitario</option>
                                     <option value="Comercial">Comercial</option>
                                     <option value="Motocicleta">Motocicleta</option>
-                                    <option value="Caminhão">Caminhão</option>
-                                    <option value="Ônibus">Ônibus</option>
-                                    <option value="Outro">Outro</option>
+                                    <option value="Caminhão">Camión</option>
+                                    <option value="Ônibus">Ómnibus</option>
+                                    <option value="Outro">Otro</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="statusVeiculo" class="form-label">Status</label>
+                                <label for="statusVeiculo" class="form-label">Estado</label>
                                 <select class="form-select" id="statusVeiculo" name="status">
-                                    <option value="ativo">Ativo</option>
-                                    <option value="inativo">Inativo</option>
+                                    <option value="ativo">Activo</option>
+                                    <option value="inativo">Inactivo</option>
                                     <option value="vendido">Vendido</option>
                                 </select>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Observações -->
+                    <!-- Observaciones -->
                     <div class="form-group">
-                        <label for="observacoesVeiculo" class="form-label">Observações</label>
-                        <textarea class="form-control" id="observacoesVeiculo" name="observacoes" rows="3" placeholder="Informações adicionais sobre o veículo, histórico de manutenções, etc..."></textarea>
+                        <label for="observacoesVeiculo" class="form-label">Observaciones</label>
+                        <textarea class="form-control" id="observacoesVeiculo" name="observacoes" rows="3" placeholder="Informaciones adicionales sobre el vehículo, historial de mantenimientos, etc..."></textarea>
                     </div>
                 </form>
             </div>
@@ -189,7 +189,7 @@
                     <i class="fas fa-times"></i> Cancelar
                 </button>
                 <button type="button" class="btn btn-primary" onclick="salvarVeiculoModal()">
-                    <i class="fas fa-save"></i> Salvar Veículo
+                    <i class="fas fa-save"></i> Guardar Vehículo
                 </button>
             </div>
         </div>
@@ -197,19 +197,19 @@
 </div>
 
 <script>
-// As funções JavaScript foram movidas para veiculos.js para evitar problemas de escopo
+// Las funciones JavaScript fueron movidas a veiculos.js para evitar problemas de alcance
 
-// Função para carregar clientes no select
+// Función para cargar clientes en el select
 function carregarClientesSelect() {
     const select = document.getElementById('clienteVeiculo');
     if (!select) return;
     
     const clientes = JSON.parse(localStorage.getItem('oficina_clientes') || '[]');
     
-    // Limpar opções existentes (exceto a primeira)
-    select.innerHTML = '<option value="">Selecione um cliente</option>';
+    // Limpiar opciones existentes (excepto la primera)
+    select.innerHTML = '<option value="">Seleccione un cliente</option>';
     
-    // Adicionar clientes
+    // Agregar clientes
     clientes.forEach(cliente => {
         const option = document.createElement('option');
         option.value = cliente.id;
@@ -218,30 +218,30 @@ function carregarClientesSelect() {
     });
 }
 
-// Carregar clientes quando o modal for carregado
+// Cargar clientes cuando el modal sea cargado
 document.addEventListener('DOMContentLoaded', function() {
-    // Aguardar um pouco para garantir que o modal foi inserido no DOM
+    // Esperar un poco para garantizar que el modal fue insertado en el DOM
     setTimeout(() => {
         carregarClientesSelect();
     }, 100);
 });
 
-// Máscaras e validações para os campos
+// Máscaras y validaciones para los campos
 document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
-        // Máscara para placa
+        // Máscara para patente
         const placaInput = document.getElementById('placaVeiculo');
         if (placaInput) {
             placaInput.addEventListener('input', function(e) {
                 let value = e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
                 
-                if (value.length <= 7) {
-                    // Formato antigo: ABC-1234
+                if (value.length <= 6) {
+                    // Formato antiguo: ABC123
                     if (value.length > 3) {
-                        value = value.substring(0, 3) + '-' + value.substring(3);
+                        value = value.substring(0, 3) + value.substring(3);
                     }
                 } else if (value.length === 7) {
-                    // Formato Mercosul: ABC1D23
+                    // Formato Mercosur: ABC1D23
                     value = value.substring(0, 3) + value.substring(3, 4) + value.substring(4, 5) + value.substring(5);
                 }
                 
@@ -249,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Máscara para RENAVAM (apenas números)
+        // Máscara para RENAVAM (solo números)
         const renavamInput = document.getElementById('renavamVeiculo');
         if (renavamInput) {
             renavamInput.addEventListener('input', function(e) {
@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Máscara para chassi (alfanumérico)
+        // Máscara para chasis (alfanumérico)
         const chassiInput = document.getElementById('chassiVeiculo');
         if (chassiInput) {
             chassiInput.addEventListener('input', function(e) {
@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Validação de ano
+        // Validación de año
         const anoInput = document.getElementById('anoVeiculo');
         if (anoInput) {
             anoInput.addEventListener('input', function(e) {
@@ -273,14 +273,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 const anoAtual = new Date().getFullYear();
                 
                 if (ano < 1900 || ano > anoAtual + 1) {
-                    e.target.setCustomValidity('Ano deve estar entre 1900 e ' + (anoAtual + 1));
+                    e.target.setCustomValidity('Año debe estar entre 1900 y ' + (anoAtual + 1));
                 } else {
                     e.target.setCustomValidity('');
                 }
             });
         }
 
-        // Máscara para quilometragem (apenas números)
+        // Máscara para kilometraje (solo números)
         const kmInput = document.getElementById('quilometragemVeiculo');
         if (kmInput) {
             kmInput.addEventListener('input', function(e) {
@@ -295,7 +295,7 @@ function carregarModelos() {
     const marca = document.getElementById('marcaVeiculo').value;
     const modeloInput = document.getElementById('modeloVeiculo');
     
-    // Modelos populares por marca (pode ser expandido)
+    // Modelos populares por marca (puede ser expandido)
     const modelos = {
         'Chevrolet': ['Onix', 'Prisma', 'Cruze', 'Tracker', 'Equinox', 'S10', 'Spin'],
         'Ford': ['Ka', 'Fiesta', 'Focus', 'EcoSport', 'Fusion', 'Ranger', 'Edge'],
@@ -308,7 +308,7 @@ function carregarModelos() {
     };
 
     if (modelos[marca]) {
-        // Criar datalist para sugestões
+        // Crear datalist para sugerencias
         let datalist = document.getElementById('modelosList');
         if (!datalist) {
             datalist = document.createElement('datalist');
@@ -324,7 +324,7 @@ function carregarModelos() {
 }
 
 function abrirModalCliente() {
-    // Fechar modal de veículo temporariamente
+    // Cerrar modal de vehículo temporalmente
     const veiculoModal = bootstrap.Modal.getInstance(document.getElementById('veiculoModal'));
     if (veiculoModal) {
         veiculoModal.hide();
@@ -334,6 +334,6 @@ function abrirModalCliente() {
     if (typeof clientesManager !== 'undefined') {
         clientesManager.abrirModal();
     } else {
-        alert('Sistema de clientes não está disponível. Recarregue a página e tente novamente.');
+        alert('Sistema de clientes no está disponible. Recargue la página e intente nuevamente.');
     }
 }

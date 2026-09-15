@@ -1,9 +1,9 @@
-<!-- Modal Novo Serviço -->
+<!-- Modal Nuevo Servicio -->
 <div class="modal fade" id="servicoModal" tabindex="-1" aria-labelledby="servicoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="servicoModalLabel">Novo Serviço</h5>
+                <h5 class="modal-title" id="servicoModalLabel">Nuevo Servicio</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <i class="fas fa-times"></i>
                 </button>
@@ -13,58 +13,58 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nomeServico" class="form-label">Nome do Serviço *</label>
+                                <label for="nomeServico" class="form-label">Nombre del Servicio *</label>
                                 <input type="text" class="form-control" id="nomeServico" name="nome" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="categoriaServico" class="form-label">Categoria *</label>
+                                <label for="categoriaServico" class="form-label">Categoría *</label>
                                 <select class="form-select" id="categoriaServico" name="categoria" required>
-                                    <option value="">Selecione uma categoria</option>
-                                    <option value="manutencao">Manutenção</option>
-                                    <option value="revisao">Revisão</option>
-                                    <option value="reparo">Reparo</option>
-                                    <option value="eletrica">Elétrica</option>
+                                    <option value="">Seleccione una categoría</option>
+                                    <option value="manutencao">Mantenimiento</option>
+                                    <option value="revisao">Revisión</option>
+                                    <option value="reparo">Reparación</option>
+                                    <option value="eletrica">Eléctrica</option>
                                     <option value="pintura">Pintura</option>
-                                    <option value="funilaria">Funilaria</option>
+                                    <option value="funilaria">Chapa y Pintura</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="descricaoServico" class="form-label">Descrição</label>
-                        <textarea class="form-control" id="descricaoServico" name="descricao" rows="3" placeholder="Descreva o serviço..."></textarea>
+                        <label for="descricaoServico" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="descricaoServico" name="descricao" rows="3" placeholder="Describa el servicio..."></textarea>
                     </div>
                     
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="valorServico" class="form-label">Valor (R$) *</label>
+                                <label for="valorServico" class="form-label">Valor ($) *</label>
                                 <input type="number" class="form-control" id="valorServico" name="valor" step="0.01" min="0" required>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="tempoEstimado" class="form-label">Tempo Estimado (horas)</label>
+                                <label for="tempoEstimado" class="form-label">Tiempo Estimado (horas)</label>
                                 <input type="number" class="form-control" id="tempoEstimado" name="tempo" step="0.5" min="0">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="statusServico" class="form-label">Status</label>
+                                <label for="statusServico" class="form-label">Estado</label>
                                 <select class="form-select" id="statusServico" name="status">
-                                    <option value="ativo">Ativo</option>
-                                    <option value="inativo">Inativo</option>
+                                    <option value="ativo">Activo</option>
+                                    <option value="inativo">Inactivo</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="observacoesServico" class="form-label">Observações</label>
-                        <textarea class="form-control" id="observacoesServico" name="observacoes" rows="2" placeholder="Observações adicionais..."></textarea>
+                        <label for="observacoesServico" class="form-label">Observaciones</label>
+                        <textarea class="form-control" id="observacoesServico" name="observacoes" rows="2" placeholder="Observaciones adicionales..."></textarea>
                     </div>
                 </form>
             </div>
@@ -73,7 +73,7 @@
                     <i class="fas fa-times"></i> Cancelar
                 </button>
                 <button type="button" class="btn btn-primary" onclick="salvarServicoModal()">
-                    <i class="fas fa-save"></i> Salvar Serviço
+                    <i class="fas fa-save"></i> Guardar Servicio
                 </button>
             </div>
         </div>

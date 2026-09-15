@@ -1,20 +1,20 @@
-<!-- Modal Novo Cliente -->
+<!-- Modal Nuevo Cliente -->
 <div class="modal fade" id="clienteModal" tabindex="-1" aria-labelledby="clienteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="clienteModalLabel">Novo Cliente</h5>
+                <h5 class="modal-title" id="clienteModalLabel">Nuevo Cliente</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class="modal-body">
                 <form id="clienteForm">
-                    <!-- Informações Básicas -->
+                    <!-- Informaciones Básicas -->
                     <div class="row">
                         <div class="col-md-8">
                             <div class="form-group">
-                                <label for="nomeCliente" class="form-label">Nome Completo *</label>
+                                <label for="nomeCliente" class="form-label">Nombre Completo *</label>
                                 <input type="text" class="form-control" id="nomeCliente" name="nome" required>
                             </div>
                         </div>
@@ -22,9 +22,9 @@
                             <div class="form-group">
                                 <label for="tipoCliente" class="form-label">Tipo *</label>
                                 <select class="form-select" id="tipoCliente" name="tipo" required onchange="toggleDocumento()">
-                                    <option value="">Selecione</option>
-                                    <option value="pessoa_fisica">Pessoa Física</option>
-                                    <option value="pessoa_juridica">Pessoa Jurídica</option>
+                                    <option value="">Seleccione</option>
+                                    <option value="pessoa_fisica">Persona Física</option>
+                                    <option value="pessoa_juridica">Persona Jurídica</option>
                                 </select>
                             </div>
                         </div>
@@ -34,54 +34,54 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group" id="cpf-group">
-                                <label for="cpfCliente" class="form-label">CPF *</label>
-                                <input type="text" class="form-control" id="cpfCliente" name="cpf" placeholder="000.000.000-00">
+                                <label for="cpfCliente" class="form-label">CUIL/DNI *</label>
+                                <input type="text" class="form-control" id="cpfCliente" name="cpf" placeholder="00.000.000-0">
                             </div>
                             <div class="form-group" id="cnpj-group" style="display: none;">
-                                <label for="cnpjCliente" class="form-label">CNPJ *</label>
-                                <input type="text" class="form-control" id="cnpjCliente" name="cnpj" placeholder="00.000.000/0000-00">
+                                <label for="cnpjCliente" class="form-label">CUIT *</label>
+                                <input type="text" class="form-control" id="cnpjCliente" name="cnpj" placeholder="00-00000000-0">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group" id="rg-group">
-                                <label for="rgCliente" class="form-label">RG</label>
+                                <label for="rgCliente" class="form-label">DNI</label>
                                 <input type="text" class="form-control" id="rgCliente" name="rg">
                             </div>
                             <div class="form-group" id="ie-group" style="display: none;">
-                                <label for="ieCliente" class="form-label">Inscrição Estadual</label>
+                                <label for="ieCliente" class="form-label">Inscripción Ingresos Brutos</label>
                                 <input type="text" class="form-control" id="ieCliente" name="inscricao_estadual">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Contato -->
+                    <!-- Contacto -->
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="telefoneCliente" class="form-label">Telefone *</label>
-                                <input type="tel" class="form-control" id="telefoneCliente" name="telefone" placeholder="(00) 00000-0000" required>
+                                <label for="telefoneCliente" class="form-label">Teléfono *</label>
+                                <input type="tel" class="form-control" id="telefoneCliente" name="telefone" placeholder="(000) 0000-0000" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="emailCliente" class="form-label">E-mail</label>
+                                <label for="emailCliente" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="emailCliente" name="email" placeholder="cliente@email.com">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Endereço -->
-                    <h6 class="mt-4 mb-3"><i class="fas fa-map-marker-alt"></i> Endereço</h6>
+                    <!-- Dirección -->
+                    <h6 class="mt-4 mb-3"><i class="fas fa-map-marker-alt"></i> Dirección</h6>
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="cepCliente" class="form-label">CEP</label>
-                                <input type="text" class="form-control" id="cepCliente" name="cep" placeholder="00000-000" onblur="buscarCEP()">
+                                <label for="cepCliente" class="form-label">CPA</label>
+                                <input type="text" class="form-control" id="cepCliente" name="cep" placeholder="A0000AAA" onblur="buscarCEP()">
                             </div>
                         </div>
                         <div class="col-md-7">
                             <div class="form-group">
-                                <label for="enderecoCliente" class="form-label">Endereço</label>
+                                <label for="enderecoCliente" class="form-label">Dirección</label>
                                 <input type="text" class="form-control" id="enderecoCliente" name="endereco">
                             </div>
                         </div>
@@ -102,13 +102,13 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="bairroCliente" class="form-label">Bairro</label>
+                                <label for="bairroCliente" class="form-label">Barrio</label>
                                 <input type="text" class="form-control" id="bairroCliente" name="bairro">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="cidadeCliente" class="form-label">Cidade</label>
+                                <label for="cidadeCliente" class="form-label">Ciudad</label>
                                 <input type="text" class="form-control" id="cidadeCliente" name="cidade">
                             </div>
                         </div>
@@ -117,54 +117,51 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="estadoCliente" class="form-label">Estado</label>
+                                <label for="estadoCliente" class="form-label">Provincia</label>
                                 <select class="form-select" id="estadoCliente" name="estado">
-                                    <option value="">Selecione</option>
-                                    <option value="AC">Acre</option>
-                                    <option value="AL">Alagoas</option>
-                                    <option value="AP">Amapá</option>
-                                    <option value="AM">Amazonas</option>
-                                    <option value="BA">Bahia</option>
-                                    <option value="CE">Ceará</option>
-                                    <option value="DF">Distrito Federal</option>
-                                    <option value="ES">Espírito Santo</option>
-                                    <option value="GO">Goiás</option>
-                                    <option value="MA">Maranhão</option>
-                                    <option value="MT">Mato Grosso</option>
-                                    <option value="MS">Mato Grosso do Sul</option>
-                                    <option value="MG">Minas Gerais</option>
-                                    <option value="PA">Pará</option>
-                                    <option value="PB">Paraíba</option>
-                                    <option value="PR">Paraná</option>
-                                    <option value="PE">Pernambuco</option>
-                                    <option value="PI">Piauí</option>
-                                    <option value="RJ">Rio de Janeiro</option>
-                                    <option value="RN">Rio Grande do Norte</option>
-                                    <option value="RS">Rio Grande do Sul</option>
-                                    <option value="RO">Rondônia</option>
-                                    <option value="RR">Roraima</option>
-                                    <option value="SC">Santa Catarina</option>
-                                    <option value="SP">São Paulo</option>
-                                    <option value="SE">Sergipe</option>
-                                    <option value="TO">Tocantins</option>
+                                    <option value="">Seleccione</option>
+                                    <option value="CABA">CABA</option>
+                                    <option value="Buenos Aires">Buenos Aires</option>
+                                    <option value="Catamarca">Catamarca</option>
+                                    <option value="Chaco">Chaco</option>
+                                    <option value="Chubut">Chubut</option>
+                                    <option value="Córdoba">Córdoba</option>
+                                    <option value="Corrientes">Corrientes</option>
+                                    <option value="Entre Ríos">Entre Ríos</option>
+                                    <option value="Formosa">Formosa</option>
+                                    <option value="Jujuy">Jujuy</option>
+                                    <option value="La Pampa">La Pampa</option>
+                                    <option value="La Rioja">La Rioja</option>
+                                    <option value="Mendoza">Mendoza</option>
+                                    <option value="Misiones">Misiones</option>
+                                    <option value="Neuquén">Neuquén</option>
+                                    <option value="Río Negro">Río Negro</option>
+                                    <option value="Salta">Salta</option>
+                                    <option value="San Juan">San Juan</option>
+                                    <option value="San Luis">San Luis</option>
+                                    <option value="Santa Cruz">Santa Cruz</option>
+                                    <option value="Santa Fe">Santa Fe</option>
+                                    <option value="Santiago del Estero">Santiago del Estero</option>
+                                    <option value="Tierra del Fuego">Tierra del Fuego</option>
+                                    <option value="Tucumán">Tucumán</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="statusCliente" class="form-label">Status</label>
+                                <label for="statusCliente" class="form-label">Estado</label>
                                 <select class="form-select" id="statusCliente" name="status">
-                                    <option value="ativo">Ativo</option>
-                                    <option value="inativo">Inativo</option>
+                                    <option value="ativo">Activo</option>
+                                    <option value="inativo">Inactivo</option>
                                 </select>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Observações -->
+                    <!-- Observaciones -->
                     <div class="form-group">
-                        <label for="observacoesCliente" class="form-label">Observações</label>
-                        <textarea class="form-control" id="observacoesCliente" name="observacoes" rows="3" placeholder="Observações adicionais sobre o cliente..."></textarea>
+                        <label for="observacoesCliente" class="form-label">Observaciones</label>
+                        <textarea class="form-control" id="observacoesCliente" name="observacoes" rows="3" placeholder="Observaciones adicionales sobre el cliente..."></textarea>
                     </div>
                 </form>
             </div>
@@ -173,7 +170,7 @@
                     <i class="fas fa-times"></i> Cancelar
                 </button>
                 <button type="button" class="btn btn-primary" id="salvarCliente">
-                    <i class="fas fa-save"></i> Salvar Cliente
+                    <i class="fas fa-save"></i> Guardar Cliente
                 </button>
             </div>
         </div>
@@ -226,43 +223,43 @@ function buscarCEP() {
                     document.getElementById('estadoCliente').value = data.uf;
                 }
             })
-            .catch(error => console.log('Erro ao buscar CEP:', error));
+            .catch(error => console.log('Error al buscar CPA:', error));
     }
 }
 
-// Máscaras para os campos
+// Máscaras para los campos
 document.addEventListener('DOMContentLoaded', function() {
-    // Máscara CPF
+    // Máscara CUIL/DNI
     document.getElementById('cpfCliente').addEventListener('input', function(e) {
         let value = e.target.value.replace(/\D/g, '');
-        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{2})(\d)/, '$1.$2');
         value = value.replace(/(\d{3})(\d)/, '$1.$2');
         value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
         e.target.value = value;
     });
 
-    // Máscara CNPJ
+    // Máscara CUIT
     document.getElementById('cnpjCliente').addEventListener('input', function(e) {
         let value = e.target.value.replace(/\D/g, '');
-        value = value.replace(/(\d{2})(\d)/, '$1.$2');
-        value = value.replace(/(\d{3})(\d)/, '$1.$2');
-        value = value.replace(/(\d{3})(\d)/, '$1/$2');
-        value = value.replace(/(\d{4})(\d{1,2})$/, '$1-$2');
+        value = value.replace(/(\d{2})(\d)/, '$1-$2');
+        value = value.replace(/(\d{8})(\d)/, '$1-$2');
         e.target.value = value;
     });
 
-    // Máscara Telefone
+    // Máscara Teléfono
     document.getElementById('telefoneCliente').addEventListener('input', function(e) {
         let value = e.target.value.replace(/\D/g, '');
-        value = value.replace(/(\d{2})(\d)/, '($1) $2');
-        value = value.replace(/(\d{5})(\d{1,4})$/, '$1-$2');
+        value = value.replace(/(\d{3})(\d)/, '($1) $2');
+        value = value.replace(/(\d{4})(\d{1,4})$/, '$1-$2');
         e.target.value = value;
     });
 
-    // Máscara CEP
+    // Máscara CPA
     document.getElementById('cepCliente').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        value = value.replace(/(\d{5})(\d{1,3})$/, '$1-$2');
+        let value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        if (value.length > 4) {
+            value = value.substring(0, 4) + value.substring(4, 8);
+        }
         e.target.value = value;
     });
 });

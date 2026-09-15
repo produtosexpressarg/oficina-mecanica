@@ -1,8 +1,8 @@
-<!-- Modal de Produto -->
+<!-- Modal de Producto -->
 <div id="produto-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3 class="modal-title" id="produto-modal-title">Novo Produto</h3>
+            <h3 class="modal-title" id="produto-modal-title">Nuevo Producto</h3>
             <button type="button" class="modal-close" onclick="fecharModalProduto()">
                 <i class="fas fa-times"></i>
             </button>
@@ -13,29 +13,29 @@
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="produto-codigo">Código do Produto *</label>
+                        <label for="produto-codigo">Código del Producto *</label>
                         <input type="text" id="produto-codigo" name="codigo" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label for="produto-nome">Nome do Produto *</label>
+                        <label for="produto-nome">Nombre del Producto *</label>
                         <input type="text" id="produto-nome" name="nome" class="form-control" required>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="produto-categoria">Categoria *</label>
+                        <label for="produto-categoria">Categoría *</label>
                         <select id="produto-categoria" name="categoria" class="form-control" required>
-                            <option value="">Selecione uma categoria</option>
-                            <option value="oleos_lubrificantes">Óleos e Lubrificantes</option>
+                            <option value="">Seleccione una categoría</option>
+                            <option value="oleos_lubrificantes">Aceites y Lubricantes</option>
                             <option value="filtros">Filtros</option>
-                            <option value="freios">Freios</option>
-                            <option value="suspensao">Suspensão</option>
-                            <option value="eletrica">Elétrica</option>
-                            <option value="ignicao">Ignição</option>
-                            <option value="pneus">Pneus</option>
-                            <option value="bateria">Bateria</option>
-                            <option value="outros">Outros</option>
+                            <option value="freios">Frenos</option>
+                            <option value="suspensao">Suspensión</option>
+                            <option value="eletrica">Eléctrica</option>
+                            <option value="ignicao">Ignición</option>
+                            <option value="pneus">Cubiertas</option>
+                            <option value="bateria">Batería</option>
+                            <option value="outros">Otros</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -45,62 +45,62 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="produto-descricao">Descrição</label>
+                    <label for="produto-descricao">Descripción</label>
                     <textarea id="produto-descricao" name="descricao" class="form-control" rows="3"></textarea>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="produto-estoque-atual">Estoque Atual *</label>
+                        <label for="produto-estoque-atual">Stock Actual *</label>
                         <input type="number" id="produto-estoque-atual" name="estoque_atual" class="form-control" min="0" required>
                     </div>
                     <div class="form-group">
-                        <label for="produto-estoque-minimo">Estoque Mínimo *</label>
+                        <label for="produto-estoque-minimo">Stock Mínimo *</label>
                         <input type="number" id="produto-estoque-minimo" name="estoque_minimo" class="form-control" min="0" required>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="produto-preco-custo" class="required">Preço de Custo</label>
+                        <label for="produto-preco-custo" class="required">Precio Costo</label>
                         <input type="text" id="produto-preco-custo" name="preco_custo" class="form-control" data-mask="moeda" required>
                     </div>
                     <div class="form-group">
-                        <label for="produto-preco-venda" class="required">Preço de Venda</label>
+                        <label for="produto-preco-venda" class="required">Precio Venta</label>
                         <input type="text" id="produto-preco-venda" name="preco_venda" class="form-control" data-mask="moeda" required>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="produto-unidade">Unidade de Medida *</label>
+                        <label for="produto-unidade">Unidad de Medida *</label>
                         <select id="produto-unidade" name="unidade" class="form-control" required>
-                            <option value="">Selecione</option>
-                            <option value="UN">Unidade</option>
-                            <option value="PC">Peça</option>
+                            <option value="">Seleccione</option>
+                            <option value="UN">Unidad</option>
+                            <option value="PC">Pieza</option>
                             <option value="LT">Litro</option>
                             <option value="ML">Mililitro</option>
-                            <option value="KG">Quilograma</option>
-                            <option value="G">Grama</option>
+                            <option value="KG">Kilogramo</option>
+                            <option value="G">Gramo</option>
                             <option value="M">Metro</option>
                             <option value="CM">Centímetro</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="produto-localizacao">Localização</label>
-                        <input type="text" id="produto-localizacao" name="localizacao" class="form-control" placeholder="Ex: Prateleira A-1">
+                        <label for="produto-localizacao">Ubicación</label>
+                        <input type="text" id="produto-localizacao" name="localizacao" class="form-control" placeholder="Ej: Estante A-1">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="produto-fornecedor">Fornecedor</label>
+                    <label for="produto-fornecedor">Proveedor</label>
                     <input type="text" id="produto-fornecedor" name="fornecedor" class="form-control">
                 </div>
 
                 <div class="form-group">
                     <div class="form-check">
                         <input type="checkbox" id="produto-ativo" name="ativo" class="form-check-input" checked>
-                        <label for="produto-ativo" class="form-check-label">Produto Ativo</label>
+                        <label for="produto-ativo" class="form-check-label">Producto Activo</label>
                     </div>
                 </div>
             </form>
@@ -110,7 +110,7 @@
                 <i class="fas fa-times"></i> Cancelar
             </button>
             <button type="submit" form="produto-form" class="btn btn-primary">
-                <i class="fas fa-save"></i> Salvar Produto
+                <i class="fas fa-save"></i> Guardar Producto
             </button>
         </div>
     </div>
@@ -122,10 +122,10 @@ function abrirModalProduto(id = null) {
     const title = document.getElementById('produto-modal-title');
     
     if (id) {
-        title.textContent = 'Editar Produto';
+        title.textContent = 'Editar Producto';
         carregarDadosProduto(id);
     } else {
-        title.textContent = 'Novo Produto';
+        title.textContent = 'Nuevo Producto';
         document.getElementById('produto-form').reset();
         document.getElementById('produto-ativo').checked = true;
     }
@@ -147,45 +147,45 @@ function salvarProduto(event) {
     const formData = new FormData(event.target);
     const produto = Object.fromEntries(formData.entries());
     
-    // Validações
+    // Validaciones
     if (!produto.codigo || !produto.nome || !produto.categoria) {
-        alert('Por favor, preencha todos os campos obrigatórios.');
+        alert('Por favor, complete todos los campos obligatorios.');
         return;
     }
     
     if (parseFloat(produto.preco_venda) <= parseFloat(produto.preco_custo)) {
-        if (!confirm('O preço de venda é menor ou igual ao preço de custo. Deseja continuar?')) {
+        if (!confirm('El precio de venta es menor o igual al precio de costo. ¿Desea continuar?')) {
             return;
         }
     }
     
-    // Simular salvamento
-    console.log('Salvando produto:', produto);
+    // Simular guardado
+    console.log('Guardando producto:', produto);
     
-    // Aqui você implementaria a chamada para a API
-    // Por enquanto, apenas fechamos o modal
+    // Aquí implementaría la llamada para la API
+    // Por ahora, solo cerramos el modal
     fecharModalProduto();
     
-    // Recarregar a tabela de produtos
+    // Recargar la tabla de productos
     if (typeof carregarProdutos === 'function') {
         carregarProdutos();
     }
     
-    alert('Produto salvo com sucesso!');
+    alert('Producto guardado con éxito!');
 }
 
 function carregarDadosProduto(id) {
-    // Implementar carregamento dos dados do produto
-    console.log('Carregando dados do produto:', id);
+    // Implementar carga de datos del producto
+    console.log('Cargando datos del producto:', id);
     
-    // Exemplo de dados mockados
+    // Ejemplo de datos mockeados
     const produtoMock = {
         id: id,
         codigo: 'PROD001',
-        nome: 'Óleo Motor 5W30',
+        nome: 'Aceite Motor 5W30',
         categoria: 'oleos_lubrificantes',
         marca: 'Castrol',
-        descricao: 'Óleo sintético para motor',
+        descricao: 'Aceite sintético para motor',
         estoque_atual: 50,
         estoque_minimo: 10,
         preco_custo: 25.00,
@@ -196,7 +196,7 @@ function carregarDadosProduto(id) {
         ativo: true
     };
     
-    // Preencher o formulário
+    // Llenar el formulario
     Object.keys(produtoMock).forEach(key => {
         const element = document.getElementById(`produto-${key.replace('_', '-')}`);
         if (element) {
@@ -209,7 +209,7 @@ function carregarDadosProduto(id) {
     });
 }
 
-// Fechar modal ao clicar fora dele
+// Cerrar modal al hacer clic fuera de él
 document.addEventListener('click', function(event) {
     const modal = document.getElementById('produto-modal');
     if (event.target === modal) {

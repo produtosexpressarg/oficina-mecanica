@@ -1,10 +1,10 @@
-<!-- Tabela de Produtos/Estoque -->
+<!-- Tabla de Productos/Inventario -->
 <div class="table-container">
     <div class="table-header">
-        <h3>Controle de Estoque</h3>
+        <h3>Control de Inventario</h3>
         <div class="table-actions">
             <button class="btn btn-primary" id="btn-novo-produto">
-                <i class="fas fa-plus"></i> Novo Produto
+                <i class="fas fa-plus"></i> Nuevo Producto
             </button>
             <button class="btn btn-warning" id="btn-movimentar-estoque">
                 <i class="fas fa-exchange-alt"></i> Movimentar
@@ -17,20 +17,20 @@
     
     <div class="table-filters">
         <div class="filter-group">
-            <input type="text" placeholder="Buscar produto..." id="search-produto" class="search-input">
+            <input type="text" placeholder="Buscar producto..." id="search-produto" class="search-input">
             <select id="filter-categoria" class="filter-select">
-                <option value="">Todas as Categorias</option>
-                <option value="pecas">Peças</option>
-                <option value="oleos">Óleos e Lubrificantes</option>
+                <option value="">Todas las Categorías</option>
+                <option value="pecas">Repuestos</option>
+                <option value="oleos">Aceites y Lubricantes</option>
                 <option value="filtros">Filtros</option>
-                <option value="pneus">Pneus</option>
-                <option value="acessorios">Acessórios</option>
+                <option value="pneus">Cubiertas</option>
+                <option value="acessorios">Accesorios</option>
             </select>
             <select id="filter-estoque" class="filter-select">
-                <option value="">Todos os Estoques</option>
-                <option value="baixo">Estoque Baixo</option>
-                <option value="zerado">Estoque Zerado</option>
-                <option value="normal">Estoque Normal</option>
+                <option value="">Todos los Inventarios</option>
+                <option value="baixo">Stock Bajo</option>
+                <option value="zerado">Stock Agotado</option>
+                <option value="normal">Stock Normal</option>
             </select>
         </div>
     </div>
@@ -40,19 +40,19 @@
             <thead>
                 <tr>
                     <th>Código</th>
-                    <th>Produto</th>
-                    <th>Categoria</th>
+                    <th>Producto</th>
+                    <th>Categoría</th>
                     <th>Marca</th>
-                    <th>Estoque Atual</th>
-                    <th>Estoque Mínimo</th>
-                    <th>Preço Custo</th>
-                    <th>Preço Venda</th>
-                    <th>Status</th>
-                    <th>Ações</th>
+                    <th>Stock Actual</th>
+                    <th>Stock Mínimo</th>
+                    <th>Precio Costo</th>
+                    <th>Precio Venta</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Dados serão carregados via JavaScript -->
+                <!-- Datos se cargarán via JavaScript -->
             </tbody>
         </table>
     </div>
@@ -66,7 +66,7 @@
                 <i class="fas fa-chevron-left"></i>
             </button>
             <span class="pagination-numbers" id="pagination-numbers">
-                <!-- Números das páginas serão gerados via JavaScript -->
+                <!-- Números de páginas se generarán via JavaScript -->
             </span>
             <button class="btn-pagination" id="btn-next">
                 <i class="fas fa-chevron-right"></i>

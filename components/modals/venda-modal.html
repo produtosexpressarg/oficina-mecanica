@@ -1,8 +1,8 @@
-<!-- Modal de Venda -->
+<!-- Modal de Venta -->
 <div id="venda-modal" class="modal">
     <div class="modal-content modal-lg">
         <div class="modal-header">
-            <h3 class="modal-title" id="venda-modal-title">Nova Venda</h3>
+            <h3 class="modal-title" id="venda-modal-title">Nueva Venta</h3>
             <button type="button" class="modal-close" onclick="fecharModalVenda()">
                 <i class="fas fa-times"></i>
             </button>
@@ -11,122 +11,122 @@
             <form id="venda-form" onsubmit="salvarVenda(event)">
                 <input type="hidden" id="venda-id" name="id">
                 
-                <!-- Informações do Cliente -->
+                <!-- Informaciones del Cliente -->
                 <div class="form-section">
-                    <h4><i class="fas fa-user"></i> Informações do Cliente</h4>
+                    <h4><i class="fas fa-user"></i> Informaciones del Cliente</h4>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="venda-cliente">Cliente *</label>
                             <select id="venda-cliente" name="cliente_id" class="form-control" required onchange="carregarVeiculosCliente()">
-                                <option value="">Selecione um cliente</option>
+                                <option value="">Seleccione un cliente</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="venda-veiculo">Veículo</label>
+                            <label for="venda-veiculo">Vehículo</label>
                             <select id="venda-veiculo" name="veiculo_id" class="form-control">
-                                <option value="">Selecione um veículo</option>
+                                <option value="">Seleccione un vehículo</option>
                             </select>
                         </div>
                     </div>
                 </div>
 
-                <!-- Produtos/Serviços -->
+                <!-- Productos/Servicios -->
                 <div class="form-section">
-                    <h4><i class="fas fa-shopping-cart"></i> Itens da Venda</h4>
+                    <h4><i class="fas fa-shopping-cart"></i> Elementos de la Venta</h4>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="item-tipo">Tipo de Item</label>
+                            <label for="item-tipo">Tipo de Elemento</label>
                             <select id="item-tipo" class="form-control" onchange="carregarItensDisponiveis()">
-                                <option value="">Selecione o tipo</option>
-                                <option value="produto">Produto</option>
-                                <option value="servico">Serviço</option>
+                                <option value="">Seleccione el tipo</option>
+                                <option value="produto">Producto</option>
+                                <option value="servico">Servicio</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="item-disponivel">Item</label>
+                            <label for="item-disponivel">Elemento</label>
                             <select id="item-disponivel" class="form-control">
-                                <option value="">Selecione um item</option>
+                                <option value="">Seleccione un elemento</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="item-quantidade">Quantidade</label>
+                            <label for="item-quantidade">Cantidad</label>
                             <input type="number" id="item-quantidade" class="form-control" min="1" value="1">
                         </div>
                         <div class="form-group">
                             <button type="button" class="btn btn-success" onclick="adicionarItem()">
-                                <i class="fas fa-plus"></i> Adicionar
+                                <i class="fas fa-plus"></i> Agregar
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Lista de Itens -->
+                <!-- Lista de Elementos -->
                 <div class="form-section">
                     <div class="table-responsive">
                         <table class="table" id="itens-venda-table">
                             <thead>
                                 <tr>
-                                    <th>Item</th>
+                                    <th>Elemento</th>
                                     <th>Tipo</th>
-                                    <th>Qtd</th>
+                                    <th>Cant</th>
                                     <th>Valor Unit.</th>
                                     <th>Total</th>
-                                    <th>Ações</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody id="itens-venda-body">
                                 <tr class="empty-state">
-                                    <td colspan="6" class="text-center">Nenhum item adicionado</td>
+                                    <td colspan="6" class="text-center">Ningún elemento agregado</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Totais -->
+                <!-- Totales -->
                 <div class="form-section">
                     <div class="totals-container">
                         <div class="total-row">
                             <span>Subtotal:</span>
-                            <span id="venda-subtotal">R$ 0,00</span>
+                            <span id="venda-subtotal">$ 0,00</span>
                         </div>
                         <div class="total-row">
-                            <label for="venda-desconto">Desconto (%):</label>
+                            <label for="venda-desconto">Descuento (%):</label>
                             <input type="number" id="venda-desconto" name="desconto" class="form-control" min="0" max="100" step="0.01" value="0" onchange="calcularTotais()">
                         </div>
                         <div class="total-row">
-                            <span>Valor do Desconto:</span>
-                            <span id="venda-valor-desconto">R$ 0,00</span>
+                            <span>Valor del Descuento:</span>
+                            <span id="venda-valor-desconto">$ 0,00</span>
                         </div>
                         <div class="total-row total-final">
                             <span>Total Final:</span>
-                            <span id="venda-total">R$ 0,00</span>
+                            <span id="venda-total">$ 0,00</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Forma de Pagamento -->
+                <!-- Forma de Pago -->
                 <div class="form-section">
-                    <h4><i class="fas fa-credit-card"></i> Pagamento</h4>
+                    <h4><i class="fas fa-credit-card"></i> Pago</h4>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="venda-forma-pagamento">Forma de Pagamento *</label>
+                            <label for="venda-forma-pagamento">Forma de Pago *</label>
                             <select id="venda-forma-pagamento" name="forma_pagamento" class="form-control" required>
-                                <option value="">Selecione</option>
-                                <option value="dinheiro">Dinheiro</option>
-                                <option value="cartao_debito">Cartão de Débito</option>
-                                <option value="cartao_credito">Cartão de Crédito</option>
-                                <option value="pix">PIX</option>
-                                <option value="transferencia">Transferência</option>
+                                <option value="">Seleccione</option>
+                                <option value="dinheiro">Efectivo</option>
+                                <option value="cartao_debito">Tarjeta de Débito</option>
+                                <option value="cartao_credito">Tarjeta de Crédito</option>
+                                <option value="pix">Transferencia</option>
+                                <option value="transferencia">Transferencia Bancaria</option>
                                 <option value="cheque">Cheque</option>
-                                <option value="prazo">A Prazo</option>
+                                <option value="prazo">A Plazo</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="venda-status-pagamento">Status do Pagamento *</label>
+                            <label for="venda-status-pagamento">Estado del Pago *</label>
                             <select id="venda-status-pagamento" name="status_pagamento" class="form-control" required>
-                                <option value="pendente">Pendente</option>
-                                <option value="pago">Pago</option>
+                                <option value="pendente">Pendiente</option>
+                                <option value="pago">Pagado</option>
                                 <option value="parcial">Parcial</option>
                                 <option value="cancelado">Cancelado</option>
                             </select>
@@ -134,20 +134,20 @@
                     </div>
                     <div class="form-row" id="parcelas-container" style="display: none;">
                         <div class="form-group">
-                            <label for="venda-parcelas">Número de Parcelas</label>
+                            <label for="venda-parcelas">Número de Cuotas</label>
                             <input type="number" id="venda-parcelas" name="parcelas" class="form-control" min="1" max="12">
                         </div>
                         <div class="form-group">
-                            <label for="venda-data-vencimento">Data de Vencimento</label>
+                            <label for="venda-data-vencimento">Fecha de Vencimiento</label>
                             <input type="date" id="venda-data-vencimento" name="data_vencimento" class="form-control">
                         </div>
                     </div>
                 </div>
 
-                <!-- Observações -->
+                <!-- Observaciones -->
                 <div class="form-section">
                     <div class="form-group">
-                        <label for="venda-observacoes">Observações</label>
+                        <label for="venda-observacoes">Observaciones</label>
                         <textarea id="venda-observacoes" name="observacoes" class="form-control" rows="3"></textarea>
                     </div>
                 </div>
@@ -158,7 +158,7 @@
                 <i class="fas fa-times"></i> Cancelar
             </button>
             <button type="submit" form="venda-form" class="btn btn-primary">
-                <i class="fas fa-save"></i> Salvar Venda
+                <i class="fas fa-save"></i> Guardar Venta
             </button>
         </div>
     </div>
@@ -172,10 +172,10 @@ function abrirModalVenda(id = null) {
     const title = document.getElementById('venda-modal-title');
     
     if (id) {
-        title.textContent = 'Editar Venda';
+        title.textContent = 'Editar Venta';
         carregarDadosVenda(id);
     } else {
-        title.textContent = 'Nova Venda';
+        title.textContent = 'Nueva Venta';
         document.getElementById('venda-form').reset();
         itensVenda = [];
         atualizarTabelaItens();
@@ -197,13 +197,13 @@ function fecharModalVenda() {
 
 function carregarClientes() {
     const select = document.getElementById('venda-cliente');
-    select.innerHTML = '<option value="">Selecione um cliente</option>';
+    select.innerHTML = '<option value="">Seleccione un cliente</option>';
     
-    // Simular carregamento de clientes
+    // Simular carga de clientes
     const clientesMock = [
-        { id: 1, nome: 'João Silva' },
-        { id: 2, nome: 'Maria Santos' },
-        { id: 3, nome: 'Pedro Oliveira' }
+        { id: 1, nome: 'Juan Pérez' },
+        { id: 2, nome: 'María Gómez' },
+        { id: 3, nome: 'Pedro Rodríguez' }
     ];
     
     clientesMock.forEach(cliente => {
@@ -217,14 +217,14 @@ function carregarClientes() {
 function carregarVeiculosCliente() {
     const clienteId = document.getElementById('venda-cliente').value;
     const select = document.getElementById('venda-veiculo');
-    select.innerHTML = '<option value="">Selecione um veículo</option>';
+    select.innerHTML = '<option value="">Seleccione un vehículo</option>';
     
     if (!clienteId) return;
     
-    // Simular carregamento de veículos do cliente
+    // Simular carga de vehículos del cliente
     const veiculosMock = [
-        { id: 1, placa: 'ABC-1234', modelo: 'Civic 2020' },
-        { id: 2, placa: 'DEF-5678', modelo: 'Corolla 2019' }
+        { id: 1, placa: 'ABC123', modelo: 'Civic 2020' },
+        { id: 2, placa: 'DEF456', modelo: 'Corolla 2019' }
     ];
     
     veiculosMock.forEach(veiculo => {
@@ -238,7 +238,7 @@ function carregarVeiculosCliente() {
 function carregarItensDisponiveis() {
     const tipo = document.getElementById('item-tipo').value;
     const select = document.getElementById('item-disponivel');
-    select.innerHTML = '<option value="">Selecione um item</option>';
+    select.innerHTML = '<option value="">Seleccione un elemento</option>';
     
     if (!tipo) return;
     
@@ -246,22 +246,22 @@ function carregarItensDisponiveis() {
     
     if (tipo === 'produto') {
         itensMock = [
-            { id: 1, nome: 'Óleo Motor 5W30', preco: 35.00 },
-            { id: 2, nome: 'Filtro de Ar', preco: 25.00 },
-            { id: 3, nome: 'Pastilha de Freio', preco: 80.00 }
+            { id: 1, nome: 'Aceite Motor 5W30', preco: 35.00 },
+            { id: 2, nome: 'Filtro de Aire', preco: 25.00 },
+            { id: 3, nome: 'Pastilla de Freno', preco: 80.00 }
         ];
     } else if (tipo === 'servico') {
         itensMock = [
-            { id: 1, nome: 'Troca de Óleo', preco: 50.00 },
-            { id: 2, nome: 'Alinhamento', preco: 80.00 },
-            { id: 3, nome: 'Balanceamento', preco: 60.00 }
+            { id: 1, nome: 'Cambio de Aceite', preco: 50.00 },
+            { id: 2, nome: 'Alineación', preco: 80.00 },
+            { id: 3, nome: 'Balanceo', preco: 60.00 }
         ];
     }
     
     itensMock.forEach(item => {
         const option = document.createElement('option');
         option.value = JSON.stringify(item);
-        option.textContent = `${item.nome} - R$ ${item.preco.toFixed(2)}`;
+        option.textContent = `${item.nome} - $ ${item.preco.toFixed(2)}`;
         select.appendChild(option);
     });
 }
@@ -272,7 +272,7 @@ function adicionarItem() {
     const quantidadeInput = document.getElementById('item-quantidade');
     
     if (!tipoSelect.value || !itemSelect.value || !quantidadeInput.value) {
-        alert('Por favor, preencha todos os campos do item.');
+        alert('Por favor, complete todos los campos del elemento.');
         return;
     }
     
@@ -294,9 +294,9 @@ function adicionarItem() {
     atualizarTabelaItens();
     calcularTotais();
     
-    // Limpar campos
+    // Limpiar campos
     tipoSelect.value = '';
-    itemSelect.innerHTML = '<option value="">Selecione um item</option>';
+    itemSelect.innerHTML = '<option value="">Seleccione un elemento</option>';
     quantidadeInput.value = 1;
 }
 
@@ -310,7 +310,7 @@ function atualizarTabelaItens() {
     const tbody = document.getElementById('itens-venda-body');
     
     if (itensVenda.length === 0) {
-        tbody.innerHTML = '<tr class="empty-state"><td colspan="6" class="text-center">Nenhum item adicionado</td></tr>';
+        tbody.innerHTML = '<tr class="empty-state"><td colspan="6" class="text-center">Ningún elemento agregado</td></tr>';
         return;
     }
     
@@ -319,8 +319,8 @@ function atualizarTabelaItens() {
             <td>${item.nome}</td>
             <td><span class="badge badge-${item.tipo === 'produto' ? 'primary' : 'success'}">${item.tipo}</span></td>
             <td>${item.quantidade}</td>
-            <td>R$ ${item.valor_unitario.toFixed(2)}</td>
-            <td>R$ ${item.valor_total.toFixed(2)}</td>
+            <td>$ ${item.valor_unitario.toFixed(2)}</td>
+            <td>$ ${item.valor_total.toFixed(2)}</td>
             <td>
                 <button type="button" class="btn btn-sm btn-danger" onclick="removerItem(${item.id})">
                     <i class="fas fa-trash"></i>
@@ -336,16 +336,16 @@ function calcularTotais() {
     const valorDesconto = (subtotal * desconto) / 100;
     const total = subtotal - valorDesconto;
     
-    document.getElementById('venda-subtotal').textContent = `R$ ${subtotal.toFixed(2)}`;
-    document.getElementById('venda-valor-desconto').textContent = `R$ ${valorDesconto.toFixed(2)}`;
-    document.getElementById('venda-total').textContent = `R$ ${total.toFixed(2)}`;
+    document.getElementById('venda-subtotal').textContent = `$ ${subtotal.toFixed(2)}`;
+    document.getElementById('venda-valor-desconto').textContent = `$ ${valorDesconto.toFixed(2)}`;
+    document.getElementById('venda-total').textContent = `$ ${total.toFixed(2)}`;
 }
 
 function salvarVenda(event) {
     event.preventDefault();
     
     if (itensVenda.length === 0) {
-        alert('Adicione pelo menos um item à venda.');
+        alert('Agregue al menos un elemento a la venta.');
         return;
     }
     
@@ -358,20 +358,20 @@ function salvarVenda(event) {
     venda.total = venda.subtotal - venda.valor_desconto;
     venda.data_venda = new Date().toISOString();
     
-    console.log('Salvando venda:', venda);
+    console.log('Guardando venta:', venda);
     
-    // Aqui você implementaria a chamada para a API
+    // Aquí implementaría la llamada para la API
     fecharModalVenda();
     
-    // Recarregar a tabela de vendas
+    // Recargar la tabla de ventas
     if (typeof carregarVendas === 'function') {
         carregarVendas();
     }
     
-    alert('Venda salva com sucesso!');
+    alert('Venta guardada con éxito!');
 }
 
-// Mostrar/ocultar campos de parcelas
+// Mostrar/ocultar campos de cuotas
 document.getElementById('venda-forma-pagamento').addEventListener('change', function() {
     const parcelasContainer = document.getElementById('parcelas-container');
     if (this.value === 'prazo' || this.value === 'cartao_credito') {
@@ -381,7 +381,7 @@ document.getElementById('venda-forma-pagamento').addEventListener('change', func
     }
 });
 
-// Fechar modal ao clicar fora dele
+// Cerrar modal al hacer clic fuera de él
 document.addEventListener('click', function(event) {
     const modal = document.getElementById('venda-modal');
     if (event.target === modal) {

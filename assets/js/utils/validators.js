@@ -25,34 +25,52 @@ class Validator {
             message: ERROR_MESSAGES.REQUIRED_FIELD
         });
         
-        // Regra: Email válido
+        // Regla: Email válido
         this.rules.set('email', {
             validate: (value) => {
-                if (!value) return true; // Opcional se não for required
+                if (!value) return true;
                 return REGEX_PATTERNS.EMAIL.test(value);
             },
             message: ERROR_MESSAGES.INVALID_EMAIL
         });
-        
-        // Regra: CPF válido
+
+        // Regla: DNI / CUIL válido argentino
+        this.rules.set('dni', {
+            validate: (value) => {
+                if (!value) return true;
+                return typeof validateDNI === 'function' ? validateDNI(value)
+                    : REGEX_PATTERNS.DNI.test(value.replace(/\D/g, ''));
+            },
+            message: ERROR_MESSAGES.INVALID_DNI
+        });
         this.rules.set('cpf', {
             validate: (value) => {
                 if (!value) return true;
-                return validateCPF(value);
+                return typeof validateDNI === 'function' ? validateDNI(value)
+                    : REGEX_PATTERNS.DNI.test(value.replace(/\D/g, ''));
             },
-            message: ERROR_MESSAGES.INVALID_CPF
+            message: ERROR_MESSAGES.INVALID_DNI
         });
-        
-        // Regra: CNPJ válido
+
+        // Regla: CUIT válido argentino
+        this.rules.set('cuit', {
+            validate: (value) => {
+                if (!value) return true;
+                return typeof validarCUIT === 'function' ? validarCUIT(value)
+                    : REGEX_PATTERNS.CUIT.test(value);
+            },
+            message: ERROR_MESSAGES.INVALID_CUIT
+        });
         this.rules.set('cnpj', {
             validate: (value) => {
                 if (!value) return true;
-                return validateCNPJ(value);
+                return typeof validarCUIT === 'function' ? validarCUIT(value)
+                    : REGEX_PATTERNS.CUIT.test(value);
             },
-            message: ERROR_MESSAGES.INVALID_CNPJ
+            message: ERROR_MESSAGES.INVALID_CUIT
         });
-        
-        // Regra: Telefone válido
+
+        // Regla: Teléfono válido
         this.rules.set('phone', {
             validate: (value) => {
                 if (!value) return true;
@@ -61,8 +79,8 @@ class Validator {
             },
             message: ERROR_MESSAGES.INVALID_PHONE
         });
-        
-        // Regra: Placa válida
+
+        // Regla: Patente válida (argentina)
         this.rules.set('plate', {
             validate: (value) => {
                 if (!value) return true;
@@ -70,14 +88,21 @@ class Validator {
             },
             message: ERROR_MESSAGES.INVALID_PLATE
         });
-        
-        // Regra: CEP válido
+
+        // Regla: CPA válido (Código Postal Argentino)
+        this.rules.set('cpa', {
+            validate: (value) => {
+                if (!value) return true;
+                return REGEX_PATTERNS.CPA.test(value);
+            },
+            message: ERROR_MESSAGES.INVALID_CPA
+        });
         this.rules.set('cep', {
             validate: (value) => {
                 if (!value) return true;
-                return REGEX_PATTERNS.CEP.test(value);
+                return REGEX_PATTERNS.CPA.test(value);
             },
-            message: ERROR_MESSAGES.INVALID_CEP
+            message: ERROR_MESSAGES.INVALID_CPA
         });
         
         // Regra: Data válida
@@ -99,25 +124,22 @@ class Validator {
             message: ERROR_MESSAGES.INVALID_NUMBER
         });
         
-        // Regra: Tamanho mínimo
         this.rules.set('minLength', {
             validate: (value, param) => {
                 if (!value) return true;
                 return value.toString().length >= param;
             },
-            message: (param) => `Mínimo de ${param} caracteres`
+            message: (param) => `Mínimo ${param} caracteres`
         });
         
-        // Regra: Tamanho máximo
         this.rules.set('maxLength', {
             validate: (value, param) => {
                 if (!value) return true;
                 return value.toString().length <= param;
             },
-            message: (param) => `Máximo de ${param} caracteres`
+            message: (param) => `Máximo ${param} caracteres`
         });
         
-        // Regra: Valor mínimo
         this.rules.set('min', {
             validate: (value, param) => {
                 if (!value) return true;
@@ -126,7 +148,6 @@ class Validator {
             message: (param) => `Valor mínimo: ${param}`
         });
         
-        // Regra: Valor máximo
         this.rules.set('max', {
             validate: (value, param) => {
                 if (!value) return true;
@@ -152,7 +173,7 @@ class Validator {
             const ruleConfig = this.rules.get(ruleName);
             
             if (!ruleConfig) {
-                console.warn(`Regra de validação não encontrada: ${ruleName}`);
+                console.warn(`Regla de validación no encontrada: ${ruleName}`);
                 continue;
             }
             
@@ -373,17 +394,18 @@ class Validator {
     }
 }
 
-// Esquemas de validação para entidades principais
+// Esquemas de validación para entidades principales (compatibilidad: las keys .cpf/.cnpj/.cep
+//  se mantienen por compatibilidad con datos antiguos guardados en Storage).
 const ValidationSchemas = {
     CLIENTE: {
         nome: 'required|minLength:2|maxLength:100',
-        cpf: 'required|cpf',
+        cpf: 'required|dni',
         telefone: 'required|phone',
         email: 'email|maxLength:100',
         endereco: 'maxLength:200',
-        cep: 'cep'
+        cep: 'cpa'
     },
-    
+
     VEICULO: {
         clienteId: 'required',
         placa: 'required|plate',
@@ -393,7 +415,7 @@ const ValidationSchemas = {
         cor: 'maxLength:30',
         km: 'number|min:0'
     },
-    
+
     SERVICO: {
         clienteId: 'required',
         veiculoId: 'required',
@@ -403,7 +425,7 @@ const ValidationSchemas = {
         valorMaoObra: 'number|min:0',
         valorPecas: 'number|min:0'
     },
-    
+
     PRODUTO: {
         codigo: 'required|minLength:3|maxLength:20',
         nome: 'required|minLength:2|maxLength:100',
@@ -413,7 +435,7 @@ const ValidationSchemas = {
         precoCusto: 'number|min:0',
         precoVenda: 'required|number|min:0'
     },
-    
+
     VENDA: {
         clienteId: 'required',
         valor: 'required|number|min:0.01',
@@ -422,84 +444,79 @@ const ValidationSchemas = {
     }
 };
 
-// Validações específicas do negócio
+// Validaciones específicas de negocio
 const BusinessValidator = {
     /**
-     * Validar duplicidade de CPF
+     * Validar duplicidad de DNI/CUIT/CUIL
      */
-    validateUniqueCPF(cpf, excludeId = null) {
+    validateUniqueCPF(val, excludeId = null) { return BusinessValidator.validateUniqueDNI(val, excludeId); },
+    validateUniqueDNI(val, excludeId = null) {
         const clientes = StorageManager.get(STORAGE_KEYS.CLIENTES, []);
-        return !clientes.some(cliente => 
-            cliente.cpf === cpf && cliente.id !== excludeId
-        );
+        return !clientes.some(cliente => cliente.cpf === val && cliente.id !== excludeId);
     },
-    
+
     /**
-     * Validar duplicidade de placa
+     * Validar duplicidad de patente
      */
     validateUniquePlate(placa, excludeId = null) {
         const veiculos = StorageManager.get(STORAGE_KEYS.VEICULOS, []);
-        return !veiculos.some(veiculo => 
-            veiculo.placa.toUpperCase() === placa.toUpperCase() && veiculo.id !== excludeId
-        );
+        return !veiculos.some(v => v.placa.toUpperCase() === placa.toUpperCase() && v.id !== excludeId);
     },
-    
+
     /**
-     * Validar duplicidade de código de produto
+     * Validar duplicidad de código de producto
      */
     validateUniqueProductCode(codigo, excludeId = null) {
         const produtos = StorageManager.get(STORAGE_KEYS.PRODUTOS, []);
-        return !produtos.some(produto => 
-            produto.codigo.toUpperCase() === codigo.toUpperCase() && produto.id !== excludeId
-        );
+        return !produtos.some(p => p.codigo.toUpperCase() === codigo.toUpperCase() && p.id !== excludeId);
     },
-    
+
     /**
-     * Validar se cliente existe
+     * Validar existencia de cliente
      */
     validateClientExists(clienteId) {
         const clientes = StorageManager.get(STORAGE_KEYS.CLIENTES, []);
-        return clientes.some(cliente => cliente.id === clienteId);
+        return clientes.some(c => c.id === clienteId);
     },
-    
+
     /**
-     * Validar se veículo existe
+     * Validar existencia de vehículo
      */
     validateVehicleExists(veiculoId) {
         const veiculos = StorageManager.get(STORAGE_KEYS.VEICULOS, []);
-        return veiculos.some(veiculo => veiculo.id === veiculoId);
+        return veiculos.some(v => v.id === veiculoId);
     },
-    
+
     /**
-     * Validar se produto existe
+     * Validar existencia de producto
      */
     validateProductExists(produtoId) {
         const produtos = StorageManager.get(STORAGE_KEYS.PRODUTOS, []);
-        return produtos.some(produto => produto.id === produtoId);
+        return produtos.some(p => p.id === produtoId);
     },
-    
+
     /**
-     * Validar estoque suficiente
+     * Validar stock suficiente
      */
     validateSufficientStock(produtoId, quantidade) {
         const produtos = StorageManager.get(STORAGE_KEYS.PRODUTOS, []);
         const produto = produtos.find(p => p.id === produtoId);
         return produto && produto.quantidade >= quantidade;
     },
-    
+
     /**
-     * Validar data não no passado
+     * Validar fecha no anterior al día de hoy
      */
     validateFutureDate(date) {
-        const hoje = new Date();
-        hoje.setHours(0, 0, 0, 0);
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
         const checkDate = new Date(date);
         checkDate.setHours(0, 0, 0, 0);
-        return checkDate >= hoje;
+        return checkDate >= hoy;
     },
-    
+
     /**
-     * Validar margem de lucro
+     * Validar margen de beneficio (precioVenda > precoCusto)
      */
     validateProfitMargin(precoCusto, precoVenda) {
         if (!precoCusto || !precoVenda) return true;
@@ -507,17 +524,15 @@ const BusinessValidator = {
     }
 };
 
-// Utilitários de validação
+// Utilitarios de validación
 const ValidationUtils = {
     /**
-     * Sanitizar dados de entrada
+     * Sanitizar datos de entrada
      */
     sanitizeInput(data) {
         const sanitized = {};
-        
         for (const [key, value] of Object.entries(data)) {
             if (typeof value === 'string') {
-                // Remover scripts e tags HTML
                 sanitized[key] = value
                     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
                     .replace(/<[^>]*>/g, '')
@@ -526,21 +541,22 @@ const ValidationUtils = {
                 sanitized[key] = value;
             }
         }
-        
         return sanitized;
     },
-    
+
     /**
-     * Normalizar dados
+     * Normalizar datos (aplica máscaras DNI/CUIT/CPA etc)
      */
     normalizeData(data, type) {
         const normalized = { ...data };
-        
+        const fmtCpfCnpj = window.OficinaHelpers?.formatCpfCnpj || formatCpfCnpj;
+        const fmtPhone = window.OficinaHelpers?.formatPhone || formatPhone;
+        const fmtCep = window.OficinaHelpers?.formatCep || formatCep;
         switch (type) {
             case 'cliente':
-                if (normalized.cpf) normalized.cpf = formatCPF(normalized.cpf);
-                if (normalized.telefone) normalized.telefone = formatPhone(normalized.telefone);
-                if (normalized.cep) normalized.cep = formatCEP(normalized.cep);
+                if (normalized.cpf) normalized.cpf = fmtCpfCnpj(normalized.cpf);
+                if (normalized.telefone) normalized.telefone = fmtPhone(normalized.telefone);
+                if (normalized.cep) normalized.cep = fmtCep(normalized.cep);
                 if (normalized.nome) normalized.nome = titleCase(normalized.nome);
                 if (normalized.email) normalized.email = normalized.email.toLowerCase();
                 break;
@@ -568,23 +584,20 @@ const ValidationUtils = {
     validateFile(file, options = {}) {
         const errors = [];
         
-        // Verificar se arquivo existe
         if (!file) {
-            errors.push('Nenhum arquivo selecionado');
+            errors.push('Ningún archivo seleccionado');
             return { isValid: false, errors };
         }
         
-        // Verificar tamanho
         const maxSize = options.maxSize || SYSTEM_LIMITS.MAX_FILE_SIZE;
         if (file.size > maxSize) {
-            errors.push(`Arquivo muito grande. Máximo: ${formatBytes(maxSize)}`);
+            errors.push(`Archivo demasiado grande. Máximo: ${formatBytes(maxSize)}`);
         }
         
-        // Verificar tipo
         if (options.allowedTypes) {
             const fileType = file.type || file.name.split('.').pop().toLowerCase();
             if (!options.allowedTypes.includes(fileType)) {
-                errors.push(`Tipo de arquivo não permitido. Aceitos: ${options.allowedTypes.join(', ')}`);
+                errors.push(`Tipo de archivo no permitido. Aceptados: ${options.allowedTypes.join(', ')}`);
             }
         }
         
@@ -615,4 +628,4 @@ if (typeof module !== 'undefined' && module.exports) {
     window.validator = validator;
 }
 
-console.log('✅ Sistema de validações carregado');
+console.log('✅ Sistema de validaciones cargado');

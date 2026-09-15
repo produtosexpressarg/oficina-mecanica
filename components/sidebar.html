@@ -1,63 +1,33 @@
 <!-- Sidebar Component -->
 <aside class="sidebar">
     <div class="sidebar-header">
-        <img src="../assets/images/logo.png" alt="Logo Oficina Mecânica" class="logo">
-        <h3>Oficina Mecânica</h3>
+        <div class="logo" style="justify-content:center;color:#fff;font-size:1.25rem;flex-direction:column;gap:8px;">
+            <i class="fas fa-wrench" style="font-size:2.5rem;"></i>
+            <span>Taller Mecánico</span>
+        </div>
     </div>
     <nav class="sidebar-nav">
-        <ul class="sidebar-menu">
-            <li class="nav-item">
-                <a href="../index.html" class="nav-link">
-                    <i class="fas fa-home"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="../pages/clientes.html" class="nav-link">
-                    <i class="fas fa-users"></i>
-                    <span>Clientes</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="../pages/veiculos.html" class="nav-link">
-                    <i class="fas fa-car"></i>
-                    <span>Veículos</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="../pages/servicos.html" class="nav-link">
-                    <i class="fas fa-tools"></i>
-                    <span>Serviços</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="../pages/estoque.html" class="nav-link">
-                    <i class="fas fa-boxes"></i>
-                    <span>Estoque</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="../pages/vendas.html" class="nav-link">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span>Vendas</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="../pages/notas-fiscais.html" class="nav-link">
-                    <i class="fas fa-file-invoice"></i>
-                    <span>Notas Fiscais</span>
-                </a>
-            </li>
+        <ul>
+            <li><a href="../index.html" class="nav-link"><i class="fas fa-tachometer-alt"></i><span>Panel Principal</span></a></li>
+            <li><a href="../pages/clientes.html" class="nav-link"><i class="fas fa-users"></i><span>Clientes</span></a></li>
+            <li><a href="../pages/veiculos.html" class="nav-link"><i class="fas fa-car"></i><span>Vehículos</span></a></li>
+            <li><a href="../pages/servicos.html" class="nav-link"><i class="fas fa-clipboard-list"></i><span>Órdenes de Servicio</span></a></li>
+            <li><a href="../pages/estoque.html" class="nav-link"><i class="fas fa-boxes"></i><span>Stock</span></a></li>
+            <li><a href="../pages/vendas.html" class="nav-link"><i class="fas fa-cash-register"></i><span>Ventas y Cobros</span></a></li>
+            <li><a href="../pages/notas-fiscais.html" class="nav-link"><i class="fas fa-file-invoice"></i><span>Facturas</span></a></li>
+            <li><a href="../comercio-exterior/index.html" class="nav-link"><i class="fas fa-globe-americas"></i><span>Comercio Exterior</span></a></li>
         </ul>
     </nav>
     <div class="sidebar-footer">
-        <a href="#" class="nav-link">
-            <i class="fas fa-cog"></i>
-            <span>Configurações</span>
-        </a>
-        <a href="#" class="nav-link">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>Sair</span>
-        </a>
+        <div style="padding:12px 18px;border-top:1px solid #34495e;">
+            <div style="display:flex;align-items:center;gap:8px;color:#ecf0f1;">
+                <i class="fas fa-user-circle" style="font-size:1.5rem;"></i>
+                <div>
+                    <div style="font-weight:600;font-size:0.85rem;">Administrador</div>
+                    <div id="currentDate" style="font-size:0.7rem;color:#95a5a6;"></div>
+                </div>
+            </div>
+            <button style="margin-top:10px;width:100%;background:#e74c3c;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem;font-weight:500;" onclick="logoutSidebar()"><i class="fas fa-sign-out-alt" style="margin-right:4px;"></i>Cerrar Sesión</button>
+        </div>
     </div>
 </aside>

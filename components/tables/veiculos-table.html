@@ -1,10 +1,10 @@
-<!-- Tabela de Veículos -->
+<!-- Tabla de Vehículos -->
 <div class="table-container">
     <div class="table-header">
-        <h3>Cadastro de Veículos</h3>
+        <h3>Registro de Vehículos</h3>
         <div class="table-actions">
             <button class="btn btn-primary" id="btn-novo-veiculo">
-                <i class="fas fa-plus"></i> Novo Veículo
+                <i class="fas fa-plus"></i> Nuevo Vehículo
             </button>
             <button class="btn btn-secondary" id="btn-exportar-veiculos">
                 <i class="fas fa-download"></i> Exportar
@@ -14,9 +14,9 @@
     
     <div class="table-filters">
         <div class="filter-group">
-            <input type="text" placeholder="Buscar veículo..." id="search-veiculo" class="search-input">
+            <input type="text" placeholder="Buscar vehículo..." id="search-veiculo" class="search-input">
             <select id="filter-marca" class="filter-select">
-                <option value="">Todas as Marcas</option>
+                <option value="">Todas las Marcas</option>
                 <option value="volkswagen">Volkswagen</option>
                 <option value="ford">Ford</option>
                 <option value="chevrolet">Chevrolet</option>
@@ -31,20 +31,20 @@
         <table class="data-table" id="veiculos-table">
             <thead>
                 <tr>
-                    <th>Placa</th>
-                    <th>Proprietário</th>
+                    <th>Patente</th>
+                    <th>Propietario</th>
                     <th>Marca</th>
                     <th>Modelo</th>
-                    <th>Ano</th>
-                    <th>Cor</th>
-                    <th>Combustível</th>
+                    <th>Año</th>
+                    <th>Color</th>
+                    <th>Combustible</th>
                     <th>KM</th>
-                    <th>Cadastro</th>
-                    <th>Ações</th>
+                    <th>Registro</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Dados serão carregados via JavaScript -->
+                <!-- Datos se cargarán via JavaScript -->
             </tbody>
         </table>
     </div>
@@ -58,7 +58,7 @@
                 <i class="fas fa-chevron-left"></i>
             </button>
             <span class="pagination-numbers" id="pagination-numbers">
-                <!-- Números das páginas serão gerados via JavaScript -->
+                <!-- Números de páginas se generarán via JavaScript -->
             </span>
             <button class="btn-pagination" id="btn-next">
                 <i class="fas fa-chevron-right"></i>

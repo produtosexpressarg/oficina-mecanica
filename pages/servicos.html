@@ -1,18 +1,21 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="es-AR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Gestão de Serviços - Sistema de Gestão para Oficina Mecânica">
-    <title>Serviços - Sistema de Gestão Oficina</title>
-    
+    <meta name="description" content="Gestión de Órdenes de Servicio - Sistema de Gestión para Taller Mecánico">
+    <title>Órdenes de Servicio - Sistema de Gestión Taller</title>
+
     <!-- Design System CSS -->
     <link rel="stylesheet" href="../assets/css/design-system.css">
-    
+    <link rel="stylesheet" href="../assets/css/layout.css">
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Constants -->
+    <script src="../assets/js/config/constants.js"></script>
     <style>
-        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -24,13 +27,11 @@
             background-color: rgba(0, 0, 0, 0.5);
             animation: fadeIn 0.3s ease;
         }
-
         .modal.show {
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
         .modal-content {
             background: white;
             border-radius: var(--border-radius);
@@ -40,7 +41,6 @@
             overflow-y: auto;
             animation: slideIn 0.3s ease;
         }
-
         .modal-header {
             background: var(--primary-color);
             color: white;
@@ -49,13 +49,11 @@
             justify-content: space-between;
             align-items: center;
         }
-
         .modal-title {
             font-size: 1.2rem;
             font-weight: 600;
             margin: 0;
         }
-
         .modal-close {
             background: none;
             border: none;
@@ -71,15 +69,8 @@
             border-radius: 50%;
             transition: var(--transition);
         }
-
-        .modal-close:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .modal-body {
-            padding: 1.5rem;
-        }
-
+        .modal-close:hover { background: rgba(255, 255, 255, 0.2); }
+        .modal-body { padding: 1.5rem; }
         .modal-footer {
             padding: 1rem 1.5rem;
             background: var(--background-secondary);
@@ -87,161 +78,489 @@
             justify-content: flex-end;
             gap: 1rem;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .modal-form {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: var(--spacing-md);
         }
-        
-        .form-group-full {
-            grid-column: 1 / -1;
+        .form-group-full { grid-column: 1 / -1; }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
         }
+        .pagination button {
+            padding: 0.4rem 0.8rem;
+            border: 1px solid var(--border-color);
+            background: white;
+            cursor: pointer;
+            border-radius: var(--border-radius);
+        }
+        .pagination button.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        .pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .badge {
+            padding: 0.25rem 0.6rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-warning { background: #fff3cd; color: #856404; }
+        .badge-danger  { background: #f8d7da; color: #721c24; }
+        .badge-info    { background: #d1ecf1; color: #0c5460; }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <i class="fas fa-wrench"></i>
-                    <h1>Sistema de Gestão - Oficina Mecânica</h1>
-                </div>
-                <div class="user-info">
-                    <span id="currentDate"></span>
-                    <div class="user-menu">
-                        <i class="fas fa-user-circle"></i>
-                        <span>Administrador</span>
+<div class="main-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo" style="justify-content:center;color:#fff;font-size:1.25rem;flex-direction:column;gap:8px;">
+                <i class="fas fa-wrench" style="font-size:2.5rem;"></i>
+                <span>Taller Mecánico</span>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="dashboard.html" class="nav-link"><i class="fas fa-tachometer-alt"></i><span>Panel Principal</span></a></li>
+                <li><a href="clientes.html" class="nav-link"><i class="fas fa-users"></i><span>Clientes</span></a></li>
+                <li><a href="veiculos.html" class="nav-link"><i class="fas fa-car"></i><span>Vehículos</span></a></li>
+                <li><a href="servicos.html" class="nav-link active"><i class="fas fa-clipboard-list"></i><span>Órdenes de Servicio</span></a></li>
+                <li><a href="estoque.html" class="nav-link"><i class="fas fa-boxes"></i><span>Stock</span></a></li>
+                <li><a href="vendas.html" class="nav-link"><i class="fas fa-cash-register"></i><span>Ventas y Cobros</span></a></li>
+                <li><a href="notas-fiscais.html" class="nav-link"><i class="fas fa-file-invoice"></i><span>Facturas</span></a></li>
+                <li><a href="../comercio-exterior/index.html" class="nav-link"><i class="fas fa-globe-americas"></i><span>Comercio Exterior</span></a></li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <div style="padding:12px 18px;border-top:1px solid #34495e;">
+                <div style="display:flex;align-items:center;gap:8px;color:#ecf0f1;">
+                    <i class="fas fa-user-circle" style="font-size:1.5rem;"></i>
+                    <div>
+                        <div style="font-weight:600;font-size:0.85rem;">Administrador</div>
+                        <div id="currentDate" style="font-size:0.7rem;color:#95a5a6;"></div>
                     </div>
                 </div>
+                <button style="margin-top:10px;width:100%;background:#e74c3c;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem;font-weight:500;" onclick="logoutSidebar()"><i class="fas fa-sign-out-alt" style="margin-right:4px;"></i>Cerrar Sesión</button>
             </div>
         </div>
-    </header>
-
-    <!-- Navigation -->
-    <nav class="nav-menu">
-        <div class="container">
-            <div class="nav-links">
-                <a href="dashboard.html" class="nav-link">
-                    <i class="fas fa-tachometer-alt"></i>
-                    Dashboard
-                </a>
-                <a href="clientes.html" class="nav-link">
-                    <i class="fas fa-users"></i>
-                    Clientes
-                </a>
-                <a href="veiculos.html" class="nav-link">
-                    <i class="fas fa-car"></i>
-                    Veículos
-                </a>
-                <a href="servicos.html" class="nav-link active">
-                    <i class="fas fa-clipboard-list"></i>
-                    Ordens de Serviço
-                </a>
-                <a href="estoque.html" class="nav-link">
-                    <i class="fas fa-boxes"></i>
-                    Estoque
-                </a>
-                <a href="notas-fiscais.html" class="nav-link">
-                    <i class="fas fa-file-invoice"></i>
-                    Notas Fiscais
-                </a>
-                <a href="vendas.html" class="nav-link">
-                    <i class="fas fa-cash-register"></i>
-                    Vendas & Pagamentos
-                </a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
+    </aside>
     <main class="main-content">
-        <div class="container">
-            <div class="page-header">
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <button class="btn btn-outline btn-sm" onclick="window.location.href='dashboard.html'">
-                        <i class="fas fa-arrow-left"></i> Voltar
-                    </button>
-                    <h1 class="page-title">Gerenciamento de Serviços</h1>
-                </div>
-                <button id="btn-novo-servico" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Novo Serviço
+        <div class="page-header d-flex justify-between align-center" style="border-bottom:none;padding-bottom:0;margin-bottom:20px;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button class="btn btn-outline btn-sm" onclick="window.location.href='dashboard.html'">
+                    <i class="fas fa-arrow-left"></i> Volver
                 </button>
+                <h1 class="page-title">Gestión de Órdenes de Servicio</h1>
             </div>
-            
+            <button id="btn-novo-servico" class="btn btn-primary" onclick="abrirModalServicio()">
+                <i class="fas fa-plus"></i> Nueva Orden
+            </button>
+        </div>
+        <div class="container">
+
+            <!-- Filtros -->
             <div class="card">
                 <div class="card-body">
                     <div class="filter-container">
                         <div class="search-box">
-                            <input type="text" id="search-servico" class="form-control" placeholder="Buscar serviço...">
-                            <button class="btn btn-outline-primary"><i class="fas fa-search"></i></button>
+                            <input type="text" id="search-servico" class="form-control" placeholder="Buscar orden por cliente, vehículo, tipo..." onkeyup="renderizarServicos()">
+                            <button class="btn btn-outline-primary" onclick="renderizarServicios()"><i class="fas fa-search"></i></button>
                         </div>
                         <div class="filter-options">
-                            <select id="filter-categoria" class="form-select">
-                                <option value="">Todas as categorias</option>
-                                <option value="manutencao">Manutenção</option>
-                                <option value="revisao">Revisão</option>
-                                <option value="reparo">Reparo</option>
-                                <option value="eletrica">Elétrica</option>
+                            <select id="filter-categoria" class="form-select" onchange="renderizarServicios()">
+                                <option value="">Todas las categorías</option>
+                                <option value="manutencao">Mantenimiento</option>
+                                <option value="revisao">Revisión</option>
+                                <option value="reparo">Reparación</option>
+                                <option value="eletrica">Eléctrica</option>
+                            </select>
+                            <select id="filter-status" class="form-select" onchange="renderizarServicios()">
+                                <option value="">Todos los estados</option>
+                                <option value="aberto">Abierta</option>
+                                <option value="em_andamento">En Curso</option>
+                                <option value="concluido">Finalizada</option>
+                                <option value="cancelado">Cancelada</option>
                             </select>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
+            <!-- Tabla -->
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">Lista de Serviços</h2>
+                    <h2 class="card-title">Lista de Órdenes</h2>
+                    <span id="total-registros" class="text-muted small">0 registros</span>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Nome</th>
-                                    <th>Descrição</th>
+                                    <th>N°</th>
+                                    <th>Fecha</th>
+                                    <th>Cliente</th>
+                                    <th>Vehículo</th>
+                                    <th>Tipo / Categoría</th>
                                     <th>Valor</th>
-                                    <th>Tempo Previsto</th>
-                                    <th>Categoria</th>
-                                    <th>Status</th>
-                                    <th>Ações</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="servicos-table-body">
-                                <!-- Dados serão carregados via JavaScript -->
-                            </tbody>
+                            <tbody id="servicos-table-body"></tbody>
                         </table>
                     </div>
+                    <div class="pagination" id="pagination"></div>
                 </div>
+            </div>
+    </main>
+</div>
+
+    <!-- Modal Servicio -->
+    <div id="servico-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="servico-modal-title">Nueva Orden de Servicio</h3>
+                <button class="modal-close" onclick="fecharModalServicio()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="servico-form" class="modal-form">
+                    <div class="form-group">
+                        <label for="s-cliente">Cliente *</label>
+                        <select id="s-cliente" class="form-control" required onchange="popularVehiculosCliente()">
+                            <option value="">Seleccione un cliente</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="s-veiculo">Vehículo *</label>
+                        <select id="s-veiculo" class="form-control" required>
+                            <option value="">Seleccione primero el cliente</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="s-data">Fecha Ingreso *</label>
+                        <input type="date" id="s-data" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="s-categoria">Categoría *</label>
+                        <select id="s-categoria" class="form-control" required>
+                            <option value="">Seleccione</option>
+                            <option value="manutencao">Mantenimiento</option>
+                            <option value="revisao">Revisión</option>
+                            <option value="reparo">Reparación</option>
+                            <option value="eletrica">Eléctrica</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="s-tipo">Tipo Servicio *</label>
+                        <select id="s-tipo" class="form-control" required>
+                            <option value="">Seleccione tipo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="s-km">Kilometraje</label>
+                        <input type="number" id="s-km" class="form-control" min="0" placeholder="km actuales">
+                    </div>
+                    <div class="form-group">
+                        <label for="s-valor">Valor Estimado ($ ARS) *</label>
+                        <input type="number" id="s-valor" class="form-control" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="s-status">Estado</label>
+                        <select id="s-status" class="form-control">
+                            <option value="aberto">Abierta</option>
+                            <option value="em_andamento">En Curso</option>
+                            <option value="concluido">Finalizada</option>
+                            <option value="cancelado">Cancelada</option>
+                        </select>
+                    </div>
+                    <div class="form-group form-group-full">
+                        <label for="s-descricao">Descripción / Trabajo a Realizar *</label>
+                        <textarea id="s-descricao" class="form-control" rows="3" required placeholder="Detalle los trabajos a realizar..."></textarea>
+                    </div>
+                    <div class="form-group form-group-full">
+                        <label for="s-observacoes">Observaciones</label>
+                        <textarea id="s-observacoes" class="form-control" rows="2" placeholder="Notas adicionales..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="fecharModalServicio()">Cancelar</button>
+                <button type="submit" form="servico-form" class="btn btn-primary">Guardar Orden</button>
             </div>
         </div>
     </div>
-    
-    <div id="servico-modal-container"></div>
-    <div id="footer-container"></div>
-    
-    <script src="../assets/js/app.js"></script>
-    <script src="../js/servicos.js"></script>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Componentes carregados diretamente no HTML
-            fetch('../components/modals/servico-modal.html').then(r => r.text()).then(d => document.getElementById('servico-modal-container').innerHTML = d);
-            fetch('../components/footer.html').then(r => r.text()).then(d => document.getElementById('footer-container').innerHTML = d);
+        function logoutSidebar() { try { localStorage.removeItem('usuarioLogado'); localStorage.removeItem('userLoggedIn'); sessionStorage.removeItem('usuarioLogado'); sessionStorage.removeItem('userLoggedIn'); } catch(_){} window.location.href='../login.html'; }
+        // Variables globales
+        let listaServicos = JSON.parse(localStorage.getItem('oficina_servicos') || '[]');
+        let editandoId = null;
+        let paginaAtual = 1;
+        const itensPorPagina = 10;
+        let clientesStore = [];
+        let veiculosStore = [];
+
+        const CATEGORIA_LABELS = {
+            manutencao: 'Mantenimiento',
+            revisao: 'Revisión',
+            reparo: 'Reparación',
+            eletrica: 'Eléctrica'
+        };
+        const STATUS_CLASS = {
+            aberto: 'badge-info',
+            em_andamento: 'badge-warning',
+            concluido: 'badge-success',
+            cancelado: 'badge-danger'
+        };
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function () {
+            actualizarFecha();
+            clientesStore = JSON.parse(localStorage.getItem('oficina_clientes') || '[]');
+            veiculosStore = JSON.parse(localStorage.getItem('oficina_veiculos') || '[]');
+            popularSelectClientes();
+            popularSelectTipos();
+            document.getElementById('s-data').value = new Date().toISOString().split('T')[0];
+            document.getElementById('servico-form').addEventListener('submit', salvarServico);
+            renderizarServicios();
         });
+
+        function actualizarFecha() {
+            const el = document.getElementById('currentDate');
+            if (el) el.textContent = new Date().toLocaleDateString('es-AR', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            });
+        }
+
+        function popularSelectClientes() {
+            const sel = document.getElementById('s-cliente');
+            sel.innerHTML = '<option value="">Seleccione un cliente</option>';
+            clientesStore.forEach(c => {
+                const o = document.createElement('option');
+                o.value = c.id;
+                o.textContent = (c.nome || c.name || 'Cliente') + ' - ' + (c.telefone || c.phone || '');
+                sel.appendChild(o);
+            });
+        }
+
+        function popularVehiculosCliente() {
+            const clienteId = document.getElementById('s-cliente').value;
+            const sel = document.getElementById('s-veiculo');
+            sel.innerHTML = '<option value="">Sin vehículo asignado</option>';
+            veiculosStore.filter(v => String(v.clienteId) === String(clienteId)).forEach(v => {
+                const o = document.createElement('option');
+                o.value = v.id;
+                const km = v.km ? ` (${Number(v.km).toLocaleString('es-AR')} km)` : '';
+                o.textContent = [v.marca, v.modelo, v.placa ? '· Patente ' + v.placa : ''].filter(Boolean).join(' ') + km;
+                sel.appendChild(o);
+            });
+        }
+
+        function popularSelectTipos() {
+            const sel = document.getElementById('s-tipo');
+            const labels = window.TIPOS_SERVICO_LABELS || {};
+            sel.innerHTML = '<option value="">Seleccione tipo</option>';
+            Object.keys(labels).forEach(k => {
+                const o = document.createElement('option');
+                o.value = k;
+                o.textContent = labels[k];
+                sel.appendChild(o);
+            });
+        }
+
+        function renderizarServicios() {
+            const busca = document.getElementById('search-servico').value.toLowerCase();
+            const catFiltro = document.getElementById('filter-categoria').value;
+            const stFiltro = document.getElementById('filter-status').value;
+            const statusLabels = window.STATUS_LABELS || {};
+
+            let filtrados = listaServicos.filter(s => {
+                const cliente = clientesStore.find(c => String(c.id) === String(s.clienteId));
+                const veiculo = veiculosStore.find(v => String(v.id) === String(s.veiculoId));
+                const haySearch = !busca ||
+                    String(s.id).includes(busca) ||
+                    ((cliente?.nome || cliente?.name || '') + '').toLowerCase().includes(busca) ||
+                    ((veiculo?.marca + ' ' + (veiculo?.modelo || '') + ' ' + (veiculo?.placa || '')) || '').toLowerCase().includes(busca) ||
+                    (s.descricao || '').toLowerCase().includes(busca);
+                return haySearch
+                    && (!catFiltro || s.categoria === catFiltro)
+                    && (!stFiltro || s.status === stFiltro);
+            }).sort((a, b) => new Date(b.data) - new Date(a.data));
+
+            document.getElementById('total-registros').textContent = `${filtrados.length} registros`;
+
+            const tbody = document.getElementById('servicos-table-body');
+            const inicio = (paginaAtual - 1) * itensPorPagina;
+            const fim = inicio + itensPorPagina;
+            const pagina = filtrados.slice(inicio, fim);
+
+            tbody.innerHTML = '';
+            if (pagina.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-secondary)">No se encontraron órdenes de servicio</td></tr>`;
+            } else {
+                pagina.forEach(s => {
+                    const cliente = clientesStore.find(c => String(c.id) === String(s.clienteId));
+                    const veiculo = veiculosStore.find(v => String(v.id) === String(s.veiculoId));
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>#${String(s.id).slice(-6)}</strong></td>
+                        <td>${s.data ? new Date(s.data).toLocaleDateString('es-AR') : '-'}</td>
+                        <td>${cliente ? (cliente.nome || cliente.name) : '—'}</td>
+                        <td>${veiculo ? [veiculo.marca, veiculo.modelo].filter(Boolean).join(' ') + (veiculo.placa ? ' · ' + veiculo.placa : '') : '—'}</td>
+                        <td>
+                            <small class="text-muted">${CATEGORIA_LABELS[s.categoria] || s.categoria || ''}</small><br>
+                            ${(window.TIPOS_SERVICO_LABELS && window.TIPOS_SERVICO_LABELS[s.tipo]) || s.tipo || s.descricao?.slice(0, 40) || ''}
+                        </td>
+                        <td>$ ${Number(s.valor || 0).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        <td><span class="badge ${STATUS_CLASS[s.status] || 'badge-info'}">${statusLabels[s.status] || s.status || 'Abierta'}</span></td>
+                        <td>
+                            <button class="btn btn-outline btn-sm" onclick="editarServico('${s.id}')" title="Editar"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-outline btn-sm" onclick="excluirServico('${s.id}')" title="Eliminar"><i class="fas fa-trash"></i></button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            // Paginación
+            const totalPaginas = Math.ceil(filtrados.length / itensPorPagina);
+            const pagDiv = document.getElementById('pagination');
+            pagDiv.innerHTML = '';
+            if (totalPaginas > 1) {
+                const prev = document.createElement('button');
+                prev.textContent = '← Anterior';
+                prev.disabled = paginaAtual === 1;
+                prev.onclick = () => { paginaAtual--; renderizarServicios(); };
+                pagDiv.appendChild(prev);
+                for (let i = 1; i <= totalPaginas; i++) {
+                    const b = document.createElement('button');
+                    b.textContent = i;
+                    if (i === paginaAtual) b.classList.add('active');
+                    b.onclick = () => { paginaAtual = i; renderizarServicios(); };
+                    pagDiv.appendChild(b);
+                }
+                const next = document.createElement('button');
+                next.textContent = 'Siguiente →';
+                next.disabled = paginaAtual === totalPaginas;
+                next.onclick = () => { paginaAtual++; renderizarServicios(); };
+                pagDiv.appendChild(next);
+            }
+        }
+
+        function abrirModalServicio(id = null) {
+            editandoId = id;
+            const modal = document.getElementById('servico-modal');
+            const title = document.getElementById('servico-modal-title');
+            const form = document.getElementById('servico-form');
+            form.reset();
+            document.getElementById('s-data').value = new Date().toISOString().split('T')[0];
+            popularSelectClientes();
+            document.getElementById('s-veiculo').innerHTML = '<option value="">Seleccione primero el cliente</option>';
+            popularSelectTipos();
+
+            if (id) {
+                const s = listaServicos.find(x => String(x.id) === String(id));
+                if (s) {
+                    title.textContent = 'Editar Orden de Servicio';
+                    document.getElementById('s-cliente').value = s.clienteId || '';
+                    popularVehiculosCliente();
+                    document.getElementById('s-veiculo').value = s.veiculoId || '';
+                    document.getElementById('s-data').value = s.data || '';
+                    document.getElementById('s-categoria').value = s.categoria || '';
+                    document.getElementById('s-tipo').value = s.tipo || '';
+                    document.getElementById('s-km').value = s.km || '';
+                    document.getElementById('s-valor').value = s.valor || 0;
+                    document.getElementById('s-status').value = s.status || 'aberto';
+                    document.getElementById('s-descricao').value = s.descricao || '';
+                    document.getElementById('s-observacoes').value = s.observacoes || '';
+                }
+            } else {
+                title.textContent = 'Nueva Orden de Servicio';
+            }
+            modal.classList.add('show');
+        }
+
+        function fecharModalServicio() {
+            document.getElementById('servico-modal').classList.remove('show');
+            editandoId = null;
+        }
+
+        function salvarServico(e) {
+            e.preventDefault();
+            const success = window.SUCCESS_MESSAGES || {};
+            const error = window.ERROR_MESSAGES || {};
+            const dados = {
+                clienteId: document.getElementById('s-cliente').value,
+                veiculoId: document.getElementById('s-veiculo').value,
+                data: document.getElementById('s-data').value,
+                categoria: document.getElementById('s-categoria').value,
+                tipo: document.getElementById('s-tipo').value,
+                km: Number(document.getElementById('s-km').value) || null,
+                valor: Number(document.getElementById('s-valor').value) || 0,
+                status: document.getElementById('s-status').value,
+                descricao: document.getElementById('s-descricao').value,
+                observacoes: document.getElementById('s-observacoes').value
+            };
+
+            if (!dados.clienteId) {
+                alert(error.CAMPO_OBRIGATORIO || 'Debe seleccionar un cliente');
+                return;
+            }
+
+            if (editandoId) {
+                const idx = listaServicos.findIndex(x => String(x.id) === String(editandoId));
+                if (idx >= 0) listaServicos[idx] = { ...listaServicos[idx], ...dados, atualizadoEm: new Date().toISOString() };
+                notificar(success.ATUALIZADO || 'Orden actualizada correctamente', 'success');
+            } else {
+                dados.id = Date.now().toString();
+                dados.criadoEm = new Date().toISOString();
+                listaServicos.push(dados);
+                notificar(success.CADASTRADO || 'Orden creada correctamente', 'success');
+            }
+
+            localStorage.setItem('oficina_servicos', JSON.stringify(listaServicos));
+            fecharModalServicio();
+            renderizarServicios();
+        }
+
+        function editarServico(id) { abrirModalServicio(id); }
+
+        function excluirServico(id) {
+            const err = window.ERROR_MESSAGES || {};
+            if (!confirm(err.CONFIRMACAO_EXCLUSAO || '¿Está seguro que desea eliminar esta orden?')) return;
+            listaServicos = listaServicos.filter(x => String(x.id) !== String(id));
+            localStorage.setItem('oficina_servicos', JSON.stringify(listaServicos));
+            const ok = window.SUCCESS_MESSAGES || {};
+            notificar(ok.EXCLUIDO || 'Orden eliminada', 'success');
+            renderizarServicios();
+        }
+
+        function notificar(msg, tipo = 'info') {
+            const n = document.createElement('div');
+            n.textContent = msg;
+            n.style.cssText = `
+                position: fixed; top: 20px; right: 20px; padding: 1rem 1.5rem; color: white;
+                border-radius: 4px; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                font-weight: 600;
+                background: ${tipo === 'success' ? '#28a745' : tipo === 'error' ? '#dc3545' : '#007bff'};
+            `;
+            document.body.appendChild(n);
+            setTimeout(() => n.remove(), 3200);
+        }
+
+        window.onclick = function (e) {
+            if (e.target.id === 'servico-modal') fecharModalServicio();
+        };
     </script>
-        </div>
-    </main>
 </body>
 </html>

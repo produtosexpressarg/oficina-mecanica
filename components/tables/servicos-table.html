@@ -1,13 +1,13 @@
-<!-- Tabela de Serviços/Ordens de Serviço -->
+<!-- Tabla de Servicios/Órdenes de Servicio -->
 <div class="table-container">
     <div class="table-header">
-        <h3>Ordens de Serviço</h3>
+        <h3>Órdenes de Servicio</h3>
         <div class="table-actions">
             <button class="btn btn-primary" id="btn-nova-os">
-                <i class="fas fa-plus"></i> Nova OS
+                <i class="fas fa-plus"></i> Nueva OS
             </button>
             <button class="btn btn-info" id="btn-relatorio-servicos">
-                <i class="fas fa-chart-bar"></i> Relatório
+                <i class="fas fa-chart-bar"></i> Reporte
             </button>
             <button class="btn btn-secondary" id="btn-exportar-servicos">
                 <i class="fas fa-download"></i> Exportar
@@ -19,22 +19,22 @@
         <div class="filter-group">
             <input type="text" placeholder="Buscar OS..." id="search-servico" class="search-input">
             <select id="filter-status-servico" class="filter-select">
-                <option value="">Todos os Status</option>
-                <option value="aberta">Aberta</option>
-                <option value="em-andamento">Em Andamento</option>
-                <option value="aguardando-pecas">Aguardando Peças</option>
-                <option value="concluida">Concluída</option>
+                <option value="">Todos los Estados</option>
+                <option value="abierta">Abierta</option>
+                <option value="em-andamento">En Proceso</option>
+                <option value="aguardando-pecas">Esperando Repuestos</option>
+                <option value="concluida">Completada</option>
                 <option value="cancelada">Cancelada</option>
             </select>
             <select id="filter-prioridade" class="filter-select">
-                <option value="">Todas as Prioridades</option>
-                <option value="baixa">Baixa</option>
+                <option value="">Todas las Prioridades</option>
+                <option value="baixa">Baja</option>
                 <option value="normal">Normal</option>
                 <option value="alta">Alta</option>
                 <option value="urgente">Urgente</option>
             </select>
-            <input type="date" id="filter-data-inicio" class="filter-date" placeholder="Data Início">
-            <input type="date" id="filter-data-fim" class="filter-date" placeholder="Data Fim">
+            <input type="date" id="filter-data-inicio" class="filter-date" placeholder="Fecha Inicio">
+            <input type="date" id="filter-data-fim" class="filter-date" placeholder="Fecha Fin">
         </div>
     </div>
 
@@ -44,23 +44,23 @@
                 <tr>
                     <th>OS Nº</th>
                     <th>Cliente</th>
-                    <th>Veículo</th>
-                    <th>Serviço</th>
-                    <th>Mecânico</th>
-                    <th>Status</th>
-                    <th>Prioridade</th>
-                    <th>Valor Total</th>
-                    <th>Data Abertura</th>
-                    <th>Previsão</th>
-                    <th>Ações</th>
+                    <th>Vehículo</th>
+                    <th>Servicio</th>
+                    <th>Mecánico</th>
+                    <th>Estado</th>
+                    <th>Prioridad</th>
+                    <th>Total</th>
+                    <th>Fecha Apertura</th>
+                    <th>Previsión</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Dados serão carregados via JavaScript -->
+                <!-- Datos se cargarán via JavaScript -->
                 <tr class="no-data" style="display: none;">
                     <td colspan="11" class="text-center">
                         <i class="fas fa-clipboard-list"></i>
-                        <p>Nenhuma ordem de serviço encontrada</p>
+                        <p>No se encontraron órdenes de servicio</p>
                     </td>
                 </tr>
             </tbody>
@@ -74,7 +74,7 @@
                     <i class="fas fa-folder-open"></i>
                 </div>
                 <div class="summary-info">
-                    <span class="summary-label">Abertas</span>
+                    <span class="summary-label">Abiertas</span>
                     <span class="summary-value" id="total-abertas">0</span>
                 </div>
             </div>
@@ -83,7 +83,7 @@
                     <i class="fas fa-cog"></i>
                 </div>
                 <div class="summary-info">
-                    <span class="summary-label">Em Andamento</span>
+                    <span class="summary-label">En Proceso</span>
                     <span class="summary-value" id="total-andamento">0</span>
                 </div>
             </div>
@@ -92,7 +92,7 @@
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <div class="summary-info">
-                    <span class="summary-label">Concluídas</span>
+                    <span class="summary-label">Completadas</span>
                     <span class="summary-value" id="total-concluidas">0</span>
                 </div>
             </div>
@@ -101,7 +101,7 @@
                     <i class="fas fa-dollar-sign"></i>
                 </div>
                 <div class="summary-info">
-                    <span class="summary-label">Faturamento</span>
+                    <span class="summary-label">Facturación</span>
                     <span class="summary-value" id="total-faturamento">R$ 0,00</span>
                 </div>
             </div>
@@ -117,7 +117,7 @@
                 <i class="fas fa-chevron-left"></i>
             </button>
             <span class="pagination-numbers" id="pagination-numbers">
-                <!-- Números das páginas serão gerados via JavaScript -->
+                <!-- Números de páginas se generarán via JavaScript -->
             </span>
             <button class="btn-pagination" id="btn-next">
                 <i class="fas fa-chevron-right"></i>

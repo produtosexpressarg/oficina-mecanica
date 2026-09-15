@@ -1,28 +1,20 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="es-AR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Gestão de Clientes - Sistema de Gestão para Oficina Mecânica">
-    <title>Clientes - Sistema de Gestão Oficina</title>
+    <meta name="description" content="Gestión de Clientes - Sistema de Gestión para Taller Mecánico">
+    <title>Clientes - Sistema de Gestión Taller</title>
     
     <!-- Design System CSS -->
     <link rel="stylesheet" href="../assets/css/design-system.css">
+    <link rel="stylesheet" href="../assets/css/layout.css">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <!-- Page Specific Styles -->
     <style>
-        /* Client Management Specific Styles */
-        .client-actions {
-            display: flex;
-            gap: var(--spacing-sm);
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: var(--spacing-lg);
-        }
-        
         .client-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -129,13 +121,24 @@
         .btn-icon {
             width: 32px;
             height: 32px;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             border-radius: var(--border-radius-sm);
             border: none;
             cursor: pointer;
             transition: var(--transition);
+            padding: 0;
+        }
+        
+        .btn-vehicles {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+        
+        .btn-vehicles:hover {
+            background: #0369a1;
+            color: white;
         }
         
         .btn-edit {
@@ -158,7 +161,6 @@
             color: white;
         }
         
-        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -175,16 +177,21 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 1rem;
         }
 
         .modal-content {
             background: white;
             border-radius: var(--border-radius);
             width: 90%;
-            max-width: 700px;
+            max-width: 720px;
             max-height: 90vh;
             overflow-y: auto;
             animation: slideIn 0.3s ease;
+        }
+
+        .modal-content.modal-small {
+            max-width: 850px;
         }
 
         .modal-header {
@@ -194,6 +201,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
         }
 
         .modal-title {
@@ -232,6 +240,8 @@
             display: flex;
             justify-content: flex-end;
             gap: 1rem;
+            border-top: 1px solid var(--border-color);
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
         }
 
         @keyframes fadeIn {
@@ -286,76 +296,179 @@
             background: var(--color-primary);
             color: white;
         }
+
+        .client-info-card {
+            background: var(--gray-50);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .client-info-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .client-info-item label {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: var(--font-weight-semibold);
+            display: block;
+            margin-bottom: var(--spacing-2xs);
+        }
+
+        .client-info-item span {
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-semibold);
+            color: var(--primary-color);
+        }
+
+        .vehicles-list .vehicle-item {
+            padding: var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            margin-bottom: var(--spacing-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--spacing-md);
+            transition: var(--transition);
+        }
+
+        .vehicles-list .vehicle-item:hover {
+            background: var(--gray-50);
+            transform: translateX(3px);
+        }
+
+        .vehicle-info h4 {
+            margin-bottom: var(--spacing-2xs);
+            color: var(--primary-color);
+            font-size: var(--font-size-base);
+        }
+
+        .vehicle-info p {
+            margin: 2px 0;
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+        }
+
+        .maint-badge {
+            padding: 4px var(--spacing-sm);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .maint-badge.atrasado {
+            background: var(--danger-light);
+            color: var(--danger-dark);
+        }
+
+        .maint-badge.urgente {
+            background: #ffe0b2;
+            color: #e65100;
+        }
+
+        .maint-badge.proximo {
+            background: var(--warning-light);
+            color: var(--warning-dark);
+        }
+
+        .maint-badge.normal {
+            background: var(--success-light);
+            color: var(--success-dark);
+        }
+
+        .vehicle-badges {
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-2xs);
+            align-items: flex-end;
+        }
+
+        .empty-vehicles {
+            text-align: center;
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            color: var(--text-muted);
+            background: var(--gray-50);
+            border-radius: var(--radius);
+            border: 2px dashed var(--border-color);
+        }
+
+        .empty-vehicles i {
+            font-size: var(--font-size-3xl);
+            margin-bottom: var(--spacing-sm);
+            color: var(--gray-400);
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .filter-row {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-form {
+                grid-template-columns: 1fr;
+            }
+
+            .vehicle-info-row,
+            .client-info-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <i class="fas fa-wrench"></i>
-                    <h1>Sistema de Gestão - Oficina Mecânica</h1>
-                </div>
-                <div class="user-info">
-                    <span id="currentDate"></span>
-                    <div class="user-menu">
-                        <i class="fas fa-user-circle"></i>
-                        <span>Administrador</span>
+<div class="main-container">
+    <!-- Sidebar Vertical -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo" style="justify-content:center;color:#fff;font-size:1.25rem;flex-direction:column;gap:8px;">
+                <i class="fas fa-wrench" style="font-size:2.5rem;"></i>
+                <span>Taller Mecánico</span>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="dashboard.html" class="nav-link"><i class="fas fa-tachometer-alt"></i><span>Panel Principal</span></a></li>
+                <li><a href="clientes.html" class="nav-link active"><i class="fas fa-users"></i><span>Clientes</span></a></li>
+                <li><a href="veiculos.html" class="nav-link"><i class="fas fa-car"></i><span>Vehículos</span></a></li>
+                <li><a href="servicos.html" class="nav-link"><i class="fas fa-clipboard-list"></i><span>Órdenes de Servicio</span></a></li>
+                <li><a href="estoque.html" class="nav-link"><i class="fas fa-boxes"></i><span>Stock</span></a></li>
+                <li><a href="vendas.html" class="nav-link"><i class="fas fa-cash-register"></i><span>Ventas y Cobros</span></a></li>
+                <li><a href="notas-fiscais.html" class="nav-link"><i class="fas fa-file-invoice"></i><span>Facturas</span></a></li>
+                <li><a href="../comercio-exterior/index.html" class="nav-link"><i class="fas fa-globe-americas"></i><span>Comercio Exterior</span></a></li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <div style="padding:12px 18px;border-top:1px solid #34495e;">
+                <div style="display:flex;align-items:center;gap:8px;color:#ecf0f1;">
+                    <i class="fas fa-user-circle" style="font-size:1.5rem;"></i>
+                    <div>
+                        <div style="font-weight:600;font-size:0.85rem;">Administrador</div>
+                        <div id="currentDate" style="font-size:0.7rem;color:#95a5a6;"></div>
                     </div>
                 </div>
+                <button style="margin-top:10px;width:100%;background:#e74c3c;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem;font-weight:500;" onclick="logoutSidebar()"><i class="fas fa-sign-out-alt" style="margin-right:4px;"></i>Cerrar Sesión</button>
             </div>
         </div>
-    </header>
-
-    <!-- Navigation -->
-    <nav class="nav-menu">
-        <div class="container">
-            <div class="nav-links">
-                <a href="dashboard.html" class="nav-link">
-                    <i class="fas fa-tachometer-alt"></i>
-                    Dashboard
-                </a>
-                <a href="clientes.html" class="nav-link active">
-                    <i class="fas fa-users"></i>
-                    Clientes
-                </a>
-                <a href="veiculos.html" class="nav-link">
-                    <i class="fas fa-car"></i>
-                    Veículos
-                </a>
-                <a href="servicos.html" class="nav-link">
-                    <i class="fas fa-clipboard-list"></i>
-                    Ordens de Serviço
-                </a>
-                <a href="estoque.html" class="nav-link">
-                    <i class="fas fa-boxes"></i>
-                    Estoque
-                </a>
-                <a href="notas-fiscais.html" class="nav-link">
-                    <i class="fas fa-file-invoice"></i>
-                    Notas Fiscais
-                </a>
-                <a href="vendas.html" class="nav-link">
-                    <i class="fas fa-cash-register"></i>
-                    Vendas & Pagamentos
-                </a>
-            </div>
-        </div>
-    </nav>
+    </aside>
 
     <!-- Main Content -->
     <main class="main-content">
-        <div class="container">
-            <div class="page-header">
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <button class="btn btn-outline btn-sm" onclick="window.location.href='dashboard.html'">
-                        <i class="fas fa-arrow-left"></i> Voltar
-                    </button>
-                    <h1 class="page-title">Gerenciamento de Clientes</h1>
-                </div>
-                <button id="btn-novo-cliente" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Novo Cliente
+        <div class="page-header d-flex justify-between align-center" style="border-bottom:none;padding-bottom:0;margin-bottom:20px;">
+            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                <h1 class="page-title" style="border:none;margin:0;"><i class="fas fa-users"></i> Gestión de Clientes</h1>
+            </div>
+            <button id="btn-novo-cliente" class="btn btn-primary" onclick="openClientModal()">
+                    <i class="fas fa-plus"></i> Nuevo Cliente
                 </button>
             </div>
             
@@ -369,119 +482,123 @@
                                 <div class="input-group">
                                     <i class="fas fa-search input-icon"></i>
                                     <input type="text" id="searchClient" class="form-control" 
-                                           placeholder="Nome, CPF, telefone ou email..." 
+                                           placeholder="Nombre, CUIL, teléfono o correo..." 
                                            onkeyup="filterClients()">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Status</label>
+                                <label class="form-label">Estado</label>
                                 <select id="filterStatus" class="form-control" onchange="filterClients()">
                                     <option value="">Todos</option>
-                                    <option value="ativo">Ativo</option>
-                                    <option value="inativo">Inativo</option>
+                                    <option value="ativo">Activo</option>
+                                    <option value="inativo">Inactivo</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Ordenar por</label>
                                 <select id="sortBy" class="form-control" onchange="sortClients()">
-                                    <option value="nome">Nome</option>
-                                    <option value="data">Data de Cadastro</option>
-                                    <option value="status">Status</option>
+                                    <option value="nome">Nombre</option>
+                                    <option value="data">Fecha de Alta</option>
+                                    <option value="status">Estado</option>
                                 </select>
                             </div>
                             <button class="btn btn-outline" onclick="clearFilters()">
-                                <i class="fas fa-times"></i> Limpar
+                                <i class="fas fa-times"></i> Limpiar
                             </button>
+                        </div>
+                    </div>
+
                     <!-- Clients Table -->
                     <div class="clients-table-container">
                         <div class="table-header">
-                            <h3><i class="fas fa-list"></i> Lista de Clientes</h3>
+                            <h3><i class="fas fa-list"></i> Listado de Clientes</h3>
                             <span id="clientCount">0 clientes encontrados</span>
                         </div>
                         
-                        <table class="clients-table">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>CPF</th>
-                                    <th>Telefone</th>
-                                    <th>Email</th>
-                                    <th>Status</th>
-                                    <th>Cadastro</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="clientsTableBody">
-                                <!-- Clients will be loaded here -->
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="clients-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>CUIL / DNI</th>
+                                        <th>Teléfono</th>
+                                        <th>Correo</th>
+                                        <th>Estado</th>
+                                        <th>Alta</th>
+                                        <th style="width: 190px;">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="clientsTableBody">
+                                </tbody>
+                            </table>
+                        </div>
                         
                         <!-- Pagination -->
-                        <div class="pagination" id="pagination">
-                            <!-- Pagination buttons will be generated here -->
-                        </div>
+                        <div class="pagination" id="pagination"></div>
                     </div>
                 </div>
             </div>
-        </div>
     </main>
+</div>
 
-    <!-- Client Modal -->
+    <!-- Client Modal (Nuevo / Editar) -->
     <div class="modal" id="clienteModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="clienteModalLabel">Novo Cliente</h3>
-                <button class="modal-close" onclick="closeClientModal()">&times;</button>
+                <h3 class="modal-title" id="clienteModalLabel">Nuevo Cliente</h3>
+                <button class="modal-close" onclick="closeClientModal()">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             
             <form id="clientForm" class="modal-form">
-                <div class="form-group">
-                    <label class="form-label required">Nome Completo</label>
-                    <input type="text" id="clientName" class="form-control" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label required">CPF</label>
-                    <input type="text" id="clientCPF" class="form-control" 
-                           placeholder="000.000.000-00" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label required">Telefone</label>
-                    <input type="text" id="clientPhone" class="form-control" 
-                           placeholder="(00) 00000-0000" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" id="clientEmail" class="form-control" 
-                           placeholder="cliente@email.com">
-                </div>
-                
                 <div class="form-group form-group-full">
-                    <label class="form-label">Endereço</label>
-                    <input type="text" id="clientAddress" class="form-control" 
-                           placeholder="Rua, número, bairro, cidade - Estado">
+                    <label class="form-label required">Nombre Completo</label>
+                    <input type="text" id="clientName" class="form-control" required placeholder="Nombre y apellido">
                 </div>
                 
                 <div class="form-group">
-                    <label class="form-label">CEP</label>
+                    <label class="form-label required">CUIL / DNI</label>
+                    <input type="text" id="clientCPF" class="form-control" 
+                           placeholder="00-00000000-0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label required">Teléfono</label>
+                    <input type="text" id="clientPhone" class="form-control" 
+                           placeholder="(011) 0000-0000" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Correo Electrónico</label>
+                    <input type="email" id="clientEmail" class="form-control" 
+                           placeholder="cliente@correo.com">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Código Postal</label>
                     <input type="text" id="clientCEP" class="form-control" 
-                           placeholder="00000-000">
+                           placeholder="B0000AAA">
                 </div>
-                
+
                 <div class="form-group">
-                    <label class="form-label">Status</label>
+                    <label class="form-label">Estado</label>
                     <select id="clientStatus" class="form-control">
-                        <option value="ativo">Ativo</option>
-                        <option value="inativo">Inativo</option>
+                        <option value="ativo">Activo</option>
+                        <option value="inativo">Inactivo</option>
                     </select>
                 </div>
                 
                 <div class="form-group form-group-full">
-                    <label class="form-label">Observações</label>
+                    <label class="form-label">Dirección</label>
+                    <input type="text" id="clientAddress" class="form-control" 
+                           placeholder="Calle, número, barrio, ciudad - Provincia">
+                </div>
+                
+                <div class="form-group form-group-full">
+                    <label class="form-label">Observaciones</label>
                     <textarea id="clientNotes" class="form-control" rows="3" 
-                              placeholder="Observações sobre o cliente..."></textarea>
+                              placeholder="Notas sobre el cliente..."></textarea>
                 </div>
             </form>
             
@@ -490,57 +607,143 @@
                     Cancelar
                 </button>
                 <button id="salvarCliente" type="submit" form="clientForm" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Salvar Cliente
+                    <i class="fas fa-save"></i> Guardar Cliente
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- Modal: Vehículos y Próximos Mantenimientos del Cliente -->
+    <div class="modal" id="vehiclesClientModal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-car"></i> Vehículos del Cliente
+                </h3>
+                <button class="modal-close" onclick="closeVehiclesClientModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="client-info-card">
+                    <h4 style="margin-bottom: var(--spacing-md); color: var(--primary-color);">
+                        <i class="fas fa-user"></i> Datos del Cliente
+                    </h4>
+                    <div class="client-info-row">
+                        <div class="client-info-item">
+                            <label>Nombre</label>
+                            <span id="vc-nombre">-</span>
+                        </div>
+                        <div class="client-info-item">
+                            <label>Teléfono</label>
+                            <span id="vc-telefono">-</span>
+                        </div>
+                        <div class="client-info-item">
+                            <label>Correo</label>
+                            <span id="vc-email">-</span>
+                        </div>
+                        <div class="client-info-item">
+                            <label>Estado</label>
+                            <span id="vc-estado">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 style="margin-bottom: var(--spacing-md);">
+                    <i class="fas fa-list"></i> Vehículos Registrados
+                </h4>
+                <div class="vehicles-list" id="vc-vehicles-list">
+                </div>
+
+                <div style="margin-top: var(--spacing-xl); display: flex; justify-content: space-between; gap: var(--spacing-sm); flex-wrap: wrap;">
+                    <button type="button" class="btn btn-outline" onclick="closeVehiclesClientModal()">
+                        <i class="fas fa-times"></i> Cerrar
+                    </button>
+                    <button type="button" class="btn btn-primary" id="vc-go-vehicles">
+                        <i class="fas fa-car"></i> Ir a Gestión Vehículos
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/config/constants.js"></script>
     <script>
-        // Global variables
+        // ============================================================
+        // VARIABLES GLOBALES
+        // ============================================================
         let clients = [];
         let filteredClients = [];
         let currentPage = 1;
         let itemsPerPage = 10;
         let editingClientId = null;
+        let viewClientVehiclesId = null;
 
-        // Initialize page
+        const STORAGE_KEY_CLIENTES = 
+            (window.STORAGE_KEYS ? STORAGE_KEYS.CLIENTES : 'oficina_clientes');
+        const STORAGE_KEY_VEICULOS = 
+            (window.STORAGE_KEYS ? STORAGE_KEYS.VEICULOS : 'oficina_veiculos');
+        const STORAGE_KEY_HISTORICO = 
+            (window.STORAGE_KEYS ? STORAGE_KEYS.HISTORICO_SERVICOS : 'oficina_historico_servicos');
+
+        // ============================================================
+        // INICIALIZACIÓN
+        // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
             updateCurrentDate();
+            migrateOldClientsData();
             loadClients();
             setupEventListeners();
         });
 
-        // Update current date
         function updateCurrentDate() {
             const now = new Date();
-            const options = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            };
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             document.getElementById('currentDate').textContent = 
-                now.toLocaleDateString('pt-BR', options);
+                now.toLocaleDateString('es-AR', options);
         }
 
-        // Setup event listeners
+        function migrateOldClientsData() {
+            const oldKey = 'clients';
+            const nuevoKey = STORAGE_KEY_CLIENTES;
+            const oldData = localStorage.getItem(oldKey);
+            const newData = localStorage.getItem(nuevoKey);
+
+            if (oldData && !newData) {
+                try {
+                    const parsed = JSON.parse(oldData);
+                    const migrateado = parsed.map(c => ({
+                        id: c.id,
+                        nome: c.name,
+                        cpf: c.cpf,
+                        telefone: c.phone,
+                        email: c.email,
+                        endereco: c.address,
+                        cep: c.cep,
+                        status: c.status,
+                        observacoes: c.notes,
+                        dataCadastro: c.createdAt,
+                        createdAt: c.createdAt
+                    }));
+                    localStorage.setItem(nuevoKey, JSON.stringify(migrateado));
+                } catch(e) {
+                    console.error('Error migrando clientes:', e);
+                }
+            }
+        }
+
         function setupEventListeners() {
             document.getElementById('clientForm').addEventListener('submit', handleClientSubmit);
-            
-            // Input masks
             setupInputMasks();
         }
 
-        // Setup input masks
         function setupInputMasks() {
             const cpfInput = document.getElementById('clientCPF');
             const phoneInput = document.getElementById('clientPhone');
             const cepInput = document.getElementById('clientCEP');
 
             cpfInput.addEventListener('input', function(e) {
-                e.target.value = formatCPF(e.target.value);
+                e.target.value = formatCUIL(e.target.value);
             });
 
             phoneInput.addEventListener('input', function(e) {
@@ -548,109 +751,162 @@
             });
 
             cepInput.addEventListener('input', function(e) {
-                e.target.value = formatCEP(e.target.value);
+                e.target.value = formatCPA(e.target.value);
             });
         }
 
-        // Format functions
-        function formatCPF(value) {
-            return value.replace(/\D/g, '')
-                       .replace(/(\d{3})(\d)/, '$1.$2')
-                       .replace(/(\d{3})(\d)/, '$1.$2')
-                       .replace(/(\d{3})(\d{1,2})/, '$1-$2')
-                       .replace(/(-\d{2})\d+?$/, '$1');
+        // ============================================================
+        // FUNCIONES DE FORMATO
+        // ============================================================
+        function formatCUIL(value) {
+            const digitos = value.replace(/\D/g, '');
+            if (digitos.length <= 11) {
+                return digitos
+                    .replace(/(\d{2})(\d)/, '$1-$2')
+                    .replace(/(\d{8})(\d{1,2})$/, '$1-$2');
+            }
+            return digitos;
         }
 
         function formatPhone(value) {
             return value.replace(/\D/g, '')
-                       .replace(/(\d{2})(\d)/, '($1) $2')
+                       .replace(/(\d{2,3})(\d)/, '($1) $2')
                        .replace(/(\d{4})(\d)/, '$1-$2')
                        .replace(/(\d{4})-(\d)(\d{4})/, '$1$2-$3')
                        .replace(/(-\d{4})\d+?$/, '$1');
         }
 
-        function formatCEP(value) {
-            return value.replace(/\D/g, '')
-                       .replace(/(\d{5})(\d)/, '$1-$2')
-                       .replace(/(-\d{3})\d+?$/, '$1');
+        function formatCPA(value) {
+            const s = value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            if (s.length <= 4) return s;
+            if (s.length <= 8) return s.substring(0, 4) + s.substring(4);
+            return s.substring(0, 4) + s.substring(4, 7) + s.substring(7, 10);
         }
 
-        // Load clients
+        function formatDateAR(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return '-';
+            return date.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        // ============================================================
+        // LECTURA / ESCRITURA STORAGE
+        // ============================================================
         function loadClients() {
-            // Load from localStorage or use mock data
-            const savedClients = localStorage.getItem('clients');
+            const savedClients = localStorage.getItem(STORAGE_KEY_CLIENTES);
             if (savedClients) {
-                clients = JSON.parse(savedClients);
-            } else {
-                // Mock data
-                clients = [
-                    {
-                        id: 1,
-                        name: 'João Silva',
-                        cpf: '123.456.789-00',
-                        phone: '(11) 99999-9999',
-                        email: 'joao@email.com',
-                        address: 'Rua das Flores, 123, Centro, São Paulo - SP',
-                        cep: '01234-567',
-                        status: 'ativo',
-                        notes: 'Cliente preferencial',
-                        createdAt: '2024-01-15'
-                    },
-                    {
-                        id: 2,
-                        name: 'Maria Santos',
-                        cpf: '987.654.321-00',
-                        phone: '(11) 88888-8888',
-                        email: 'maria@email.com',
-                        address: 'Av. Paulista, 456, Bela Vista, São Paulo - SP',
-                        cep: '01310-100',
-                        status: 'ativo',
-                        notes: '',
-                        createdAt: '2024-01-20'
-                    }
-                ];
+                try {
+                    clients = JSON.parse(savedClients).map(c => ({
+                        id: c.id,
+                        nome: c.nome || c.name,
+                        cpf: c.cpf,
+                        telefone: c.telefone || c.phone,
+                        email: c.email,
+                        endereco: c.endereco || c.address,
+                        cep: c.cep,
+                        status: c.status || 'ativo',
+                        observacoes: c.observacoes || c.notes,
+                        createdAt: c.createdAt || c.dataCadastro
+                    }));
+                } catch (e) {
+                    console.error('Error cargando clientes:', e);
+                    clients = [];
+                }
+            } 
+            
+            if (!clients || clients.length === 0) {
+                clients = cargarClientesIniciales();
                 saveClients();
             }
             
             filteredClients = [...clients];
-            updateStatistics();
             renderClients();
         }
 
-        // Save clients to localStorage
         function saveClients() {
-            localStorage.setItem('clients', JSON.stringify(clients));
+            const guardar = clients.map(c => ({
+                id: c.id,
+                nome: c.nome,
+                cpf: c.cpf,
+                telefone: c.telefone,
+                email: c.email,
+                endereco: c.endereco,
+                cep: c.cep,
+                status: c.status,
+                observacoes: c.observacoes,
+                createdAt: c.createdAt
+            }));
+            localStorage.setItem(STORAGE_KEY_CLIENTES, JSON.stringify(guardar));
         }
 
-        // Update statistics
-        function updateStatistics() {
-            const total = clients.length;
-            const active = clients.filter(c => c.status === 'ativo').length;
-            const thisMonth = clients.filter(c => {
-                const clientDate = new Date(c.createdAt);
-                const now = new Date();
-                return clientDate.getMonth() === now.getMonth() && 
-                       clientDate.getFullYear() === now.getFullYear();
-            }).length;
-            
-            // Update client count in table header
-            const clientCountElement = document.getElementById('clientCount');
-            if (clientCountElement) {
-                clientCountElement.textContent = `${total} clientes encontrados`;
-            }
+        function cargarClientesIniciales() {
+            const hoy = new Date();
+            return [
+                {
+                    id: 1,
+                    nome: 'Juan Pérez',
+                    cpf: '20-12345678-9',
+                    telefone: '(11) 4444-5555',
+                    email: 'juan.perez@ejemplo.com',
+                    endereco: 'Av. Rivadavia 1234, CABA',
+                    cep: 'C1002AAA',
+                    status: 'ativo',
+                    observacoes: 'Cliente preferencial - Deja el auto siempre en horario de mañana',
+                    createdAt: new Date(hoy.getTime() - 240 * 86400000).toISOString().split('T')[0]
+                },
+                {
+                    id: 2,
+                    nome: 'María Gómez',
+                    cpf: '27-23456789-0',
+                    telefone: '(11) 5555-6666',
+                    email: 'maria.gomez@ejemplo.com',
+                    endereco: 'Calle Florida 567, CABA',
+                    cep: 'C1005AAB',
+                    status: 'ativo',
+                    observacoes: '',
+                    createdAt: new Date(hoy.getTime() - 210 * 86400000).toISOString().split('T')[0]
+                },
+                {
+                    id: 3,
+                    nome: 'Carlos Rodríguez',
+                    cpf: '20-34567890-1',
+                    telefone: '(11) 6666-7777',
+                    email: 'carlos.rodriguez@ejemplo.com',
+                    endereco: 'Av. Corrientes 890, CABA',
+                    cep: 'C1043AAC',
+                    status: 'ativo',
+                    observacoes: 'Se le debe avisar por WhatsApp los turnos',
+                    createdAt: new Date(hoy.getTime() - 180 * 86400000).toISOString().split('T')[0]
+                },
+                {
+                    id: 4,
+                    nome: 'Ana López',
+                    cpf: '27-45678901-2',
+                    telefone: '(11) 7777-8888',
+                    email: 'ana.lopez@ejemplo.com',
+                    endereco: 'Av. Santa Fe 2000, CABA',
+                    cep: 'C1123AAD',
+                    status: 'ativo',
+                    observacoes: '',
+                    createdAt: new Date(hoy.getTime() - 120 * 86400000).toISOString().split('T')[0]
+                }
+            ];
         }
 
-        // Filter clients
+        // ============================================================
+        // FILTROS, ORDENAMIENTO, PAGINACIÓN
+        // ============================================================
         function filterClients() {
             const searchTerm = document.getElementById('searchClient').value.toLowerCase();
             const statusFilter = document.getElementById('filterStatus').value;
             
             filteredClients = clients.filter(client => {
                 const matchesSearch = !searchTerm || 
-                    client.name.toLowerCase().includes(searchTerm) ||
-                    client.cpf.includes(searchTerm) ||
-                    client.phone.includes(searchTerm) ||
-                    client.email.toLowerCase().includes(searchTerm);
+                    (client.nome || '').toLowerCase().includes(searchTerm) ||
+                    (client.cpf || '').includes(searchTerm) ||
+                    (client.telefone || '').includes(searchTerm) ||
+                    (client.email || '').toLowerCase().includes(searchTerm);
                 
                 const matchesStatus = !statusFilter || client.status === statusFilter;
                 
@@ -661,27 +917,23 @@
             renderClients();
         }
 
-        // Sort clients
         function sortClients() {
             const sortBy = document.getElementById('sortBy').value;
-            
             filteredClients.sort((a, b) => {
                 switch(sortBy) {
                     case 'nome':
-                        return a.name.localeCompare(b.name);
+                        return (a.nome || '').localeCompare(b.nome || '');
                     case 'data':
                         return new Date(b.createdAt) - new Date(a.createdAt);
                     case 'status':
-                        return a.status.localeCompare(b.status);
+                        return (a.status || '').localeCompare(b.status || '');
                     default:
                         return 0;
                 }
             });
-            
             renderClients();
         }
 
-        // Clear filters
         function clearFilters() {
             document.getElementById('searchClient').value = '';
             document.getElementById('filterStatus').value = '';
@@ -691,7 +943,50 @@
             renderClients();
         }
 
-        // Render clients table
+        function updateClientCount() {
+            const cant = filteredClients.length;
+            document.getElementById('clientCount').textContent = 
+                `${cant} cliente${cant !== 1 ? 's' : ''} encontrado${cant !== 1 ? 's' : ''}`;
+        }
+
+        function renderPagination() {
+            const pagination = document.getElementById('pagination');
+            const totalPages = Math.ceil(filteredClients.length / itemsPerPage);
+            
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+            
+            let html = '';
+            html += `<button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
+                        <i class="fas fa-chevron-left"></i>
+                     </button>`;
+            
+            for (let i = 1; i <= totalPages; i++) {
+                html += i === currentPage 
+                    ? `<button class="active">${i}</button>`
+                    : `<button onclick="changePage(${i})">${i}</button>`;
+            }
+            
+            html += `<button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
+                        <i class="fas fa-chevron-right"></i>
+                     </button>`;
+            
+            pagination.innerHTML = html;
+        }
+
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredClients.length / itemsPerPage);
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                renderClients();
+            }
+        }
+
+        // ============================================================
+        // RENDER TABLA CLIENTES
+        // ============================================================
         function renderClients() {
             const tbody = document.getElementById('clientsTableBody');
             const startIndex = (currentPage - 1) * itemsPerPage;
@@ -703,8 +998,9 @@
             if (pageClients.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="7" class="text-center">
-                            <i class="fas fa-users"></i> Nenhum cliente encontrado
+                        <td colspan="7" class="text-center" style="padding: var(--spacing-2xl); color: var(--text-muted);">
+                            <i class="fas fa-users" style="font-size: 2rem; display:block; margin-bottom: var(--spacing-sm);"></i> 
+                            No se encontraron clientes
                         </td>
                     </tr>
                 `;
@@ -712,24 +1008,28 @@
                 pageClients.forEach(client => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td><strong>${client.name}</strong></td>
-                        <td>${client.cpf}</td>
-                        <td>${client.phone}</td>
+                        <td><strong>${client.nome || '-'}</strong></td>
+                        <td>${client.cpf || '-'}</td>
+                        <td>${client.telefone || '-'}</td>
                         <td>${client.email || '-'}</td>
                         <td>
                             <span class="client-status status-${client.status}">
-                                ${client.status === 'ativo' ? 'Ativo' : 'Inativo'}
+                                ${client.status === 'ativo' ? 'Activo' : 'Inactivo'}
                             </span>
                         </td>
-                        <td>${formatDate(client.createdAt)}</td>
+                        <td>${formatDateAR(client.createdAt)}</td>
                         <td>
                             <div class="action-buttons">
+                                <button class="btn-icon btn-vehicles" onclick="openVehiclesClientModal(${client.id})" 
+                                        title="Ver vehículos y próximos mantenimientos">
+                                    <i class="fas fa-car"></i>
+                                </button>
                                 <button class="btn-icon btn-edit" onclick="editClient(${client.id})" 
                                         title="Editar">
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="btn-icon btn-delete" onclick="deleteClient(${client.id})" 
-                                        title="Excluir">
+                                        title="Eliminar">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -743,229 +1043,308 @@
             renderPagination();
         }
 
-        // Format date
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('pt-BR');
-        }
-
-        // Update client count
-        function updateClientCount() {
-            document.getElementById('clientCount').textContent = 
-                `${filteredClients.length} cliente${filteredClients.length !== 1 ? 's' : ''} encontrado${filteredClients.length !== 1 ? 's' : ''}`;
-        }
-
-        // Render pagination
-        function renderPagination() {
-            const pagination = document.getElementById('pagination');
-            const totalPages = Math.ceil(filteredClients.length / itemsPerPage);
-            
-            if (totalPages <= 1) {
-                pagination.innerHTML = '';
-                return;
-            }
-            
-            let paginationHTML = '';
-            
-            // Previous button
-            paginationHTML += `
-                <button onclick="changePage(${currentPage - 1})" 
-                        ${currentPage === 1 ? 'disabled' : ''}>
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-            `;
-            
-            // Page numbers
-            for (let i = 1; i <= totalPages; i++) {
-                if (i === currentPage) {
-                    paginationHTML += `<button class="active">${i}</button>`;
-                } else {
-                    paginationHTML += `<button onclick="changePage(${i})">${i}</button>`;
-                }
-            }
-            
-            // Next button
-            paginationHTML += `
-                <button onclick="changePage(${currentPage + 1})" 
-                        ${currentPage === totalPages ? 'disabled' : ''}>
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            `;
-            
-            pagination.innerHTML = paginationHTML;
-        }
-
-        // Change page
-        function changePage(page) {
-            const totalPages = Math.ceil(filteredClients.length / itemsPerPage);
-            if (page >= 1 && page <= totalPages) {
-                currentPage = page;
-                renderClients();
-            }
-        }
-
-        // Open client modal
+        // ============================================================
+        // CRUD CLIENTES
+        // ============================================================
         function openClientModal() {
             editingClientId = null;
-            document.getElementById('clienteModalLabel').textContent = 'Novo Cliente';
+            document.getElementById('clienteModalLabel').textContent = 'Nuevo Cliente';
             document.getElementById('clientForm').reset();
-            document.getElementById('clienteModal').style.display = 'flex';
+            document.getElementById('clientStatus').value = 'ativo';
+            document.getElementById('clienteModal').classList.add('show');
         }
 
-        // Close client modal
         function closeClientModal() {
-            document.getElementById('clienteModal').style.display = 'none';
+            document.getElementById('clienteModal').classList.remove('show');
             editingClientId = null;
         }
 
-        // Edit client
         function editClient(id) {
             const client = clients.find(c => c.id === id);
             if (!client) return;
             
             editingClientId = id;
-            document.getElementById('modalTitle').textContent = 'Editar Cliente';
+            document.getElementById('clienteModalLabel').textContent = 'Editar Cliente';
             
-            // Fill form
-            document.getElementById('clientName').value = client.name;
-            document.getElementById('clientCPF').value = client.cpf;
-            document.getElementById('clientPhone').value = client.phone;
+            document.getElementById('clientName').value = client.nome || '';
+            document.getElementById('clientCPF').value = client.cpf || '';
+            document.getElementById('clientPhone').value = client.telefone || '';
             document.getElementById('clientEmail').value = client.email || '';
-            document.getElementById('clientAddress').value = client.address || '';
+            document.getElementById('clientAddress').value = client.endereco || '';
             document.getElementById('clientCEP').value = client.cep || '';
-            document.getElementById('clientStatus').value = client.status;
-            document.getElementById('clientNotes').value = client.notes || '';
+            document.getElementById('clientStatus').value = client.status || 'ativo';
+            document.getElementById('clientNotes').value = client.observacoes || '';
             
-            document.getElementById('clienteModal').style.display = 'flex';
+            document.getElementById('clienteModal').classList.add('show');
         }
 
-        // Handle client form submit
         function handleClientSubmit(e) {
             e.preventDefault();
             
             const formData = {
-                name: document.getElementById('clientName').value,
-                cpf: document.getElementById('clientCPF').value,
-                phone: document.getElementById('clientPhone').value,
-                email: document.getElementById('clientEmail').value,
-                address: document.getElementById('clientAddress').value,
-                cep: document.getElementById('clientCEP').value,
+                nome: document.getElementById('clientName').value.trim(),
+                cpf: document.getElementById('clientCPF').value.trim(),
+                telefone: document.getElementById('clientPhone').value.trim(),
+                email: document.getElementById('clientEmail').value.trim(),
+                endereco: document.getElementById('clientAddress').value.trim(),
+                cep: document.getElementById('clientCEP').value.trim(),
                 status: document.getElementById('clientStatus').value,
-                notes: document.getElementById('clientNotes').value
+                observacoes: document.getElementById('clientNotes').value.trim()
             };
             
-            // Validate required fields
-            if (!formData.name || !formData.cpf || !formData.phone) {
-                alert('Por favor, preencha todos os campos obrigatórios.');
+            if (!formData.nome || !formData.cpf || !formData.telefone) {
+                alert(window.ERROR_MESSAGES?.REQUIRED_FIELD || 'Por favor, complete todos los campos obligatorios.');
                 return;
             }
             
-            // Validate CPF uniqueness
             const existingClient = clients.find(c => 
                 c.cpf === formData.cpf && c.id !== editingClientId
             );
             if (existingClient) {
-                alert('Já existe um cliente cadastrado com este CPF.');
+                alert('Ya existe un cliente registrado con este CUIL/DNI.');
                 return;
             }
             
             if (editingClientId) {
-                // Update existing client
                 const clientIndex = clients.findIndex(c => c.id === editingClientId);
                 clients[clientIndex] = { ...clients[clientIndex], ...formData };
             } else {
-                // Add new client
-                const newClient = {
-                    id: Date.now(),
+                const maxId = clients.length > 0 ? Math.max(...clients.map(c => Number(c.id))) : 0;
+                clients.push({
+                    id: maxId + 1,
                     ...formData,
                     createdAt: new Date().toISOString().split('T')[0]
-                };
-                clients.push(newClient);
+                });
             }
             
             saveClients();
             loadClients();
             closeClientModal();
             
-            // Show success message
             showNotification(
-                editingClientId ? 'Cliente atualizado com sucesso!' : 'Cliente cadastrado com sucesso!',
+                editingClientId 
+                    ? (window.SUCCESS_MESSAGES?.UPDATE_SUCCESS || 'Cliente actualizado correctamente')
+                    : (window.SUCCESS_MESSAGES?.CLIENTE_GUARDADO || 'Cliente guardado correctamente'), 
                 'success'
             );
         }
 
-        // Delete client
         function deleteClient(id) {
             const client = clients.find(c => c.id === id);
             if (!client) return;
             
-            if (confirm(`Tem certeza que deseja excluir o cliente "${client.name}"?`)) {
+            if (confirm(`¿Está seguro que desea eliminar el cliente "${client.nome}"?`)) {
                 clients = clients.filter(c => c.id !== id);
                 saveClients();
                 loadClients();
-                showNotification('Cliente excluído com sucesso!', 'success');
+                showNotification(window.SUCCESS_MESSAGES?.DELETE_SUCCESS || 'Cliente eliminado correctamente', 'success');
             }
         }
 
-        // Export clients
-        function exportClients() {
-            const dataStr = JSON.stringify(clients, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            const url = URL.createObjectURL(dataBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'clientes.json';
-            link.click();
-            URL.revokeObjectURL(url);
+        // ============================================================
+        // MODAL: VEHÍCULOS DEL CLIENTE + PRÓXIMOS MANTENIMIENTOS
+        // ============================================================
+        function openVehiclesClientModal(clientId) {
+            viewClientVehiclesId = Number(clientId);
+            const cliente = clients.find(c => c.id === viewClientVehiclesId);
+            if (!cliente) return;
+
+            document.getElementById('vc-nombre').textContent = cliente.nome || '-';
+            document.getElementById('vc-telefono').textContent = cliente.telefone || '-';
+            document.getElementById('vc-email').textContent = cliente.email || '-';
+            const estSpan = document.getElementById('vc-estado');
+            estSpan.textContent = cliente.status === 'ativo' ? 'Activo' : 'Inactivo';
+            estSpan.style.color = cliente.status === 'ativo' ? 'var(--success-color)' : 'var(--danger-color)';
+
+            document.getElementById('vc-go-vehicles').onclick = function() {
+                window.location.href = 'veiculos.html';
+            };
+
+            renderVehiclesListForClient();
+            document.getElementById('vehiclesClientModal').classList.add('show');
         }
 
-        // Import clients (placeholder)
-        function importClients() {
-            alert('Funcionalidade de importação será implementada em breve.');
+        function closeVehiclesClientModal() {
+            document.getElementById('vehiclesClientModal').classList.remove('show');
+            viewClientVehiclesId = null;
         }
 
-        // Show notification
+        function getStorageArray(key, fallback) {
+            try {
+                const raw = localStorage.getItem(key);
+                return raw ? JSON.parse(raw) : fallback;
+            } catch(e) { return fallback; }
+        }
+
+        function clasificarProximo(proximaFecha, proximoKm, kmActual) {
+            const hoy = new Date();
+            hoy.setHours(0,0,0,0);
+            let status = 'normal';
+            let texto = 'Al día';
+            
+            if (proximaFecha) {
+                const unDia = 86400000;
+                const dias = Math.ceil((new Date(proximaFecha) - hoy) / unDia);
+                if (dias < 0) {
+                    status = 'atrasado';
+                    texto = `Atrasado ${Math.abs(dias)} d.`;
+                } else if (dias <= 7) {
+                    status = 'urgente';
+                    texto = `${dias} d.`;
+                } else if (dias <= 30) {
+                    status = 'proximo';
+                    texto = `${dias} d.`;
+                } else {
+                    texto = `En ${dias} d.`;
+                }
+            }
+
+            if (proximoKm !== null && proximoKm !== undefined && kmActual) {
+                const faltan = proximoKm - kmActual;
+                if (faltan <= 0) {
+                    if (status !== 'atrasado') status = 'atrasado';
+                    texto = texto + ` / Atras. ${Math.abs(faltan).toLocaleString('es-AR')} km`;
+                } else if (faltan <= 1000) {
+                    if (status === 'normal') status = 'urgente';
+                    texto = texto + ` / Faltan ${faltan.toLocaleString('es-AR')} km`;
+                } else if (faltan <= 3000) {
+                    if (status === 'normal') status = 'proximo';
+                }
+            }
+            
+            return { status, texto };
+        }
+
+        function renderVehiclesListForClient() {
+            const container = document.getElementById('vc-vehicles-list');
+            const todosVehiculos = getStorageArray(STORAGE_KEY_VEICULOS, []);
+            const historico = getStorageArray(STORAGE_KEY_HISTORICO, []);
+            const labelsServicio = window.TIPOS_SERVICO_LABELS || {};
+
+            const vehiculosCliente = todosVehiculos.filter(v => 
+                Number(v.clienteId) === viewClientVehiclesId
+            );
+
+            if (vehiculosCliente.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-vehicles">
+                        <i class="fas fa-car"></i>
+                        <p style="margin-bottom: var(--spacing-sm);"><strong>Este cliente no tiene vehículos registrados aún.</strong></p>
+                        <small style="color: var(--text-muted);">Puede agregarlos desde la sección Gestión de Vehículos.</small>
+                    </div>
+                `;
+                return;
+            }
+
+            const prioridad = { 'atrasado': 0, 'urgente': 1, 'proximo': 2, 'normal': 3 };
+            const vehiculosConMantenimiento = vehiculosCliente.map(v => {
+                const ultimosPorServicio = {};
+                historico
+                    .filter(h => Number(h.veiculoId) === Number(v.id))
+                    .forEach(h => {
+                        const k = `${h.veiculoId}_${h.servicio}`;
+                        if (!ultimosPorServicio[k] || new Date(h.fecha) > new Date(ultimosPorServicio[k].fecha)) {
+                            ultimosPorServicio[k] = h;
+                        }
+                    });
+                
+                const mantenimientosRelevantes = Object.values(ultimosPorServicio)
+                    .filter(h => h.proximaFecha || h.proximoKm)
+                    .map(h => {
+                        const clasificacion = clasificarProximo(h.proximaFecha, h.proximoKm, v.km);
+                        return {
+                            servicio: labelsServicio[h.servicio] || h.servicio,
+                            ...clasificacion,
+                            proximaFecha: h.proximaFecha,
+                            proximoKm: h.proximoKm
+                        };
+                    })
+                    .sort((a, b) => prioridad[a.status] - prioridad[b.status]);
+
+                const peor = mantenimientosRelevantes[0] || { status: 'normal', texto: 'Sin vencimientos próximos' };
+                return { vehiculo: v, peor, mantenimientosRelevantes };
+            });
+
+            vehiculosConMantenimiento.sort((a, b) => prioridad[a.peor.status] - prioridad[b.peor.status]);
+
+            container.innerHTML = vehiculosConMantenimiento.map(({ vehiculo, peor, mantenimientosRelevantes }) => `
+                <div class="vehicle-item">
+                    <div class="vehicle-info">
+                        <h4>
+                            ${vehiculo.marca || ''} ${vehiculo.modelo || ''} 
+                            ${vehiculo.placa ? `<span style="font-size: 0.8rem; color: var(--text-muted); margin-left: 6px;">(${vehiculo.placa})</span>` : ''}
+                        </h4>
+                        <p><i class="fas fa-calendar"></i> Año: ${vehiculo.anio || '-'} 
+                           &nbsp;|&nbsp; <i class="fas fa-palette"></i> Color: ${vehiculo.color || '-'}
+                        </p>
+                        <p><i class="fas fa-tachometer-alt"></i> KM actual: ${vehiculo.km ? Number(vehiculo.km).toLocaleString('es-AR') + ' km' : '-'}</p>
+                        ${mantenimientosRelevantes.length > 0 ? `
+                            <p style="margin-top: var(--spacing-xs);">
+                                <strong>Próximo:</strong> ${mantenimientosRelevantes[0].servicio}
+                                ${mantenimientosRelevantes[0].proximaFecha ? ` (${formatDateAR(mantenimientosRelevantes[0].proximaFecha)})` : ''}
+                                ${mantenimientosRelevantes.length > 1 ? ` <em style="color: var(--text-muted);">(+${mantenimientosRelevantes.length - 1} más)</em>` : ''}
+                            </p>
+                        ` : `<p style="color: var(--success-color); margin-top: var(--spacing-xs);"><i class="fas fa-check-circle"></i> Sin mantenimientos programados aún</p>`}
+                    </div>
+                    <div class="vehicle-badges">
+                        <span class="maint-badge ${peor.status}">
+                            ${peor.texto}
+                        </span>
+                        <button class="btn btn-sm btn-outline-secondary" 
+                                style="font-size: var(--font-size-xs); padding: 3px 8px;"
+                                onclick="irAVehiculo(${vehiculo.id})">
+                            <i class="fas fa-external-link-alt"></i> Detalle
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function irAVehiculo(vehiculoId) {
+            localStorage.setItem('oficina_focus_veiculo', String(vehiculoId));
+            window.location.href = 'veiculos.html';
+        }
+
+        // ============================================================
+        // NOTIFICACIONES Y UTILIDADES
+        // ============================================================
         function showNotification(message, type = 'info') {
-            // Simple notification - can be enhanced with a proper notification system
+            const bgColor = type === 'success' ? 'var(--success-color)' 
+                          : type === 'danger'  ? 'var(--danger-color)' 
+                          : 'var(--primary-color)';
             const notification = document.createElement('div');
-            notification.className = `notification notification-${type}`;
             notification.textContent = message;
             notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                padding: 1rem 1.5rem;
-                background: var(--color-${type === 'success' ? 'success' : 'primary'});
-                color: white;
-                border-radius: var(--border-radius-md);
-                box-shadow: var(--shadow-lg);
-                z-index: 10000;
-                animation: slideIn 0.3s ease;
+                position: fixed; top: 20px; right: 20px;
+                padding: 1rem 1.5rem; background: ${bgColor}; color: white;
+                border-radius: var(--border-radius-md); box-shadow: var(--shadow-lg);
+                z-index: 10000; animation: slideIn 0.3s ease;
             `;
-            
             document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
+            setTimeout(() => notification.remove(), 3500);
         }
 
-        // Logout function
-        function logout() {
-            if (confirm('Tem certeza que deseja sair?')) {
+        function logout() { logoutSidebar(); }
+        function logoutSidebar() {
+            if (confirm('¿Está seguro que desea salir?')) {
                 localStorage.removeItem('usuarioLogado');
+                localStorage.removeItem('userLoggedIn');
                 sessionStorage.removeItem('usuarioLogado');
+                sessionStorage.removeItem('userLoggedIn');
                 window.location.href = '../login.html';
             }
         }
 
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('clienteModal');
-            if (event.target === modal) {
-                closeClientModal();
-            }
-        }
+        // Cerrar modales al hacer click fuera
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                    editingClientId = null;
+                    viewClientVehiclesId = null;
+                }
+            });
+        });
     </script>
 
     <!-- JavaScript Files -->

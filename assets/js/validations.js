@@ -1,35 +1,44 @@
 /**
- * Sistema de Validações e Máscaras para Formulários
- * Oficina Mecânica - Sistema de Gestão
+ * Sistema de Validaciones y Máscaras para Formularios
+ * Taller Mecánico - Sistema de Gestión
  */
 
 // ==================== MÁSCARAS ====================
 
 /**
- * Aplicar máscara de CPF
+ * Aplicar máscara de DNI (8 dígitos + verificador argentino opcional o CUIL 11 dígitos)
  */
-function mascaraCPF(input) {
+function mascaraDNI(input) {
     let valor = input.value.replace(/\D/g, '');
-    valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
-    valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
-    valor = valor.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    if (valor.length <= 8) {
+        // Formato DNI simple: 12.345.678
+        valor = valor.replace(/(\d{2})(\d)/, '$1.$2');
+        valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
+    } else {
+        // Formato CUIL largo: 00-00000000-0
+        valor = valor.slice(0, 11);
+        if (valor.length > 2) valor = valor.slice(0,2) + '-' + valor.slice(2);
+        if (valor.length > 11) valor = valor.slice(0,11) + '-' + valor.slice(11);
+    }
     input.value = valor;
 }
+/** @deprecated usar mascaraDNI. Por compatibilidad con datos antiguos */
+function mascaraCPF(input) { mascaraDNI(input); }
 
 /**
- * Aplicar máscara de CNPJ
+ * Aplicar máscara de CUIT (formato argentino 00-00000000-0, 11 dígitos)
  */
-function mascaraCNPJ(input) {
-    let valor = input.value.replace(/\D/g, '');
-    valor = valor.replace(/^(\d{2})(\d)/, '$1.$2');
-    valor = valor.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
-    valor = valor.replace(/\.(\d{3})(\d)/, '.$1/$2');
-    valor = valor.replace(/(\d{4})(\d)/, '$1-$2');
+function mascaraCUIT(input) {
+    let valor = input.value.replace(/\D/g, '').slice(0, 11);
+    if (valor.length > 2) valor = valor.slice(0,2) + '-' + valor.slice(2);
+    if (valor.length > 11) valor = valor.slice(0,11) + '-' + valor.slice(11);
     input.value = valor;
 }
+/** @deprecated usar mascaraCUIT */
+function mascaraCNPJ(input) { mascaraCUIT(input); }
 
 /**
- * Aplicar máscara de telefone
+ * Aplicar máscara de teléfono (formato argentino)
  */
 function mascaraTelefone(input) {
     let valor = input.value.replace(/\D/g, '');
@@ -44,134 +53,102 @@ function mascaraTelefone(input) {
 }
 
 /**
- * Aplicar máscara de CEP
+ * Aplicar máscara de CPA (Código Postal Argentino, letras/números 8 chars)
  */
-function mascaraCEP(input) {
-    let valor = input.value.replace(/\D/g, '');
-    valor = valor.replace(/(\d{5})(\d)/, '$1-$2');
+function mascaraCPA(input) {
+    let valor = input.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
+    if (valor.length > 4) valor = valor.slice(0,4) + valor.slice(4);
     input.value = valor;
 }
+/** @deprecated usar mascaraCPA */
+function mascaraCEP(input) { mascaraCPA(input); }
 
 /**
- * Aplicar máscara de moeda (Real)
+ * Aplicar máscara de moneda (pesos argentinos $)
  */
 function mascaraMoeda(input) {
     let valor = input.value.replace(/\D/g, '');
-    valor = (valor / 100).toFixed(2) + '';
-    valor = valor.replace(".", ",");
-    valor = valor.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
-    input.value = 'R$ ' + valor;
+    if (valor === '') { input.value = ''; return; }
+    valor = (parseInt(valor) / 100).toFixed(2);
+    valor = valor.replace('.', ',');
+    valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    input.value = '$ ' + valor;
 }
 
 /**
- * Aplicar máscara de placa de veículo
+ * Aplicar máscara de patente (Mercosul / antiguo)
  */
 function mascaraPlaca(input) {
-    let valor = input.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
-    
-    // Formato antigo: ABC-1234
-    if (valor.length <= 7 && !/\d[A-Z]/.test(valor)) {
-        valor = valor.replace(/(\w{3})(\w)/, '$1-$2');
+    let valor = input.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    if (valor.length <= 7) {
+        valor = valor.replace(/^([A-Z]{3})([0-9])/, '$1 $2');
+    } else {
+        valor = valor.replace(/^([A-Z]{3})([0-9])([A-Z])([0-9]{3})/, '$1 $2$3$4');
     }
-    // Formato Mercosul: ABC1D23
-    else if (valor.length <= 7) {
-        valor = valor.replace(/(\w{3})(\w)(\w{2})/, '$1$2$5');
-    }
-    
-    input.value = valor;
+    input.value = valor.slice(0, 8);
 }
 
 /**
- * Aplicar máscara de data
+ * Aplicar máscara de fecha (DD/MM/AAAA)
  */
 function mascaraData(input) {
     let valor = input.value.replace(/\D/g, '');
     valor = valor.replace(/(\d{2})(\d)/, '$1/$2');
     valor = valor.replace(/(\d{2})(\d)/, '$1/$2');
-    input.value = valor;
+    input.value = valor.slice(0, 10);
 }
 
 /**
- * Aplicar máscara de hora
+ * Aplicar máscara de hora (HH:MM)
  */
 function mascaraHora(input) {
     let valor = input.value.replace(/\D/g, '');
     valor = valor.replace(/(\d{2})(\d)/, '$1:$2');
-    input.value = valor;
+    input.value = valor.slice(0, 5);
 }
 
-// ==================== VALIDAÇÕES ====================
-
-/**
- * Validar CPF
- */
-function validarCPF(cpf) {
-    cpf = cpf.replace(/\D/g, '');
-    
-    if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) {
-        return false;
-    }
-    
-    let soma = 0;
-    for (let i = 0; i < 9; i++) {
-        soma += parseInt(cpf.charAt(i)) * (10 - i);
-    }
-    let resto = 11 - (soma % 11);
-    let digito1 = resto < 2 ? 0 : resto;
-    
-    if (parseInt(cpf.charAt(9)) !== digito1) {
-        return false;
-    }
-    
-    soma = 0;
-    for (let i = 0; i < 10; i++) {
-        soma += parseInt(cpf.charAt(i)) * (11 - i);
-    }
-    resto = 11 - (soma % 11);
-    let digito2 = resto < 2 ? 0 : resto;
-    
-    return parseInt(cpf.charAt(10)) === digito2;
-}
+// ==================== VALIDACIONES ====================
 
 /**
- * Validar CNPJ
+ * Validar DNI (longitud 7-8 dígitos sin dígito verificador o CUIL 11 dígitos)
  */
-function validarCNPJ(cnpj) {
-    cnpj = cnpj.replace(/\D/g, '');
-    
-    if (cnpj.length !== 14 || /^(\d)\1{13}$/.test(cnpj)) {
-        return false;
+function validarDNI(dni) {
+    const valor = dni.replace(/\D/g, '');
+    if (valor.length >= 7 && valor.length <= 8) return /^\d{7,8}$/.test(valor);
+    if (valor.length === 11) {
+        // Validación simple de CUIL argentino
+        const multi = [5, 4, 3, 2, 7, 6, 5, 4, 3, 2];
+        let suma = 0;
+        for (let i = 0; i < 10; i++) suma += parseInt(valor.charAt(i)) * multi[i];
+        let resto = 11 - (suma % 11);
+        if (resto === 11) resto = 0;
+        if (resto === 10) resto = 9;
+        return parseInt(valor.charAt(10)) === resto;
     }
-    
-    let tamanho = cnpj.length - 2;
-    let numeros = cnpj.substring(0, tamanho);
-    let digitos = cnpj.substring(tamanho);
-    let soma = 0;
-    let pos = tamanho - 7;
-    
-    for (let i = tamanho; i >= 1; i--) {
-        soma += numeros.charAt(tamanho - i) * pos--;
-        if (pos < 2) pos = 9;
-    }
-    
-    let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
-    if (resultado !== parseInt(digitos.charAt(0))) {
-        return false;
-    }
-    
-    tamanho = tamanho + 1;
-    numeros = cnpj.substring(0, tamanho);
-    soma = 0;
-    pos = tamanho - 7;
-    
-    for (let i = tamanho; i >= 1; i--) {
-        soma += numeros.charAt(tamanho - i) * pos--;
-        if (pos < 2) pos = 9;
-    }
-    
-    resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
-    return resultado === parseInt(digitos.charAt(1));
+    return false;
 }
+/** @deprecated usar validarDNI */
+function validarCPF(cpf) { return validarDNI(cpf); }
+
+/**
+ * Validar CUIT argentino (11 dígitos)
+ */
+function validarCUIT(cuit) {
+    const valor = cuit.replace(/\D/g, '');
+    if (valor.length !== 11) return false;
+    const tipos = [20, 23, 24, 27, 30, 33, 34];
+    const pref = parseInt(valor.slice(0, 2));
+    if (!tipos.includes(pref)) return false;
+    const multi = [5, 4, 3, 2, 7, 6, 5, 4, 3, 2];
+    let suma = 0;
+    for (let i = 0; i < 10; i++) suma += parseInt(valor.charAt(i)) * multi[i];
+    let resto = 11 - (suma % 11);
+    if (resto === 11) resto = 0;
+    if (resto === 10) resto = 9;
+    return parseInt(valor.charAt(10)) === resto;
+}
+/** @deprecated usar validarCUIT */
+function validarCNPJ(cnpj) { return validarCUIT(cnpj); }
 
 /**
  * Validar email
@@ -182,7 +159,7 @@ function validarEmail(email) {
 }
 
 /**
- * Validar telefone
+ * Validar teléfono
  */
 function validarTelefone(telefone) {
     const numeros = telefone.replace(/\D/g, '');
@@ -190,201 +167,178 @@ function validarTelefone(telefone) {
 }
 
 /**
- * Validar CEP
+ * Validar CPA (Código Postal Argentino)
  */
-function validarCEP(cep) {
-    const regex = /^\d{5}-?\d{3}$/;
-    return regex.test(cep);
+function validarCPA(cpa) {
+    // Formato CPA Argentino: A0000AAA o simplificado 4-8 chars
+    const regex = /^[A-Z]?\d{4}[A-Z]{0,3}$/i;
+    const limpio = cpa.replace(/[^A-Za-z0-9]/g, '');
+    return regex.test(limpio) && limpio.length >= 4 && limpio.length <= 8;
 }
+/** @deprecated usar validarCPA */
+function validarCEP(cep) { return validarCPA(cep); }
 
 /**
- * Validar data
+ * Validar fecha
  */
 function validarData(data) {
     const regex = /^\d{2}\/\d{2}\/\d{4}$/;
     if (!regex.test(data)) return false;
-    
     const partes = data.split('/');
     const dia = parseInt(partes[0]);
     const mes = parseInt(partes[1]);
     const ano = parseInt(partes[2]);
-    
     const dataObj = new Date(ano, mes - 1, dia);
-    return dataObj.getDate() === dia && 
-           dataObj.getMonth() === mes - 1 && 
+    return dataObj.getDate() === dia &&
+           dataObj.getMonth() === mes - 1 &&
            dataObj.getFullYear() === ano;
 }
 
 /**
- * Validar placa de veículo
+ * Validar patente de vehículo (formato argentino)
  */
 function validarPlaca(placa) {
     const placaLimpa = placa.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
-    
-    // Formato antigo: ABC1234
     const formatoAntigo = /^[A-Z]{3}\d{4}$/;
-    // Formato Mercosul: ABC1D23
     const formatoMercosul = /^[A-Z]{3}\d[A-Z]\d{2}$/;
-    
     return formatoAntigo.test(placaLimpa) || formatoMercosul.test(placaLimpa);
 }
 
-// ==================== APLICAÇÃO AUTOMÁTICA ====================
+// ==================== APLICACIÓN AUTOMÁTICA ====================
 
 /**
- * Inicializar máscaras e validações
+ * Inicializar máscaras y validaciones
  */
 function inicializarValidacoes() {
-    // Aplicar máscaras automaticamente baseado em data-mask
     document.addEventListener('input', function(e) {
         const input = e.target;
         const mask = input.getAttribute('data-mask');
-        
-        switch(mask) {
+        if (!mask) return;
+        switch(mask.toLowerCase()) {
+            case 'dni':
             case 'cpf':
-                mascaraCPF(input);
-                break;
+                mascaraDNI(input); break;
+            case 'cuit':
             case 'cnpj':
-                mascaraCNPJ(input);
-                break;
+                mascaraCUIT(input); break;
             case 'telefone':
-                mascaraTelefone(input);
-                break;
+                mascaraTelefone(input); break;
+            case 'cpa':
             case 'cep':
-                mascaraCEP(input);
-                break;
+                mascaraCPA(input); break;
             case 'moeda':
-                mascaraMoeda(input);
-                break;
+                mascaraMoeda(input); break;
             case 'placa':
-                mascaraPlaca(input);
-                break;
+                mascaraPlaca(input); break;
             case 'data':
-                mascaraData(input);
-                break;
+                mascaraData(input); break;
             case 'hora':
-                mascaraHora(input);
-                break;
+                mascaraHora(input); break;
         }
     });
-    
-    // Validar campos ao perder o foco
+
     document.addEventListener('blur', function(e) {
         const input = e.target;
         const validate = input.getAttribute('data-validate');
-        
         if (!validate || !input.value) return;
-        
         let isValid = true;
         let mensagem = '';
-        
-        switch(validate) {
+        switch(validate.toLowerCase()) {
+            case 'dni':
             case 'cpf':
-                isValid = validarCPF(input.value);
-                mensagem = 'CPF inválido';
+                isValid = validarDNI(input.value);
+                mensagem = 'DNI / CUIL inválido';
                 break;
+            case 'cuit':
             case 'cnpj':
-                isValid = validarCNPJ(input.value);
-                mensagem = 'CNPJ inválido';
+                isValid = validarCUIT(input.value);
+                mensagem = 'CUIT inválido';
                 break;
             case 'email':
                 isValid = validarEmail(input.value);
-                mensagem = 'Email inválido';
+                mensagem = 'Correo electrónico inválido';
                 break;
             case 'telefone':
                 isValid = validarTelefone(input.value);
-                mensagem = 'Telefone inválido';
+                mensagem = 'Teléfono inválido';
                 break;
+            case 'cpa':
             case 'cep':
-                isValid = validarCEP(input.value);
-                mensagem = 'CEP inválido';
+                isValid = validarCPA(input.value);
+                mensagem = 'CPA inválido (Código Postal)';
                 break;
             case 'data':
                 isValid = validarData(input.value);
-                mensagem = 'Data inválida';
+                mensagem = 'Fecha inválida';
                 break;
             case 'placa':
                 isValid = validarPlaca(input.value);
-                mensagem = 'Placa inválida';
+                mensagem = 'Patente inválida';
                 break;
         }
-        
-        // Remover mensagens de erro anteriores
         const errorElement = input.parentNode.querySelector('.error-message');
-        if (errorElement) {
-            errorElement.remove();
-        }
-        
-        // Aplicar estilo de erro/sucesso
+        if (errorElement) errorElement.remove();
         if (isValid) {
             input.classList.remove('error');
             input.classList.add('valid');
         } else {
             input.classList.remove('valid');
             input.classList.add('error');
-            
-            // Adicionar mensagem de erro
             const errorDiv = document.createElement('div');
             errorDiv.className = 'error-message';
             errorDiv.textContent = mensagem;
             input.parentNode.appendChild(errorDiv);
         }
-    });
+    }, true);
 }
 
 /**
- * Validar formulário completo
+ * Validar formulario completo
  */
 function validarFormulario(form) {
     const inputs = form.querySelectorAll('input[data-validate], input[required]');
     let isValid = true;
-    
     inputs.forEach(input => {
-        // Disparar evento blur para validar
         input.dispatchEvent(new Event('blur'));
-        
         if (input.classList.contains('error') || (input.required && !input.value)) {
             isValid = false;
         }
     });
-    
     return isValid;
 }
 
 /**
- * Limpar validações do formulário
+ * Limpiar validaciones del formulario
  */
 function limparValidacoes(form) {
     const inputs = form.querySelectorAll('input');
     const errorMessages = form.querySelectorAll('.error-message');
-    
-    inputs.forEach(input => {
-        input.classList.remove('error', 'valid');
-    });
-    
-    errorMessages.forEach(error => {
-        error.remove();
-    });
+    inputs.forEach(input => input.classList.remove('error', 'valid'));
+    errorMessages.forEach(error => error.remove());
 }
 
-// Inicializar quando o DOM estiver carregado
 document.addEventListener('DOMContentLoaded', inicializarValidacoes);
 
-// Exportar funções para uso global
 window.validacoes = {
+    mascaraDNI,
+    mascaraCUIT,
+    mascaraCPA,
     mascaraCPF,
     mascaraCNPJ,
-    mascaraTelefone,
     mascaraCEP,
+    mascaraTelefone,
     mascaraMoeda,
     mascaraPlaca,
     mascaraData,
     mascaraHora,
+    validarDNI,
+    validarCUIT,
+    validarCPA,
     validarCPF,
     validarCNPJ,
+    validarCEP,
     validarEmail,
     validarTelefone,
-    validarCEP,
     validarData,
     validarPlaca,
     validarFormulario,
